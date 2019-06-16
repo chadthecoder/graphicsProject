@@ -2,23 +2,33 @@ cc = g++
 
 main = main.cpp
 
-includeDeps = -I "..\libs\glew\include" -I "..\libs\glfw\include" -I "..\libs\SDL2\i686-w64-mingw32\include"
-
-linkingDeps = -L "..\libs\glew\lib\Release\Win32" -L "..\libs\glfw\lib-mingw" -L "..\libs\SDL2\i686-w64-mingw32\lib"
-
 links = -lglew32 -lglfw3 -lgdi32 -lopengl32 -lmingw32 -lSDL2main -lSDL2
 
-libs = $(includeDeps) $(linkingDeps) $(links)
+includeDepsWin = -I "libsWin\glew\include" -I "libsWin\glfw\include" -I "libsWin\SDL2\i686-w64-mingw32\include"
 
-output = -o "windows/Rocket League"
+includeDepsLin = -I "libsLin\glew\include" -I "libsLin\glfw\include" -I "libsLin\SDL2\i686-w64-mingw32\include"
 
-dotO = windows/main.o windows/Game.o
+linkingDepsWin = -L "libsWin\glew\lib\Release\Win32" -L "libsWin\glfw\lib-mingw" -L "libsWin\SDL2\i686-w64-mingw32\lib"
+
+linkingDepsLin = -L "libsLin\glew\lib\Release\Win32" -L "libsLin\glfw\lib-mingw" -L "libsLin\SDL2\i686-w64-mingw32\lib"
+
+libsWin = $(includeDepsWin) $(linkingDepsWin) $(links)
+
+libsLin = $(includeDepsLin) $(linkingDepsLin) $(links)
+
+dotOWin = windows/main.o windows/Game.o
+
+dotOLin = linux/main.o linux/Game.o
 
 iconO = windows/windows.res
 
-win: $(dotO)
+outputWin = -o "windows/Rocket League"
+
+outputLin = -o "linux/Rocket League"
+
+win: $(dotOWin)
 	windres windows/windows.rc -O coff -o $(iconO)
-	$(cc) $(output) $(dotO) $(iconO) $(libs)
+	$(cc) $(outputWin) $(dotOWin) $(iconO) $(libsWin)
 
 windows/main.o: main.cpp
 	$(cc) -c main.cpp -o windows/main.o
@@ -26,9 +36,23 @@ windows/main.o: main.cpp
 windows/Game.o: Game.cpp
 	$(cc) -c Game.cpp -o windows/Game.o
 
-run:
+runWin:
 	"windows/Rocket League"
+
+lin: $(dotOLin)
+	$(cc) $(outputLin) $(dotOLin) $(libsLin)
+
+linux/main.o: main.cpp
+	$(cc) -c main.cpp -o linux/main.o
+
+linux/Game.o: Game.cpp
+	$(cc) -c Game.cpp -o linux/Game.o
+
+runLin:
+	"linux/Rocket League"
 
 clean:
 	rm windows/*.o
 	rm windows/*.exe
+	rm linux/*.o
+	rm linux/*.exe

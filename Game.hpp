@@ -1,9 +1,9 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "..\libs\glew\include\GL\glew.h"
-#include "..\libs\glfw\include\GLFW\glfw3.h"
-#include "..\libs\SDL2\i686-w64-mingw32\include\SDL2\SDL.h"
+#include "libsWin\glew\include\GL\glew.h"
+#include "libsWin\glfw\include\GLFW\glfw3.h"
+#include "libsWin\SDL2\i686-w64-mingw32\include\SDL2\SDL.h"
 
 struct Vector2
 {
