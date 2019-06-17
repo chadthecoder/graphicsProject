@@ -1,4 +1,6 @@
 #include "Game.hpp"
+#include <iostream>
+using namespace std;
 
 Game::Game()
 {
@@ -44,6 +46,9 @@ bool Game::Initialize()
   mBallPos.x = this->screenWidth / 2;
   mBallPos.y = this->screenHeight / 2;
 
+  mPaddlePosU.x = this->screenWidth / 12;
+  mPaddlePosU.y = this->screenHeight / 2;
+
   return true;
 }
 
@@ -76,11 +81,25 @@ void Game::ProcessInput()
       mIsRunning = false;
       break;
     }
+
     const Uint8 *state = SDL_GetKeyboardState(NULL);
+
     if (state[SDL_SCANCODE_ESCAPE])
     {
       SDL_Event event;
       mIsRunning = false;
+    }
+
+    //paddle direction
+    this->mPaddleDir = 0;
+    if (state[SDL_SCANCODE_W])
+    {
+      this->mPaddleDir -= 1;
+    }
+
+    if (state[SDL_SCANCODE_S])
+    {
+      this->mPaddleDir += 1;
     }
   }
 }
@@ -97,7 +116,13 @@ void Game::UpdateGame()
   }
 
   //update objects using deltaTime
-  this->mBallPos.x += 50 * deltaTime;
+  this->mBallPos.x += 50 * this->deltaTime;
+
+  if (this->mPaddleDir != 0)
+  {
+    this->mPaddlePosU.y += this->mPaddleDir * 300.0f * this->deltaTime;
+    cout << mPaddlePosU.y << endl;
+  }
 }
 
 void Game::GenerateOutput()
@@ -153,6 +178,13 @@ void Game::GenerateOutput()
       this->THICKNESS,
       this->THICKNESS};
   SDL_RenderFillRect(this->mRenderer, &ball);
+
+  SDL_Rect paddleU{
+      static_cast<int>(mPaddlePosU.x - this->THICKNESS / 2),
+      static_cast<int>(mPaddlePosU.y - this->THICKNESS / 2),
+      this->THICKNESS,
+      90}; //this->THICKNESS};
+  SDL_RenderFillRect(this->mRenderer, &paddleU);
 
   SDL_RenderPresent(this->mRenderer);
 }

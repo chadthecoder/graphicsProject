@@ -27,14 +27,14 @@ private:
 
   SDL_Window *mWindow;
   SDL_Renderer *mRenderer;
-  Vector2 mPaddlePos, mBallPos;
+  Vector2 mPaddlePosU, mBallPos;
   Uint32 mTicksCount;
   SDL_DisplayMode DM;
   SDL_Event event;
   float deltaTime;
   bool mIsRunning;
-  int screenHeight;
-  int screenWidth;
+  int screenHeight, screenWidth;
+  int mPaddleDir;
 };
 
 #endif
