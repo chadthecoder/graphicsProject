@@ -1,9 +1,15 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "libsWin\glew\include\GL\glew.h"
-#include "libsWin\glfw\include\GLFW\glfw3.h"
-#include "libsWin\SDL2\i686-w64-mingw32\include\SDL2\SDL.h"
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+	#include "libsWin\glew\include\GL\glew.h"
+	#include "libsWin\glfw\include\GLFW\glfw3.h"
+	#include "libsWin\SDL2\i686-w64-mingw32\include\SDL2\SDL.h"
+#else
+	#include <GL/glew.h>
+	#include <GLFW/glfw3.h>
+	#include <SDL2/SDL.h>
+#endif
 
 struct Vector2
 {

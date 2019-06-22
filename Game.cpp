@@ -1,9 +1,10 @@
 #include "Game.hpp"
-#include <iostream>
-using namespace std;
+//#include <iostream>
+//using namespace std;
 
 Game::Game()
 {
+this->mIsRunning = true;
 }
 
 bool Game::Initialize()
@@ -121,7 +122,7 @@ void Game::UpdateGame()
   if (this->mPaddleDir != 0)
   {
     this->mPaddlePosU.y += this->mPaddleDir * 300.0f * this->deltaTime;
-    cout << mPaddlePosU.y << endl;
+    //cout << mPaddlePosU.y << endl;
   }
 }
 

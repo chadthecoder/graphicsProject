@@ -2,7 +2,10 @@ cc = g++
 
 main = main.cpp
 
-links = -lglew32 -lglfw3 -lgdi32 -lopengl32 -lmingw32 -lSDL2main -lSDL2
+linksWin = -lglew32 -lglfw3 -lgdi32 -lopengl32 -lmingw32 -lSDL2main -lSDL2
+
+linksLin = -lSDL2main -lSDL2
+fun = -lGLEW -lglfw 
 
 includeDepsWin = -I "libsWin\glew\include" -I "libsWin\glfw\include" -I "libsWin\SDL2\i686-w64-mingw32\include"
 
@@ -12,9 +15,9 @@ linkingDepsWin = -L "libsWin\glew\lib\Release\Win32" -L "libsWin\glfw\lib-mingw"
 
 linkingDepsLin = -L "libsLin\glew\lib\Release\Win32" -L "libsLin\glfw\lib-mingw" -L "libsLin\SDL2\i686-w64-mingw32\lib"
 
-libsWin = $(includeDepsWin) $(linkingDepsWin) $(links)
+libsWin = $(includeDepsWin) $(linkingDepsWin) $(linksWin)
 
-libsLin = $(includeDepsLin) $(linkingDepsLin) $(links)
+libsLin = $(includeDepsLin) $(linkingDepsLin) $(linksLin)
 
 dotOWin = windows/main.o windows/Game.o
 
@@ -49,7 +52,7 @@ linux/Game.o: Game.cpp
 	$(cc) -c Game.cpp -o linux/Game.o
 
 runLin:
-	"linux/Rocket League"
+	./linux/"Rocket League"
 
 clean:
 	rm windows/*.o
