@@ -1,11 +1,8 @@
 #include "Game.hpp"
-//#include <iostream>
+#include <iostream>
 //using namespace std;
 
-Game::Game()
-{
-this->mIsRunning = true;
-}
+Game::Game() : mIsRunning(true), mTicksCount(0) {}
 
 bool Game::Initialize()
 {
@@ -72,7 +69,7 @@ void Game::RunLoop()
 
 void Game::ProcessInput()
 {
-  this->event;
+  //this->event;
   while (SDL_PollEvent(&this->event))
   {
     switch (this->event.type)
@@ -109,6 +106,7 @@ void Game::UpdateGame()
 {
   while (!SDL_TICKS_PASSED(SDL_GetTicks(), this->mTicksCount + 16))
     ;
+
   this->deltaTime = (SDL_GetTicks() - this->mTicksCount);
   this->mTicksCount = SDL_GetTicks();
   if (this->deltaTime > 0.05f)
@@ -122,7 +120,7 @@ void Game::UpdateGame()
   if (this->mPaddleDir != 0)
   {
     this->mPaddlePosU.y += this->mPaddleDir * 300.0f * this->deltaTime;
-    //cout << mPaddlePosU.y << endl;
+    std::cout << mPaddlePosU.y << std::endl;
   }
 }
 
@@ -184,7 +182,7 @@ void Game::GenerateOutput()
       static_cast<int>(mPaddlePosU.x - this->THICKNESS / 2),
       static_cast<int>(mPaddlePosU.y - this->THICKNESS / 2),
       this->THICKNESS,
-      90}; //this->THICKNESS};
+      this->THICKNESS * 6};
   SDL_RenderFillRect(this->mRenderer, &paddleU);
 
   SDL_RenderPresent(this->mRenderer);
