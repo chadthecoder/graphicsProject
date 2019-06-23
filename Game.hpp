@@ -29,8 +29,6 @@ private:
   void UpdateGame();
   void GenerateOutput();
 
-  static const int THICKNESS = 15;
-
   SDL_Window *mWindow;
   SDL_Renderer *mRenderer;
   Vector2 mPaddlePosU, mBallPos;
@@ -39,7 +37,7 @@ private:
   SDL_Event event;
   float deltaTime;
   bool mIsRunning;
-  int screenHeight, screenWidth;
+  int screenHeight, screenWidth, thickness, paddleHeight;
   int mPaddleDir;
 };
 
