@@ -16,7 +16,8 @@ bool Game::Initialize()
   this->screenHeight = this->DM.h;
   this->screenWidth = this->DM.w;
   this->thickness = this->screenWidth / 100;
-  this->paddleHeight = this->thickness * 6;
+  this->paddleU.height = this->thickness * 6;
+  this->paddleU.width = this->thickness;
 
 /* Making it fullscreen only is the only non complicated way   *
  * to make it look good on Ubuntu because of Ubuntu's top bar. */
@@ -48,10 +49,21 @@ bool Game::Initialize()
   mBallPos.x = this->screenWidth / 2;
   mBallPos.y = this->screenHeight / 2;
 
-  mPaddlePosU.x = this->screenWidth / 16;
-  mPaddlePosU.y = this->screenHeight / 2;
+  paddleU.x = this->screenWidth / 16;
+  paddleU.y = this->screenHeight / 2;
 
   return true;
+}
+
+void Game::InitializeObjects()
+{
+  this->funny = this->createPaddle(
+  400.0f,//static_cast<int>(paddleU.x - this->thickness / 2),
+  400.0f,//static_cast<int>(paddleU.y - this->thickness / 2),
+  30,
+  100,
+  30
+  );
 }
 
 void Game::Shutdown()
@@ -93,15 +105,15 @@ void Game::ProcessInput()
     }
 
     //paddle direction
-    this->mPaddleDir = 0;
+    this->paddleU.direction = 0;
     if (state[SDL_SCANCODE_W])
     {
-      this->mPaddleDir -= 1;
+      this->paddleU.direction -= 1;
     }
 
     if (state[SDL_SCANCODE_S])
     {
-      this->mPaddleDir += 1;
+      this->paddleU.direction += 1;
     }
   }
 }
@@ -121,20 +133,55 @@ void Game::UpdateGame()
   //update objects using deltaTime
   this->mBallPos.x += 50 * this->deltaTime;
 
-  if (this->mPaddleDir != 0)
+  if (this->paddleU.direction != 0)
   {
-    if(this->mPaddlePosU.y < this->thickness)
+    if(this->paddleU.y < this->thickness)
     {
-      this->mPaddlePosU.y = this->thickness;
+      this->paddleU.y = this->thickness;
     }
-    else if(this->mPaddlePosU.y > (this->screenHeight - this->thickness - this->paddleHeight))
+    else if(this->paddleU.y > (this->screenHeight - this->thickness - this->paddleU.height))
     {
-      this->mPaddlePosU.y = this->screenHeight - this->thickness - this->paddleHeight;
+      this->paddleU.y = this->screenHeight - this->thickness - this->paddleU.height;
     }
-    this->mPaddlePosU.y += this->mPaddleDir * 300.0f * this->deltaTime;
-    std::cout << mPaddlePosU.y << std::endl;
+    this->paddleU.y += this->paddleU.direction * 300.0f * this->deltaTime;
+    //std::cout << paddleU.y << std::endl;
   }
 }
+
+  Paddle Game::createPaddle(float xq, float yq, int widthq, int heightq, int directionq)
+  {
+    Paddle mPaddle;
+    mPaddle.x = xq;
+    mPaddle.y = yq;
+    mPaddle.width = widthq;
+    mPaddle.height = heightq;
+    mPaddle.direction = directionq;
+    return mPaddle;
+  }
+
+  void Game::drawPaddle(Paddle mPaddle)
+  {
+    SDL_Rect rectMPaddle{
+        static_cast<int>(mPaddle.x - this->thickness / 2),
+        static_cast<int>(mPaddle.y - this->thickness / 2),
+        mPaddle.width,
+        mPaddle.height};
+    SDL_RenderFillRect(this->mRenderer, &rectMPaddle);
+  }
+
+  SDL_Rect Game::createPaddleU()
+  {
+      SDL_Rect myPaddle{
+        static_cast<int>(paddleU.x - this->thickness / 2),
+        static_cast<int>(paddleU.y - this->thickness / 2),
+        this->paddleU.width,
+        this->paddleU.height};
+      return myPaddle;
+  }
+  void Game::drawPaddleU(SDL_Rect myPaddle)
+  {
+    SDL_RenderFillRect(this->mRenderer, &myPaddle);
+  }
 
 void Game::GenerateOutput()
 {
@@ -190,12 +237,15 @@ void Game::GenerateOutput()
       this->thickness};
   SDL_RenderFillRect(this->mRenderer, &ball);
 
-  SDL_Rect paddleU{
-      static_cast<int>(mPaddlePosU.x - this->thickness / 2),
-      static_cast<int>(mPaddlePosU.y - this->thickness / 2),
-      this->thickness,
-      this->paddleHeight};
-  SDL_RenderFillRect(this->mRenderer, &paddleU);
+
+  SDL_Rect myPaddle = this->createPaddleU();
+  this->drawPaddleU(myPaddle);
+
+  
+  this->funny.x += 5;
+  std::cout << funny.x << " ";
+  this->drawPaddle(this->funny);
+  std::cout << funny.x << std::endl;
 
   SDL_RenderPresent(this->mRenderer);
 }

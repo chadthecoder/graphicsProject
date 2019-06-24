@@ -11,9 +11,17 @@
 #include <SDL2/SDL.h>
 #endif
 
+#include <string>
+
 struct Vector2
 {
   float x, y;
+};
+
+struct Paddle
+{
+  float x, y;
+  int width, height, direction;
 };
 
 class Game
@@ -25,20 +33,29 @@ public:
   void Shutdown();
 
 private:
+  void InitializeObjects();
+
   void ProcessInput();
   void UpdateGame();
   void GenerateOutput();
 
+  Paddle createPaddle(float x, float y, int width, int height, int direction);
+  void drawPaddle(Paddle mPaddle);
+
+  SDL_Rect createPaddleU();
+  void drawPaddleU(SDL_Rect myPaddle);
+
   SDL_Window *mWindow;
   SDL_Renderer *mRenderer;
-  Vector2 mPaddlePosU, mBallPos;
+  Vector2 mBallPos;
+  Paddle paddleU, funny;
   Uint32 mTicksCount;
   SDL_DisplayMode DM;
   SDL_Event event;
   float deltaTime;
   bool mIsRunning;
-  int screenHeight, screenWidth, thickness, paddleHeight;
-  int mPaddleDir;
+  int screenHeight, screenWidth, thickness;
+  int testyFunny = 400;
 };
 
 #endif
