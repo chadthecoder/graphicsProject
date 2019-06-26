@@ -16,6 +16,12 @@
 struct Vector2
 {
   float x, y;
+  Vector2() {}
+  Vector2(float x, float y)
+  {
+    this->x = x;
+    this->y = y;
+  }
 };
 
 struct Paddle
@@ -47,14 +53,14 @@ private:
 
   SDL_Window *mWindow;
   SDL_Renderer *mRenderer;
-  Vector2 mBallPos;
+  Vector2 mBallPos, mBallVel;
   Paddle paddleU, funny;
   Uint32 mTicksCount;
   SDL_DisplayMode DM;
   SDL_Event event;
   float deltaTime;
   bool mIsRunning;
-  int screenHeight, screenWidth, thickness;
+  int screenHeight, screenWidth, thickness, paddleWidth, paddleHeight;
   int testyFunny = 400;
 };
 

@@ -2,7 +2,7 @@
 #include <iostream>
 //using namespace std;
 
-Game::Game() : mIsRunning(true), mTicksCount(0) {}
+Game::Game() : mIsRunning(true), mTicksCount(0), mBallVel(-200.0f, 235.0f) {}
 
 bool Game::Initialize()
 {
@@ -16,8 +16,10 @@ bool Game::Initialize()
   this->screenHeight = this->DM.h;
   this->screenWidth = this->DM.w;
   this->thickness = this->screenWidth / 100;
-  this->paddleU.height = this->thickness * 6;
-  this->paddleU.width = this->thickness;
+  this->paddleHeight = this->thickness * 6;
+  this->paddleU.height = paddleHeight;
+  this->paddleWidth = this->thickness;
+  this->paddleU.width = this->paddleWidth;
 
 /* Making it fullscreen only is the only non complicated way   *
  * to make it look good on Ubuntu because of Ubuntu's top bar. */
@@ -52,6 +54,8 @@ bool Game::Initialize()
   paddleU.x = this->screenWidth / 16;
   paddleU.y = this->screenHeight / 2;
 
+  InitializeObjects();
+
   return true;
 }
 
@@ -60,9 +64,9 @@ void Game::InitializeObjects()
   this->funny = this->createPaddle(
   400.0f,//static_cast<int>(paddleU.x - this->thickness / 2),
   400.0f,//static_cast<int>(paddleU.y - this->thickness / 2),
-  30,
-  100,
-  30
+  this->paddleWidth,
+  this->paddleHeight,
+  0
   );
 }
 
@@ -85,22 +89,20 @@ void Game::RunLoop()
 
 void Game::ProcessInput()
 {
-  //this->event;
   while (SDL_PollEvent(&this->event))
   {
     switch (this->event.type)
     {
     case SDL_QUIT:
-      SDL_Event event;
       mIsRunning = false;
       break;
     }
+  }
 
     const Uint8 *state = SDL_GetKeyboardState(NULL);
-
+    std::cout << state[SDL_SCANCODE_ESCAPE];
     if (state[SDL_SCANCODE_ESCAPE])
     {
-      SDL_Event event;
       mIsRunning = false;
     }
 
@@ -115,7 +117,6 @@ void Game::ProcessInput()
     {
       this->paddleU.direction += 1;
     }
-  }
 }
 
 void Game::UpdateGame()
@@ -243,9 +244,7 @@ void Game::GenerateOutput()
 
   
   this->funny.x += 5;
-  std::cout << funny.x << " ";
   this->drawPaddle(this->funny);
-  std::cout << funny.x << std::endl;
 
   SDL_RenderPresent(this->mRenderer);
 }
