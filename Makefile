@@ -54,8 +54,10 @@ linux/Game.o: Game.cpp
 runLin:
 	./linux/"Rocket League"
 
-clean:
+cleanWin:
 	rm windows/*.o
 	rm windows/*.exe
+
+cleanLin:
 	rm linux/*.o
-	rm linux/*.exe
+	rm linux/"Rocket League"

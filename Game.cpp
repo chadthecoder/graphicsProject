@@ -2,7 +2,24 @@
 #include <iostream>
 //using namespace std;
 
-Game::Game() : mIsRunning(true), mTicksCount(0), mBallVel(-200.0f, 235.0f) {}
+Game::Game() : mIsRunning(true), mTicksCount(0), gameBall(1500.0f, 500.0f, -100.0f, 117.5f, 15, 15), leftPoints(0), rightPoints(0) {}
+
+void Game::centerVector2(Vector2 vec)
+{
+  vec.x = this->screenWidth / 2;
+  vec.y = this->screenHeight / 2;
+}
+
+void Game::InitializeObjects()
+{
+  this->funny = this->createPaddle(
+  400.0f,//static_cast<int>(paddleU.x - this->thickness / 2),
+  400.0f,//static_cast<int>(paddleU.y - this->thickness / 2),
+  this->paddleU.width,
+  this->paddleU.height,
+  0
+  );
+}
 
 bool Game::Initialize()
 {
@@ -18,7 +35,7 @@ bool Game::Initialize()
   this->thickness = this->screenWidth / 100;
   this->paddleHeight = this->thickness * 6;
   this->paddleU.height = paddleHeight;
-  this->paddleWidth = this->thickness;
+  this->paddleWidth = this->thickness*5.0f;
   this->paddleU.width = this->paddleWidth;
 
 /* Making it fullscreen only is the only non complicated way   *
@@ -48,26 +65,18 @@ bool Game::Initialize()
     return false;
   }
 
-  mBallPos.x = this->screenWidth / 2;
-  mBallPos.y = this->screenHeight / 2;
+  //mBallPos.x = this->screenWidth / 2;
+  //mBallPos.y = this->screenHeight / 2;
+  //this->centerVector2(this->mBallPos);
+  gameBall.x = this->screenWidth / 2;
+  gameBall.y = this->screenHeight / 2;
 
   paddleU.x = this->screenWidth / 16;
   paddleU.y = this->screenHeight / 2;
 
-  InitializeObjects();
+  this->InitializeObjects();
 
   return true;
-}
-
-void Game::InitializeObjects()
-{
-  this->funny = this->createPaddle(
-  400.0f,//static_cast<int>(paddleU.x - this->thickness / 2),
-  400.0f,//static_cast<int>(paddleU.y - this->thickness / 2),
-  this->paddleWidth,
-  this->paddleHeight,
-  0
-  );
 }
 
 void Game::Shutdown()
@@ -82,7 +91,10 @@ void Game::RunLoop()
   while (this->mIsRunning)
   {
     this->ProcessInput();
-    this->UpdateGame();
+    if(!this->UpdateGame())
+    {
+      break;
+    }
     this->GenerateOutput();
   }
 }
@@ -100,7 +112,7 @@ void Game::ProcessInput()
   }
 
     const Uint8 *state = SDL_GetKeyboardState(NULL);
-    std::cout << state[SDL_SCANCODE_ESCAPE];
+  
     if (state[SDL_SCANCODE_ESCAPE])
     {
       mIsRunning = false;
@@ -119,7 +131,7 @@ void Game::ProcessInput()
     }
 }
 
-void Game::UpdateGame()
+bool Game::UpdateGame()
 {
   while (!SDL_TICKS_PASSED(SDL_GetTicks(), this->mTicksCount + 16))
     ;
@@ -131,8 +143,53 @@ void Game::UpdateGame()
     this->deltaTime = 0.05f;
   }
 
+  //if paddle hits sides of screen
+  if((gameBall.y >= (this->screenHeight - this->thickness)) && (gameBall.yVelocity > 0.0f))
+  {
+    gameBall.yVelocity *= -1;
+  }
+  else if((gameBall.y <= this->thickness) && (gameBall.yVelocity < 0.0f))
+  {
+    gameBall.yVelocity *= -1;
+  }
+  else if((gameBall.x <= this->thickness) && (gameBall.xVelocity < 0.0f))
+  {
+    this->rightPoints += 1;
+    gameBall.x = this->screenWidth / 2;
+    gameBall.y = this->screenHeight / 2;
+    //gameBall.xVelocity *= -1;
+  }
+  else if((gameBall.x >= (this->screenWidth - this->thickness)) && (gameBall.xVelocity > 0.0f))
+  {
+    this->leftPoints += 1;
+    gameBall.x = this->screenWidth / 2;
+    gameBall.y = this->screenHeight / 2;
+    //gameBall.xVelocity *= -1;
+  }
+
+  if(this->leftPoints == 7)
+  {
+    std::cout << "The left side wins!\n";
+    /*
+      Doesn't do anything right now since returning false stops loop, but could be used in the future.
+      this->mIsRunning = false;
+    */
+    return false;
+  }
+
+  if(this->rightPoints == 7)
+  {
+    std::cout << "The right side wins!\n";
+    /*
+      Doesn't do anything right now since returning false stops loop, but could be used in the future.
+      this->mIsRunning = false;
+    */
+    return false;
+  }
+
   //update objects using deltaTime
-  this->mBallPos.x += 50 * this->deltaTime;
+  this->gameBall.x += gameBall.xVelocity * this->deltaTime;
+  this->gameBall.y += gameBall.yVelocity * this->deltaTime;
 
   if (this->paddleU.direction != 0)
   {
@@ -145,8 +202,16 @@ void Game::UpdateGame()
       this->paddleU.y = this->screenHeight - this->thickness - this->paddleU.height;
     }
     this->paddleU.y += this->paddleU.direction * 300.0f * this->deltaTime;
-    //std::cout << paddleU.y << std::endl;
   }
+
+
+  if(gameBall.collidesWith(paddleU))
+  {
+    //gameBall.xVelocity *= -1;
+  }
+
+
+  return true;
 }
 
   Paddle Game::createPaddle(float xq, float yq, int widthq, int heightq, int directionq)
@@ -163,8 +228,8 @@ void Game::UpdateGame()
   void Game::drawPaddle(Paddle mPaddle)
   {
     SDL_Rect rectMPaddle{
-        static_cast<int>(mPaddle.x - this->thickness / 2),
-        static_cast<int>(mPaddle.y - this->thickness / 2),
+        static_cast<int>(mPaddle.x - (mPaddle.width / 2.0f)),
+        static_cast<int>(mPaddle.y - (mPaddle.height / 2.0f)),
         mPaddle.width,
         mPaddle.height};
     SDL_RenderFillRect(this->mRenderer, &rectMPaddle);
@@ -172,11 +237,13 @@ void Game::UpdateGame()
 
   SDL_Rect Game::createPaddleU()
   {
-      SDL_Rect myPaddle{
-        static_cast<int>(paddleU.x - this->thickness / 2),
-        static_cast<int>(paddleU.y - this->thickness / 2),
+      SDL_Rect myPaddle
+      {
+        static_cast<int>(paddleU.x - (paddleU.width / 2.0f)),
+        static_cast<int>(paddleU.y - (paddleU.height / 2.0f)),
         this->paddleU.width,
-        this->paddleU.height};
+        this->paddleU.height
+      };
       return myPaddle;
   }
   void Game::drawPaddleU(SDL_Rect myPaddle)
@@ -232,10 +299,10 @@ void Game::GenerateOutput()
   SDL_RenderFillRect(this->mRenderer, &wall_bottom);
 
   SDL_Rect ball{
-      static_cast<int>(mBallPos.x - this->thickness / 2),
-      static_cast<int>(mBallPos.y - this->thickness / 2),
-      this->thickness,
-      this->thickness};
+      static_cast<int>(gameBall.x - (gameBall.width / 2.0f)),
+      static_cast<int>(gameBall.y - (gameBall.height / 2.0f)),
+      gameBall.width,
+      gameBall.height};
   SDL_RenderFillRect(this->mRenderer, &ball);
 
 
