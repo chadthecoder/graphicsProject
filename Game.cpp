@@ -35,7 +35,7 @@ bool Game::Initialize()
   this->thickness = this->screenWidth / 100;
   this->paddleHeight = this->thickness * 6;
   this->paddleU.height = paddleHeight;
-  this->paddleWidth = this->thickness*5.0f;
+  this->paddleWidth = this->thickness;
   this->paddleU.width = this->paddleWidth;
 
 /* Making it fullscreen only is the only non complicated way   *
@@ -206,7 +206,7 @@ bool Game::UpdateGame()
 
 
   if(gameBall.collidesWith(paddleU))
-  {
+  { 
     //gameBall.xVelocity *= -1;
   }
 

@@ -90,6 +90,14 @@ struct Ball
 
       if(test1 && test2 && test3 && test4)
       {
+        if(this->x+this->width/2.0f >= paddle.x-paddle.width/2.0f || this->x-this->width/2.0f <= paddle.x+paddle.width/2.0f)
+        {
+          this->xVelocity *= -1;
+        }
+        else if(this->y+this->height/2.0f >= paddle.y-paddle.height/2.0f || this->y-this->height/2.0f <= paddle.y+paddle.height/2.0f)
+        {
+          this->yVelocity *= -1;
+        }
         std::cout << "collision\n";
         return true;
       }
