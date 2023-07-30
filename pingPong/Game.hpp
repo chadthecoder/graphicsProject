@@ -5,10 +5,12 @@
 #include "libsWin\glew\include\GL\glew.h"
 #include "libsWin\glfw\include\GLFW\glfw3.h"
 #include "libsWin\SDL2\i686-w64-mingw32\include\SDL2\SDL.h"
+#include "libsWin\SDL2_image-2.0.3\i686-w64-mingw32\include\SDL2\SDL_image.h"
 #else
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #endif
 
 #include <string>

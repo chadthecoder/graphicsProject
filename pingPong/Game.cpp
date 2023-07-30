@@ -2,6 +2,8 @@
 #include <iostream>
 //using namespace std;
 
+SDL_Texture* zText;
+
 Game::Game() : mIsRunning(true), mTicksCount(0), gameBall(1500.0f, 500.0f, -100.0f, 117.5f, 15, 15), leftPoints(0), rightPoints(0) {}
 
 void Game::centerVector2(Vector2 vec)
@@ -19,6 +21,10 @@ void Game::InitializeObjects()
   this->paddleU.height,
   0
   );
+
+  SDL_Surface* zSurface = IMG_Load("assets/zero.png");
+  zText = SDL_CreateTextureFromSurface(mRenderer, zSurface);
+  SDL_FreeSurface(zSurface);
 }
 
 bool Game::Initialize()
@@ -247,6 +253,8 @@ if (this->funny.direction != 0)
   return true;
 }
 
+
+
   Paddle Game::createPaddle(float xq, float yq, int widthq, int heightq, int directionq)
   {
     Paddle mPaddle;
@@ -342,9 +350,10 @@ void Game::GenerateOutput()
   SDL_Rect myPaddle = this->createPaddleU();
   this->drawPaddleU(myPaddle);
 
-  
   //this->funny.x += 5;
   this->drawPaddle(this->funny);
+
+  SDL_RenderCopy(mRenderer, zText, NULL, NULL);
 
   SDL_RenderPresent(this->mRenderer);
 }
