@@ -13,8 +13,8 @@ void Game::centerVector2(Vector2 vec)
 void Game::InitializeObjects()
 {
   this->funny = this->createPaddle(
-  400.0f,//static_cast<int>(paddleU.x - this->thickness / 2),
-  400.0f,//static_cast<int>(paddleU.y - this->thickness / 2),
+  this->screenWidth * 15 / 16,//static_cast<int>(paddleU.x - this->thickness / 2),
+  this->screenHeight / 2,//static_cast<int>(paddleU.y - this->thickness / 2),
   this->paddleU.width,
   this->paddleU.height,
   0
@@ -74,6 +74,9 @@ bool Game::Initialize()
   paddleU.x = this->screenWidth / 16;
   paddleU.y = this->screenHeight / 2;
 
+  //funny.x = this->screenWidth * 15 / 16;
+  //funny.y = this->screenHeight / 2;
+
   this->InitializeObjects();
 
   return true;
@@ -128,6 +131,18 @@ void Game::ProcessInput()
     if (state[SDL_SCANCODE_S])
     {
       this->paddleU.direction += 1;
+    }
+
+    //paddle2, funny
+    this->funny.direction = 0;
+    if (state[SDL_SCANCODE_I])
+    {
+      this->funny.direction -= 1;
+    }
+
+    if (state[SDL_SCANCODE_K])
+    {
+      this->funny.direction += 1;
     }
 }
 
@@ -204,8 +219,26 @@ bool Game::UpdateGame()
     this->paddleU.y += this->paddleU.direction * 300.0f * this->deltaTime;
   }
 
+if (this->funny.direction != 0)
+  {
+    if(this->funny.y < this->thickness)
+    {
+      this->funny.y = this->thickness;
+    }
+    else if(this->funny.y > (this->screenHeight - this->thickness - this->funny.height))
+    {
+      this->funny.y = this->screenHeight - this->thickness - this->funny.height;
+    }
+    this->funny.y += this->funny.direction * 300.0f * this->deltaTime;
+  }
+
 
   if(gameBall.collidesWith(paddleU))
+  { 
+    //gameBall.xVelocity *= -1;
+  }
+
+  if(gameBall.collidesWith(funny))
   { 
     //gameBall.xVelocity *= -1;
   }
@@ -310,7 +343,7 @@ void Game::GenerateOutput()
   this->drawPaddleU(myPaddle);
 
   
-  this->funny.x += 5;
+  //this->funny.x += 5;
   this->drawPaddle(this->funny);
 
   SDL_RenderPresent(this->mRenderer);
