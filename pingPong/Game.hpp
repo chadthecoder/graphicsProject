@@ -65,7 +65,42 @@ struct Ball
 
     bool collidesWith(Paddle paddle)
     {
-      bool test1 = false, test2 = false, test3 = false, test4 = false;
+
+      //new collision detection method?
+      //fix to work so mattter what side of the paddle it hits?
+    
+      // Did we intersect with the paddle?
+	float diff = paddle.y - this->y;
+	// Take absolute value of difference
+	diff = (diff > 0.0f) ? diff : -diff;
+	if (
+		// Our y-difference is small enough
+		diff <= paddle.height / 2.0f &&
+		// We are in the correct x-position, this needs changing to be able to work with any paddle as opposed to hard coding for every paddle
+		(
+      this->x <= paddle.x+(paddle.width/2) && this->x >= (paddle.x+(paddle.width/2)-5.0f)
+    ) &&
+		// The ball is moving to the left
+		this->xVelocity < 0.0f)
+	{
+		this->xVelocity *= -1.0f;
+	}
+  else if (
+		// Our y-difference is small enough
+		diff <= paddle.height / 2.0f &&
+		// We are in the correct x-position, this needs changing to be able to work with any paddle as opposed to hard coding for every paddle
+		(
+      this->x <= paddle.x-(paddle.width/2) && this->x >= (paddle.x-(paddle.width/2)-5.0f)
+    ) &&
+		// The ball is moving to the right
+		this->xVelocity > 0.0f)
+	{
+		this->xVelocity *= -1.0f;
+	}
+  
+
+    	//old collision detection way, find new way that works no matter what direction the ball hits the paddle?
+      /*bool test1 = false, test2 = false, test3 = false, test4 = false;
       if((paddle.x - (paddle.width/2.0f)) < (this->x + (this->width/2.0f)))
       {
         std::cout << "1 ";
@@ -107,6 +142,9 @@ struct Ball
       {
         return false;
       }
+      */
+      //temp placeholder to run
+      return false;
     }
 };
 
@@ -119,7 +157,6 @@ public:
   void Shutdown();
 
 private:
-  void InitializeObjects();
 
   void ProcessInput();
   bool UpdateGame();

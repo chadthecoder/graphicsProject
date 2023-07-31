@@ -12,20 +12,7 @@ void Game::centerVector2(Vector2 vec)
   vec.y = this->screenHeight / 2;
 }
 
-void Game::InitializeObjects()
-{
-  this->funny = this->createPaddle(
-  this->screenWidth * 15 / 16,//static_cast<int>(paddleU.x - this->thickness / 2),
-  this->screenHeight / 2,//static_cast<int>(paddleU.y - this->thickness / 2),
-  this->paddleU.width,
-  this->paddleU.height,
-  0
-  );
 
-  SDL_Surface* zSurface = IMG_Load("assets/zero.png");
-  zText = SDL_CreateTextureFromSurface(mRenderer, zSurface);
-  SDL_FreeSurface(zSurface);
-}
 
 bool Game::Initialize()
 {
@@ -83,7 +70,19 @@ bool Game::Initialize()
   //funny.x = this->screenWidth * 15 / 16;
   //funny.y = this->screenHeight / 2;
 
-  this->InitializeObjects();
+
+  //keep this and remove initalize objects function?
+  this->funny = this->createPaddle(
+  this->screenWidth * 15 / 16,//static_cast<int>(paddleU.x - this->thickness / 2),
+  this->screenHeight / 2,//static_cast<int>(paddleU.y - this->thickness / 2),
+  this->paddleU.width,
+  this->paddleU.height,
+  0
+  );
+
+  SDL_Surface* zSurface = IMG_Load("assets/zero.png");
+  zText = SDL_CreateTextureFromSurface(mRenderer, zSurface);
+  SDL_FreeSurface(zSurface);
 
   return true;
 }
@@ -339,13 +338,23 @@ void Game::GenerateOutput()
   SDL_RenderFillRect(this->mRenderer, &wall_top);
   SDL_RenderFillRect(this->mRenderer, &wall_bottom);
 
+  //create sdl rect for ball
   SDL_Rect ball{
       static_cast<int>(gameBall.x - (gameBall.width / 2.0f)),
       static_cast<int>(gameBall.y - (gameBall.height / 2.0f)),
       gameBall.width,
       gameBall.height};
+  //fill sdl rect info into render
   SDL_RenderFillRect(this->mRenderer, &ball);
 
+  /*//sdl drawing test
+  SDL_Rect ball2{
+      static_cast<int>(0),
+      static_cast<int>(0),
+      100,
+      100};
+  SDL_RenderFillRect(this->mRenderer, &ball2);
+  */
 
   SDL_Rect myPaddle = this->createPaddleU();
   this->drawPaddleU(myPaddle);
