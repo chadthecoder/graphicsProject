@@ -90,7 +90,8 @@ struct Ball
 		diff <= paddle.height / 2.0f &&
 		// We are in the correct x-position, this needs changing to be able to work with any paddle as opposed to hard coding for every paddle
 		(
-      this->x <= paddle.x-(paddle.width/2) && this->x >= (paddle.x-(paddle.width/2)-5.0f)
+      //this->x <= paddle.x-(paddle.width/2) && this->x >= (paddle.x-(paddle.width/2)-5.0f)
+      this->x >= paddle.x-(paddle.width/2) && this->x <= (paddle.x-(paddle.width/2)+5.0f)
     ) &&
 		// The ball is moving to the right
 		this->xVelocity > 0.0f)
