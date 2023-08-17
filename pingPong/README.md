@@ -15,5 +15,6 @@ sudo apt-get install libglfw3
 sudo apt-get install libglfw3-dev
 
 # Read Makefilw in order to install on Windows or Linux
-make linux
-make runLinux
+make lin
+make runLin
+make cleanLin
