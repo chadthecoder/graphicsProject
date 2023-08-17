@@ -13,3 +13,7 @@ Meant to be cross platform for Windows and Linux. Only works on Windows right no
 sudo apt-get install libglew-dev
 sudo apt-get install libglfw3
 sudo apt-get install libglfw3-dev
+
+# Read Makefilw in order to install on Windows or Linux
+make linux
+make runLinux
