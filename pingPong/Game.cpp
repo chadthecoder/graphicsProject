@@ -1,8 +1,8 @@
 #include "Game.hpp"
 #include <iostream>
-//using namespace std;
+// using namespace std;
 
-SDL_Texture* zText;
+SDL_Texture *zText;
 
 Game::Game() : mIsRunning(true), mTicksCount(0), gameBall(1500.0f, 500.0f, -100.0f, 117.5f, 15, 15), leftPoints(0), rightPoints(0) {}
 
@@ -11,8 +11,6 @@ void Game::centerVector2(Vector2 vec)
   vec.x = this->screenWidth / 2;
   vec.y = this->screenHeight / 2;
 }
-
-
 
 bool Game::Initialize()
 {
@@ -31,8 +29,8 @@ bool Game::Initialize()
   this->paddleWidth = this->thickness;
   this->paddleU.width = this->paddleWidth;
 
-/* Making it fullscreen only is the only non complicated way   *
- * to make it look good on Ubuntu because of Ubuntu's top bar. */
+  /* Making it fullscreen only is the only non complicated way   *
+   * to make it look good on Ubuntu because of Ubuntu's top bar. */
   this->mWindow = SDL_CreateWindow(
       "Chapter 1",
       SDL_WINDOWPOS_CENTERED,
@@ -58,31 +56,27 @@ bool Game::Initialize()
     return false;
   }
 
-  //mBallPos.x = this->screenWidth / 2;
-  //mBallPos.y = this->screenHeight / 2;
-  //this->centerVector2(this->mBallPos);
+  // mBallPos.x = this->screenWidth / 2;
+  // mBallPos.y = this->screenHeight / 2;
+  // this->centerVector2(this->mBallPos);
   gameBall.x = this->screenWidth / 2;
   gameBall.y = this->screenHeight / 2;
 
   paddleU.x = this->screenWidth / 16;
   paddleU.y = this->screenHeight / 2;
 
-  //funny.x = this->screenWidth * 15 / 16;
-  //funny.y = this->screenHeight / 2;
+  // funny.x = this->screenWidth * 15 / 16;
+  // funny.y = this->screenHeight / 2;
 
-
-  //keep this and remove initalize objects function?
+  // keep this and remove initalize objects function?
   this->funny = this->createPaddle(
-  this->screenWidth * 15 / 16,//static_cast<int>(paddleU.x - this->thickness / 2),
-  this->screenHeight / 2,//static_cast<int>(paddleU.y - this->thickness / 2),
-  this->paddleU.width,
-  this->paddleU.height,
-  0
-  );
+      this->screenWidth * 15 / 16, // static_cast<int>(paddleU.x - this->thickness / 2),
+      this->screenHeight / 2,      // static_cast<int>(paddleU.y - this->thickness / 2),
+      this->paddleU.width,
+      this->paddleU.height,
+      0);
 
-  SDL_Surface* zSurface = IMG_Load("assets/zero.png");
-  zText = SDL_CreateTextureFromSurface(mRenderer, zSurface);
-  SDL_FreeSurface(zSurface);
+  // scorekeeper?
 
   return true;
 }
@@ -99,12 +93,20 @@ void Game::RunLoop()
   while (this->mIsRunning)
   {
     this->ProcessInput();
-    if(!this->UpdateGame())
+    if (!this->UpdateGame())
     {
       break;
     }
     this->GenerateOutput();
   }
+}
+
+void Game::UpdateScore()
+{
+  // this->leftPoints, this->rightPoints
+  SDL_Surface *zSurface = IMG_Load("assets/zero.png");
+  zText = SDL_CreateTextureFromSurface(mRenderer, zSurface);
+  SDL_FreeSurface(zSurface);
 }
 
 void Game::ProcessInput()
@@ -119,36 +121,36 @@ void Game::ProcessInput()
     }
   }
 
-    const Uint8 *state = SDL_GetKeyboardState(NULL);
-  
-    if (state[SDL_SCANCODE_ESCAPE])
-    {
-      mIsRunning = false;
-    }
+  const Uint8 *state = SDL_GetKeyboardState(NULL);
 
-    //paddle direction
-    this->paddleU.direction = 0;
-    if (state[SDL_SCANCODE_W])
-    {
-      this->paddleU.direction -= 1;
-    }
+  if (state[SDL_SCANCODE_ESCAPE])
+  {
+    mIsRunning = false;
+  }
 
-    if (state[SDL_SCANCODE_S])
-    {
-      this->paddleU.direction += 1;
-    }
+  // paddle direction
+  this->paddleU.direction = 0;
+  if (state[SDL_SCANCODE_W])
+  {
+    this->paddleU.direction -= 1;
+  }
 
-    //paddle2, funny
-    this->funny.direction = 0;
-    if (state[SDL_SCANCODE_I])
-    {
-      this->funny.direction -= 1;
-    }
+  if (state[SDL_SCANCODE_S])
+  {
+    this->paddleU.direction += 1;
+  }
 
-    if (state[SDL_SCANCODE_K])
-    {
-      this->funny.direction += 1;
-    }
+  // paddle2, funny
+  this->funny.direction = 0;
+  if (state[SDL_SCANCODE_I])
+  {
+    this->funny.direction -= 1;
+  }
+
+  if (state[SDL_SCANCODE_K])
+  {
+    this->funny.direction += 1;
+  }
 }
 
 bool Game::UpdateGame()
@@ -163,31 +165,31 @@ bool Game::UpdateGame()
     this->deltaTime = 0.05f;
   }
 
-  //if paddle hits sides of screen
-  if((gameBall.y >= (this->screenHeight - this->thickness)) && (gameBall.yVelocity > 0.0f))
+  // if paddle hits sides of screen
+  if ((gameBall.y >= (this->screenHeight - this->thickness)) && (gameBall.yVelocity > 0.0f))
   {
     gameBall.yVelocity *= -1;
   }
-  else if((gameBall.y <= this->thickness) && (gameBall.yVelocity < 0.0f))
+  else if ((gameBall.y <= this->thickness) && (gameBall.yVelocity < 0.0f))
   {
     gameBall.yVelocity *= -1;
   }
-  else if((gameBall.x <= this->thickness) && (gameBall.xVelocity < 0.0f))
+  else if ((gameBall.x <= this->thickness) && (gameBall.xVelocity < 0.0f))
   {
     this->rightPoints += 1;
     gameBall.x = this->screenWidth / 2;
     gameBall.y = this->screenHeight / 2;
-    //gameBall.xVelocity *= -1;
+    // gameBall.xVelocity *= -1;
   }
-  else if((gameBall.x >= (this->screenWidth - this->thickness)) && (gameBall.xVelocity > 0.0f))
+  else if ((gameBall.x >= (this->screenWidth - this->thickness)) && (gameBall.xVelocity > 0.0f))
   {
     this->leftPoints += 1;
     gameBall.x = this->screenWidth / 2;
     gameBall.y = this->screenHeight / 2;
-    //gameBall.xVelocity *= -1;
+    // gameBall.xVelocity *= -1;
   }
 
-  if(this->leftPoints == 7)
+  if (this->leftPoints == 7)
   {
     std::cout << "The left side wins!\n";
     /*
@@ -197,7 +199,7 @@ bool Game::UpdateGame()
     return false;
   }
 
-  if(this->rightPoints == 7)
+  if (this->rightPoints == 7)
   {
     std::cout << "The right side wins!\n";
     /*
@@ -207,93 +209,89 @@ bool Game::UpdateGame()
     return false;
   }
 
-  //update objects using deltaTime
+  // update objects using deltaTime
   this->gameBall.x += gameBall.xVelocity * this->deltaTime;
   this->gameBall.y += gameBall.yVelocity * this->deltaTime;
 
   if (this->paddleU.direction != 0)
   {
-    if(this->paddleU.y < this->thickness)
+    if (this->paddleU.y < this->thickness)
     {
       this->paddleU.y = this->thickness;
     }
-    else if(this->paddleU.y > (this->screenHeight - this->thickness - this->paddleU.height))
+    else if (this->paddleU.y > (this->screenHeight - this->thickness - this->paddleU.height))
     {
       this->paddleU.y = this->screenHeight - this->thickness - this->paddleU.height;
     }
     this->paddleU.y += this->paddleU.direction * 300.0f * this->deltaTime;
   }
 
-if (this->funny.direction != 0)
+  if (this->funny.direction != 0)
   {
-    if(this->funny.y < this->thickness)
+    if (this->funny.y < this->thickness)
     {
       this->funny.y = this->thickness;
     }
-    else if(this->funny.y > (this->screenHeight - this->thickness - this->funny.height))
+    else if (this->funny.y > (this->screenHeight - this->thickness - this->funny.height))
     {
       this->funny.y = this->screenHeight - this->thickness - this->funny.height;
     }
     this->funny.y += this->funny.direction * 300.0f * this->deltaTime;
   }
 
-
-  if(gameBall.collidesWith(paddleU))
-  { 
-    //gameBall.xVelocity *= -1;
+  if (gameBall.collidesWith(paddleU))
+  {
+    // gameBall.xVelocity *= -1;
   }
 
-  if(gameBall.collidesWith(funny))
-  { 
-    //gameBall.xVelocity *= -1;
+  if (gameBall.collidesWith(funny))
+  {
+    // gameBall.xVelocity *= -1;
   }
 
+  this->UpdateScore();
 
   return true;
 }
 
+Paddle Game::createPaddle(float xq, float yq, int widthq, int heightq, int directionq)
+{
+  Paddle mPaddle;
+  mPaddle.x = xq;
+  mPaddle.y = yq;
+  mPaddle.width = widthq;
+  mPaddle.height = heightq;
+  mPaddle.direction = directionq;
+  return mPaddle;
+}
 
+void Game::drawPaddle(Paddle mPaddle)
+{
+  SDL_Rect rectMPaddle{
+      static_cast<int>(mPaddle.x - (mPaddle.width / 2.0f)),
+      static_cast<int>(mPaddle.y - (mPaddle.height / 2.0f)),
+      mPaddle.width,
+      mPaddle.height};
+  SDL_RenderFillRect(this->mRenderer, &rectMPaddle);
+}
 
-  Paddle Game::createPaddle(float xq, float yq, int widthq, int heightq, int directionq)
-  {
-    Paddle mPaddle;
-    mPaddle.x = xq;
-    mPaddle.y = yq;
-    mPaddle.width = widthq;
-    mPaddle.height = heightq;
-    mPaddle.direction = directionq;
-    return mPaddle;
-  }
-
-  void Game::drawPaddle(Paddle mPaddle)
-  {
-    SDL_Rect rectMPaddle{
-        static_cast<int>(mPaddle.x - (mPaddle.width / 2.0f)),
-        static_cast<int>(mPaddle.y - (mPaddle.height / 2.0f)),
-        mPaddle.width,
-        mPaddle.height};
-    SDL_RenderFillRect(this->mRenderer, &rectMPaddle);
-  }
-
-  SDL_Rect Game::createPaddleU()
-  {
-      SDL_Rect myPaddle
-      {
-        static_cast<int>(paddleU.x - (paddleU.width / 2.0f)),
-        static_cast<int>(paddleU.y - (paddleU.height / 2.0f)),
-        this->paddleU.width,
-        this->paddleU.height
-      };
-      return myPaddle;
-  }
-  void Game::drawPaddleU(SDL_Rect myPaddle)
-  {
-    SDL_RenderFillRect(this->mRenderer, &myPaddle);
-  }
+SDL_Rect Game::createPaddleU()
+{
+  SDL_Rect myPaddle{
+      static_cast<int>(paddleU.x - (paddleU.width / 2.0f)),
+      static_cast<int>(paddleU.y - (paddleU.height / 2.0f)),
+      this->paddleU.width,
+      this->paddleU.height};
+  return myPaddle;
+}
+void Game::drawPaddleU(SDL_Rect myPaddle)
+{
+  SDL_RenderFillRect(this->mRenderer, &myPaddle);
+}
 
 void Game::GenerateOutput()
 {
-  //renderer, rgba; black
+  // renderer, rgba; black
   SDL_SetRenderDrawColor(
       this->mRenderer,
       0,
@@ -301,12 +299,12 @@ void Game::GenerateOutput()
       0,
       255);
 
-  //draw scene
+  // draw scene
 
-  //background
+  // background
   SDL_RenderClear(this->mRenderer);
 
-  //white for walls
+  // white for walls
   SDL_SetRenderDrawColor(
       this->mRenderer,
       255,
@@ -338,13 +336,13 @@ void Game::GenerateOutput()
   SDL_RenderFillRect(this->mRenderer, &wall_top);
   SDL_RenderFillRect(this->mRenderer, &wall_bottom);
 
-  //create sdl rect for ball
+  // create sdl rect for ball
   SDL_Rect ball{
       static_cast<int>(gameBall.x - (gameBall.width / 2.0f)),
       static_cast<int>(gameBall.y - (gameBall.height / 2.0f)),
       gameBall.width,
       gameBall.height};
-  //fill sdl rect info into render
+  // fill sdl rect info into render
   SDL_RenderFillRect(this->mRenderer, &ball);
 
   /*//sdl drawing test
@@ -359,7 +357,7 @@ void Game::GenerateOutput()
   SDL_Rect myPaddle = this->createPaddleU();
   this->drawPaddleU(myPaddle);
 
-  //this->funny.x += 5;
+  // this->funny.x += 5;
   this->drawPaddle(this->funny);
 
   SDL_RenderCopy(mRenderer, zText, NULL, NULL);
