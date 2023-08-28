@@ -178,7 +178,7 @@ private:
   float deltaTime;
   bool mIsRunning;
   int screenHeight, screenWidth, thickness, paddleWidth, paddleHeight;
-  int testyFunny = 400, leftPoints, rightPoints;
+  int testyFunny = 400, leftPoints = 0, rightPoints = 0;
   SDL_Rect rectScoreLine;
 };
 

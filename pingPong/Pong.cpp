@@ -133,11 +133,15 @@ void Pong::RunLoop()
 void Pong::UpdateScore()
 {
   // this->leftPoints, this->rightPoints
-  SDL_Surface *surfaceLeftScore = IMG_Load("assets/imgs/num0.png");
+
+  std::string fileLeft = "assets/imgs/num" + std::to_string(this->leftPoints) + ".png";
+  std::string fileRight = "assets/imgs/num" + std::to_string(this->rightPoints) + ".png";
+
+  SDL_Surface *surfaceLeftScore = IMG_Load(fileLeft.c_str());
   textLeftScore = SDL_CreateTextureFromSurface(mRenderer, surfaceLeftScore);
   SDL_FreeSurface(surfaceLeftScore);
 
-  SDL_Surface *surfaceRightScore = IMG_Load("assets/imgs/num1.png");
+  SDL_Surface *surfaceRightScore = IMG_Load(fileRight.c_str());
   textRightScore = SDL_CreateTextureFromSurface(mRenderer, surfaceRightScore);
   SDL_FreeSurface(surfaceRightScore);
 }
@@ -198,7 +202,7 @@ bool Pong::UpdateGame()
     this->deltaTime = 0.05f;
   }
 
-  // if paddle hits sides of screen
+  // if paddle collides with side of screen, collision detection
   if ((gameBall.y >= (this->screenHeight - this->thickness)) && (gameBall.yVelocity > 0.0f))
   {
     gameBall.yVelocity *= -1;
@@ -222,6 +226,7 @@ bool Pong::UpdateGame()
     // gameBall.xVelocity *= -1;
   }
 
+  // game over because one side has 7 points
   if (this->leftPoints == 7)
   {
     std::cout << "The left side wins!\n";
