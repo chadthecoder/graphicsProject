@@ -21,9 +21,9 @@ libsWin = $(includeDepsWin) $(linkingDepsWin) $(linksWin)
 
 libsLin = $(includeDepsLin) $(linkingDepsLin) $(linksLin)
 
-dotOWin = windows/main.o windows/Game.o
+dotOWin = windows/main.o windows/$(gameName).o
 
-dotOLin = linux/main.o linux/Game.o
+dotOLin = linux/main.o linux/$(gameName).o
 
 iconO = windows/windows.res
 
@@ -38,8 +38,8 @@ win: $(dotOWin)
 windows/main.o: main.cpp
 	$(cc) -c main.cpp -o windows/main.o
 
-windows/Game.o: Game.cpp
-	$(cc) -c Game.cpp -o windows/Game.o
+windows/$(gameName).o: $(gameName).cpp
+	$(cc) -c $(gameName).cpp -o windows/$(gameName).o
 
 runWin:
 	"windows/$(gameName)"
@@ -50,8 +50,8 @@ lin: $(dotOLin)
 linux/main.o: main.cpp
 	$(cc) -c main.cpp -o linux/main.o
 
-linux/Game.o: Game.cpp
-	$(cc) -c Game.cpp -o linux/Game.o
+linux/$(gameName).o: $(gameName).cpp
+	$(cc) -c $(gameName).cpp -o linux/$(gameName).o
 
 runLin:
 	./linux/"$(gameName)"

@@ -1,18 +1,19 @@
-#include "Game.hpp"
+#include "Pong.hpp"
 #include <iostream>
 // using namespace std;
 
-SDL_Texture *zText;
+SDL_Texture *textLeftScore, *textRightScore;
+SDL_Rect rectLeftSrc, rectRightSrc, rectDest;
 
-Game::Game() : mIsRunning(true), mTicksCount(0), gameBall(1500.0f, 500.0f, -100.0f, 117.5f, 15, 15), leftPoints(0), rightPoints(0) {}
+Pong::Pong() : mIsRunning(true), mTicksCount(0), gameBall(1500.0f, 500.0f, -100.0f, 117.5f, 15, 15), leftPoints(0), rightPoints(0) {}
 
-void Game::centerVector2(Vector2 vec)
+void Pong::centerVector2(Vector2 vec)
 {
   vec.x = this->screenWidth / 2;
   vec.y = this->screenHeight / 2;
 }
 
-bool Game::Initialize()
+bool Pong::Initialize()
 {
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
   {
@@ -90,17 +91,33 @@ bool Game::Initialize()
 
   // scorekeeper?
 
+  rectLeftSrc.h = 32;
+  rectLeftSrc.w = 32;
+  rectLeftSrc.x = 50;
+  rectLeftSrc.y = 50;
+
+  rectScoreLine = {
+      static_cast<int>(100),
+      static_cast<int>(65),
+      20,
+      5};
+
+  rectRightSrc.h = 32;
+  rectRightSrc.w = 32;
+  rectRightSrc.x = 130;
+  rectRightSrc.y = 50;
+
   return true;
 }
 
-void Game::Shutdown()
+void Pong::Shutdown()
 {
   SDL_DestroyRenderer(mRenderer);
   SDL_DestroyWindow(mWindow);
   SDL_Quit();
 }
 
-void Game::RunLoop()
+void Pong::RunLoop()
 {
   while (this->mIsRunning)
   {
@@ -109,19 +126,23 @@ void Game::RunLoop()
     {
       break;
     }
-    this->GenerateOutput();
+    this->Render();
   }
 }
 
-void Game::UpdateScore()
+void Pong::UpdateScore()
 {
   // this->leftPoints, this->rightPoints
-  SDL_Surface *zSurface = IMG_Load("assets/zero.png");
-  zText = SDL_CreateTextureFromSurface(mRenderer, zSurface);
-  SDL_FreeSurface(zSurface);
+  SDL_Surface *surfaceLeftScore = IMG_Load("assets/imgs/num0.png");
+  textLeftScore = SDL_CreateTextureFromSurface(mRenderer, surfaceLeftScore);
+  SDL_FreeSurface(surfaceLeftScore);
+
+  SDL_Surface *surfaceRightScore = IMG_Load("assets/imgs/num1.png");
+  textRightScore = SDL_CreateTextureFromSurface(mRenderer, surfaceRightScore);
+  SDL_FreeSurface(surfaceRightScore);
 }
 
-void Game::ProcessInput()
+void Pong::ProcessInput()
 {
   while (SDL_PollEvent(&this->event))
   {
@@ -165,7 +186,7 @@ void Game::ProcessInput()
   }
 }
 
-bool Game::UpdateGame()
+bool Pong::UpdateGame()
 {
   while (!SDL_TICKS_PASSED(SDL_GetTicks(), this->mTicksCount + 16))
     ;
@@ -266,7 +287,7 @@ bool Game::UpdateGame()
   return true;
 }
 
-Paddle Game::createPaddle(float xq, float yq, int widthq, int heightq, int directionq)
+Paddle Pong::createPaddle(float xq, float yq, int widthq, int heightq, int directionq)
 {
   Paddle mPaddle;
   mPaddle.x = xq;
@@ -277,7 +298,7 @@ Paddle Game::createPaddle(float xq, float yq, int widthq, int heightq, int direc
   return mPaddle;
 }
 
-void Game::drawPaddle(Paddle mPaddle)
+void Pong::drawPaddle(Paddle mPaddle)
 {
   SDL_Rect rectMPaddle{
       static_cast<int>(mPaddle.x - (mPaddle.width / 2.0f)),
@@ -287,7 +308,7 @@ void Game::drawPaddle(Paddle mPaddle)
   SDL_RenderFillRect(this->mRenderer, &rectMPaddle);
 }
 
-SDL_Rect Game::createPaddleU()
+SDL_Rect Pong::createPaddleU()
 {
   SDL_Rect myPaddle{
       static_cast<int>(paddleU.x - (paddleU.width / 2.0f)),
@@ -296,12 +317,12 @@ SDL_Rect Game::createPaddleU()
       this->paddleU.height};
   return myPaddle;
 }
-void Game::drawPaddleU(SDL_Rect myPaddle)
+void Pong::drawPaddleU(SDL_Rect myPaddle)
 {
   SDL_RenderFillRect(this->mRenderer, &myPaddle);
 }
 
-void Game::GenerateOutput()
+void Pong::Render()
 {
   // renderer, rgba; black
   SDL_SetRenderDrawColor(
@@ -348,6 +369,8 @@ void Game::GenerateOutput()
   SDL_RenderFillRect(this->mRenderer, &wall_top);
   SDL_RenderFillRect(this->mRenderer, &wall_bottom);
 
+  SDL_RenderFillRect(this->mRenderer, &rectScoreLine);
+
   // create sdl rect for ball
   SDL_Rect ball{
       static_cast<int>(gameBall.x - (gameBall.width / 2.0f)),
@@ -372,7 +395,8 @@ void Game::GenerateOutput()
   // this->funny.x += 5;
   this->drawPaddle(this->funny);
 
-  SDL_RenderCopy(mRenderer, zText, NULL, NULL);
+  SDL_RenderCopy(mRenderer, textLeftScore, NULL, &rectLeftSrc);
+  SDL_RenderCopy(mRenderer, textRightScore, NULL, &rectRightSrc);
 
   SDL_RenderPresent(this->mRenderer);
 }

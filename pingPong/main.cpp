@@ -2,11 +2,11 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "Game.hpp"
+#include "Pong.hpp"
 
 int main(int argc, char *argv[])
 {
-  Game game;
+  Pong game;
 
   bool success = game.Initialize();
   if (success)

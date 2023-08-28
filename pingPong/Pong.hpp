@@ -1,5 +1,5 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef PONG_H
+#define PONG_H
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 #include "libsWin\glew\include\GL\glew.h"
@@ -146,10 +146,10 @@ struct Ball
   }
 };
 
-class Game
+class Pong
 {
 public:
-  Game();
+  Pong();
   bool Initialize();
   void RunLoop();
   void Shutdown();
@@ -157,7 +157,7 @@ public:
 private:
   void ProcessInput();
   bool UpdateGame();
-  void GenerateOutput();
+  void Render();
   void UpdateScore();
 
   void centerVector2(Vector2 vec);
@@ -179,6 +179,7 @@ private:
   bool mIsRunning;
   int screenHeight, screenWidth, thickness, paddleWidth, paddleHeight;
   int testyFunny = 400, leftPoints, rightPoints;
+  SDL_Rect rectScoreLine;
 };
 
 #endif
