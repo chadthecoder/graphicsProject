@@ -32,7 +32,7 @@ bool Game::Initialize()
   /* Making it fullscreen only is the only non complicated way   *
    * to make it look good on Ubuntu because of Ubuntu's top bar. */
   this->mWindow = SDL_CreateWindow(
-      "Pong Game",
+      "Chapter 1",
       SDL_WINDOWPOS_CENTERED,
       SDL_WINDOWPOS_CENTERED,
       this->screenWidth,
@@ -44,18 +44,6 @@ bool Game::Initialize()
     SDL_Log("Error: %s", SDL_GetError());
     return false;
   }
-
-  // make window icon
-  SDL_Surface *icon = IMG_Load("pongIcon.png");
-
-  if (!icon)
-  {
-    std::cout << "icon failed/n" << std::endl;
-    // return error? or should be break?
-    return 1;
-  }
-
-  SDL_SetWindowIcon(mWindow, icon);
 
   mRenderer = SDL_CreateRenderer(
       this->mWindow,

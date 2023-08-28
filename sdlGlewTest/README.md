@@ -1,6 +1,6 @@
 # graphicsProject
 
-Graphics project using SDL2, OPENGL, GLFW, GLEW, and GLM. Following multiple tutorials to learn how to code graphics in C++.
+Graphics project using SDL2 and OPENGL with GLEW. Following multiple tutorials to learn how to code graphics in C++.
 
 Meant to be cross platform for Windows and Linux. Only works on Windows right now.
 
@@ -16,11 +16,16 @@ Game Programming in C++ by Sanjay Madhav
 # install packages on ubunbtu
 
 sudo apt-get install libglew-dev
-sudo apt-get install libglfw3
-sudo apt-get install libglfw3-dev
+sudo apt install libsdl2-dev libsdl2-2.0-0 -y
 
-# Read Makefilw in order to install on Windows or Linux
+# Read Makefilw in order to install on Linux
 
 make lin
 make runLin
 make cleanLin
+
+# Read Makefilw in order to install on Windows
+
+make win
+make runWin
+make cleanWin

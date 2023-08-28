@@ -1,13 +1,13 @@
 cc = g++
 
-gameName = Pong
-
 main = main.cpp
+
+# need to add to linksWin?
+openGL = -lGLEW -lglfw -lGL 
 
 linksWin = -lglew32 -lglfw3 -lgdi32 -lopengl32 -lmingw32 -lSDL2main -lSDL2 -lSDL2_image
 
-linksLin = -lSDL2main -lSDL2 -lSDL2_image
-fun = -lGLEW -lglfw -lGL 
+linksLin = -lSDL2main -lSDL2 -lSDL2_image $(openGL)
 
 includeDepsWin = -I "libsWin\glew\include" -I "libsWin\glfw\include" -I "libsWin\SDL2\i686-w64-mingw32\include" -I "libsWin\SDL2_image-2.0.3\i686-w64-mingw32\include"
 
@@ -27,9 +27,9 @@ dotOLin = linux/main.o linux/Game.o
 
 iconO = windows/windows.res
 
-outputWin = -o "windows/$(gameName)"
+outputWin = -o "windows/Rocket League"
 
-outputLin = -o "linux/$(gameName)"
+outputLin = -o "linux/Rocket League"
 
 win: $(dotOWin)
 	windres windows/windows.rc -O coff -o $(iconO)
@@ -42,7 +42,7 @@ windows/Game.o: Game.cpp
 	$(cc) -c Game.cpp -o windows/Game.o
 
 runWin:
-	"windows/$(gameName)"
+	"windows/Rocket League"
 
 lin: $(dotOLin)
 	$(cc) $(outputLin) $(dotOLin) $(libsLin)
@@ -54,7 +54,7 @@ linux/Game.o: Game.cpp
 	$(cc) -c Game.cpp -o linux/Game.o
 
 runLin:
-	./linux/"$(gameName)"
+	./linux/"Rocket League"
 
 cleanWin:
 	rm windows/*.o
@@ -62,4 +62,4 @@ cleanWin:
 
 cleanLin:
 	rm linux/*.o
-	rm linux/"$(gameName)"
+	rm linux/"Rocket League"
