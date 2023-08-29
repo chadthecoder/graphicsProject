@@ -1,5 +1,4 @@
-/linux/*
+/linux/*.o
+/linux/Pong
 /windows/*.exe
 /windows/*.o
-*.exe
-*.o
