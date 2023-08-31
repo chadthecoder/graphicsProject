@@ -33,10 +33,11 @@ int main(int argc, char *argv[])
         udp::socket socket(io_context);
         socket.open(udp::v4());
 
-while(true){
-
         boost::array<char, 1> send_buf = {{0}};
         socket.send_to(boost::asio::buffer(send_buf), receiver_endpoint);
+
+        // while (true)
+        //{
 
         boost::array<char, 128> recv_buf;
         udp::endpoint sender_endpoint;
@@ -44,8 +45,7 @@ while(true){
             boost::asio::buffer(recv_buf), sender_endpoint);
 
         std::cout.write(recv_buf.data(), len);
-}
-
+        //}
     }
     catch (std::exception &e)
     {
