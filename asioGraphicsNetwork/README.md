@@ -1,12 +1,10 @@
 # graphicsProject
 
-Graphics project using SDL2 and OPENGL with GLEW. Following multiple tutorials to learn how to code graphics in C++.
+Graphics project using SDL2, OPENGL with GLEW, and ASIO. Following multiple tutorials to learn how to code graphics in C++.
 
-Meant to be cross platform for Windows and Linux. Only works on Windows right now.
+Meant to be cross platform for Windows and Linux. Only tested on Linux right now.
 
 # Resources:
-
-pong icon by Icons8 (icons8.com)
 
 https://www.codeproject.com/Articles/1264257/Socket-Programming-in-Cplusplus-using-boost-asio-T
 
