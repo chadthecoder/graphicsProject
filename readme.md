@@ -1,4 +1,4 @@
-# Graphics Project with SDL2, OpenGL, GLEW, and GLM
+# Graphics Project with SDL2, ASIO, OpenGL using GLEW, and GLM
 
 This is a graphics project written in C++ that utilizes SDL2 and OpenGL using GLEW and GLM libraries to create graphical applications. The project aims to provide a starting point for learning graphics programming in C++.
 
