@@ -4,7 +4,7 @@ ip = 127.0.0.1
 
 both: $(dotO)
 	$(cc) client.cpp -o bin/client -Iasio-1.28.0/include -DASIO_STANDALONE=1
-	$(cc) server.cpp -o bin/server
+	$(cc) server.cpp -o bin/server -Iasio-1.28.0/include -DASIO_STANDALONE=1
 
 runServer:
 	sudo bin/server
