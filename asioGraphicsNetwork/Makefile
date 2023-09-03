@@ -3,7 +3,7 @@ cc = g++
 ip = 127.0.0.1
 
 both: $(dotO)
-	$(cc) client.cpp -o bin/client
+	$(cc) client.cpp -o bin/client -Iasio-1.28.0/include -DASIO_STANDALONE=1
 	$(cc) server.cpp -o bin/server
 
 runServer:
@@ -14,6 +14,5 @@ runClient:
 	bin/client $(ip)
 
 clean:
-	rm bin/*.o
 	rm bin/client
 	rm bin/server
