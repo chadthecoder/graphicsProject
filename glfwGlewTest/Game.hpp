@@ -8,9 +8,9 @@
 #include "libsWin\SDL2_image-2.0.3\i686-w64-mingw32\include\SDL2\SDL_image.h"
 #else
 #include <GL/glew.h>
-// #include <GLFW/glfw3.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+#include <GLFW/glfw3.h>
+// #include <SDL2/SDL.h>
+// #include <SDL2/SDL_image.h>
 #endif
 
 #include <string>
@@ -165,16 +165,16 @@ private:
   Paddle createPaddle(float x, float y, int width, int height, int direction);
   void drawPaddle(Paddle mPaddle);
 
-  SDL_Rect createPaddleU();
-  void drawPaddleU(SDL_Rect myPaddle);
+  // SDL_Rect createPaddleU();
+  // void drawPaddleU(SDL_Rect myPaddle);
 
-  SDL_Window *mWindow;
-  SDL_Renderer *mRenderer;
+  // SDL_Window *mWindow;
+  // SDL_Renderer *mRenderer;
   Paddle paddleU, funny;
   Ball gameBall;
-  Uint32 mTicksCount;
-  SDL_DisplayMode DM;
-  SDL_Event event;
+  // Uint32 mTicksCount;
+  //  SDL_DisplayMode DM;
+  //  SDL_Event event;
   float deltaTime;
   bool mIsRunning;
   int screenHeight, screenWidth, thickness, paddleWidth, paddleHeight;
