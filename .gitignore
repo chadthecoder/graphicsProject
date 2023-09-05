@@ -1,3 +1,2 @@
-/bin
-*.exe
-*.o
+glfwGlewTest/linux/*.o
+glfwGlewTest/linux/*.o

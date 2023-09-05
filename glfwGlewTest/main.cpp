@@ -31,6 +31,9 @@ int main(void)
 
     std::cout << glGetString(GL_VERSION) << "\n";
 
+    float move = -0.49f;
+    int frame = 1;
+
     float positions[6] = {
         -0.5f,
         -0.5f,
@@ -42,13 +45,10 @@ int main(void)
     unsigned int buffer;
     glGenBuffers(1, &buffer);
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);
+    // glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
-
-    // float move = -0.49f;
-    // int frame = 1;
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
