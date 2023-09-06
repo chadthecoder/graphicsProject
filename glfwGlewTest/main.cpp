@@ -2,10 +2,45 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <fstream>
+#include <sstream>
+#include <string>
 
-static void ParseShader(const std::string &filepath)
+struct ShaderProgramSource
 {
-    std::ifstream stream();
+    std::string VertexSource;
+    std::string FragmentSource;
+};
+
+static ShaderProgramSource ParseShader(const std::string &filepath)
+{
+
+    enum class ShaderType
+    {
+        NONE = -1,
+        VERTEX = 0,
+        FRAGMENT = 1
+    };
+
+    std::ifstream stream(filepath);
+    std::string line;
+    std::stringstream ss[2];
+    ShaderType type = ShaderType::NONE;
+
+    while (getline(stream, line))
+    {
+        if (line.find("#shader") != std::string::npos)
+        {
+            if (line.find("vertex") != std::string::npos)
+                type = ShaderType::VERTEX;
+            else if (line.find("fragment") != std::string::npos)
+                type = ShaderType::FRAGMENT;
+        }
+        else
+        {
+            ss[(int)type] << line << '\n';
+        }
+    }
+    return {ss[0].str(), ss[1].str()};
 }
 
 static unsigned int CompileShader(unsigned int type, const std::string &source)
@@ -60,7 +95,7 @@ int main(void)
     }
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(1366, 768, "Hello World", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -81,25 +116,32 @@ int main(void)
     // float move = -0.49f;
     // int frame = 1;
 
-    float positions[6] = {
-        -0.5f,
-        -0.5f,
-        0.0f,
-        0.5f,
-        0.5f,
-        -0.5f};
+    float positions[] =
+        {
+            -0.5f, -0.5f,
+            0.5f, -0.5f,
+            0.5f, 0.5f,
+
+            0.5f, 0.5f,
+            -0.5f, 0.5f,
+            -0.5f, -0.5f};
 
     unsigned int buffer;
     glGenBuffers(1, &buffer);
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 6 * 2 * sizeof(float), positions, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
 
-    // test
+    ShaderProgramSource source = ParseShader("res/shaders/Basic.shader");
 
-    unsigned int shader = CreateShader(vertexShader, fragmentShader);
+    std::cout << "VERTEX" << std::endl;
+    std::cout << source.VertexSource << std::endl;
+    std::cout << "FRAGMENT" << std::endl;
+    std::cout << source.FragmentSource << std::endl;
+
+    unsigned int shader = CreateShader(source.VertexSource, source.FragmentSource);
     glUseProgram(shader);
 
     /* Loop until the user closes the window */
