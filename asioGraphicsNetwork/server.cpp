@@ -33,13 +33,13 @@ public:
     {
         // this->io_context = io_context;
         io_context.run();
-        start_receive([this](const asio::error_code &ec, size_t len) {});
+        start_receive();
     }
 
 private:
     using state_ptr = std::shared_ptr<udp_server>;
     // start waiting for client to send
-    void start_receive(std::function<void(const asio::error_code &ec, size_t len)> handler)
+    void start_receive()
     {
         // other option to pass instead of asio::use_future
         //  asio::yield_context yield;
@@ -52,11 +52,13 @@ private:
                     asio::buffer(recBuff), remote_endpoint_,
                     handle_receive(iError1, recSize)); */
 
-        socket_.async_receive_from(asio::buffer(recBuff), remote_endpoint_, handler);
+        size_t len = socket_.receive_from(
+            asio::buffer(recBuff), remote_endpoint_);
+
         std::cout << "hi1" << std::endl;
 
-        asio::steady_timer t(io_context, asio::chrono::seconds(20));
-        t.wait();
+        // asio::steady_timer t(io_context, asio::chrono::seconds(20));
+        // t.wait();
 
         handle_receive(iError1, recSize);
     }
@@ -81,10 +83,7 @@ private:
                                                           iError2,
                                                           sizeDay)); */
 
-            std::future<std::size_t> my_future2 = socket_.async_send_to(
-                asio::buffer(day),
-                remote_endpoint_,
-                asio::use_future);
+            socket_.send_to(asio::buffer(day), remote_endpoint_);
 
             // my_future2.wait();
 
@@ -92,7 +91,7 @@ private:
 
             // start listening for another client send
             state_ptr s2;
-            start_receive([this](const asio::error_code &ec, size_t len) {});
+            start_receive();
         }
     }
 
