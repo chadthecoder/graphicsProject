@@ -87,6 +87,7 @@ static unsigned int CreateShader(const std::string &vertexShader, const std::str
 int main(void)
 {
     GLFWwindow *window;
+    // unsigned int gScaleLocation;
 
     /* Initialize the library */
     if (!glfwInit())
@@ -105,7 +106,7 @@ int main(void)
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
-    glfwSwapInterval(20);
+    glfwSwapInterval(10);
 
     // Init glew
     if (glewInit() != GLEW_OK)
@@ -153,6 +154,15 @@ int main(void)
     int location = glGetUniformLocation(shader, "u_Color");
     //  ASSERT(location != -1);
 
+    // gScaleLocation = glGetUniformLocation(shader, gScale);
+    unsigned int gScaleLocation = glGetUniformLocation(shader, "gScale");
+    static float Scale = 0.0f;
+    static float scaleDelta = 0.05f;
+
+    unsigned int incLocation = glGetUniformLocation(shader, "incLoc");
+    static float incLoc = 0.0f;
+    static float incDelta = 0.1f;
+
     // int location = glGetUniformLocation(shader, "u_Green");
     // glUniform1f(location, green); // red, green, blue, alpha);
 
@@ -162,7 +172,24 @@ int main(void)
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUniform4f(location, red, green, blue, alpha); // red, green, blue, alpha);
+        glUniform4f(location, red, green, blue, alpha);
+        // glUniform1f(location2, red, green, blue, alpha);
+
+        Scale += scaleDelta;
+        if ((Scale >= 1.0f) || (Scale <= -1.0f))
+        {
+            scaleDelta *= -1.0f;
+        }
+        glUniform1f(gScaleLocation, Scale);
+
+        incLoc += incDelta;
+        if ((incLoc >= 1.0f) || (incLoc <= -1.0f))
+        {
+            incDelta *= -1.0f;
+        }
+
+        glUniform1f(incLocation, incLoc);
+
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         if (green > 1.0f)
