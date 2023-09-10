@@ -155,11 +155,11 @@ int main(void)
     //  ASSERT(location != -1);
 
     // gScaleLocation = glGetUniformLocation(shader, gScale);
-    unsigned int gScaleLocation = glGetUniformLocation(shader, "gScale");
+    unsigned int gScaleLocation = glGetUniformLocation(shader, "u_gScale");
     static float Scale = 0.0f;
     static float scaleDelta = 0.05f;
 
-    unsigned int incLocation = glGetUniformLocation(shader, "incLoc");
+    unsigned int incLocation = glGetUniformLocation(shader, "u_incLoc");
     static float incLoc = 0.0f;
     static float incDelta = 0.1f;
 
