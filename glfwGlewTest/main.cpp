@@ -105,6 +105,8 @@ int main(void)
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
+    glfwSwapInterval(20);
+
     // Init glew
     if (glewInit() != GLEW_OK)
     {
@@ -144,14 +146,60 @@ int main(void)
     unsigned int shader = CreateShader(source.VertexSource, source.FragmentSource);
     glUseProgram(shader);
 
+    float red = 0.6f, green = 0.0f, blue = 0.6f, alpha = 1.0f;
+    //  change colors following the cherno video
+    float increment = 0.05f;
+    bool inc = true;
+    int location = glGetUniformLocation(shader, "u_Color");
+    //  ASSERT(location != -1);
+
+    // int location = glGetUniformLocation(shader, "u_Green");
+    // glUniform1f(location, green); // red, green, blue, alpha);
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
+        glUniform4f(location, red, green, blue, alpha); // red, green, blue, alpha);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
+        if (green > 1.0f)
+        {
+            increment = -0.05f;
+            std::cout << "dec\n";
+        }
+        else if (green < 0.0f)
+        {
+            increment = 0.05f;
+            std::cout << "inc\n";
+        }
+
+        green += increment;
+        std::cout << green << "\n";
+
+        /* if (inc == true)
+        {
+            if (green >= 1.0f)
+            {
+                inc = false;
+                green -= 0.05f;
+            }
+            green += 0.05f;
+            std::cout << green << " inc\n";
+        }
+        else
+        {
+            if (green <= 0.0f)
+            {
+                inc = true;
+                green += 0.05f;
+            }
+            green -= 0.05f;
+            std::cout << green << " dec\n";
+        }
+ */
         // using legacy opengl to draw a triangle with animation
         /*         if (move <= 0.49f)
                 {
