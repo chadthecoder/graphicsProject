@@ -35,8 +35,8 @@ win: $(dotOWin)
 	windres windows/windows.rc -O coff -o $(iconO)
 	$(cc) $(outputWin) $(dotOWin) $(iconO) $(libsWin)
 
-windows/main.o: main.cpp
-	$(cc) -c main.cpp -o windows/main.o
+windows/main.o: $(main)
+	$(cc) -c $(main) -o windows/main.o
 
 windows/Game.o: Game.cpp
 	$(cc) -c Game.cpp -o windows/Game.o
@@ -47,8 +47,8 @@ runWin:
 lin: $(dotOLin)
 	$(cc) $(outputLin) $(dotOLin) $(libsLin)
 
-linux/main.o: main.cpp
-	$(cc) -c main.cpp -o linux/main.o
+linux/main.o: $(main)
+	$(cc) -c $(main) -o linux/main.o
 
 #linux/Game.o: Game.cpp
 #	$(cc) -c Game.cpp -o linux/Game.o
