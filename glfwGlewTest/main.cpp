@@ -1,3 +1,5 @@
+//purposely induced error at ln 266, GL_INT instead of GL_UNSIGNED_INT
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -5,6 +7,7 @@
 #include <sstream>
 #include <string>
 #include <csignal>
+#include <functional>
 
 #define ASSERT(x){ if(!x)\
 raise(SIGTRAP); } //__builtin_debugtrap(); //instead of raise(SIGTRAP) for windows
@@ -14,11 +17,7 @@ static void GLClearError()
     while(glGetError() != GL_NO_ERROR);
 }
 
-#define GLCall(x) GLClearError();\
-    x;\
-    ASSERT(GLLogCall(#x, __FILE__, __LINE__));
-
-static bool GLLogCall(const char* function, const char* file, int line)
+static bool GLLogCall(int test, const char* file, int line)
 {
     while(GLenum error = glGetError())
     {
@@ -30,11 +29,62 @@ static bool GLLogCall(const char* function, const char* file, int line)
             << "\nError in Line: "
             <<  __LINE__
             << "\nError in Function: "
-            << function
+            << test
             << "\n\n";
         return false;
     }
     return true;
+}
+
+static bool GLLogCall(const char* func, const char* file, int line)
+{
+    while(GLenum error = glGetError())
+    {
+        std::cout << "GL Error(Hex: "
+            << std::hex
+            << error
+            << std::dec
+            << ")\nError in File: "
+            << file
+            << "\nError in Line: "
+            <<  line
+            << "\nError in Function: "
+            << func
+            << "\n\n";
+        return false;
+    }
+    return true;
+}
+
+static bool GLLogCall(const char* func)
+{
+    while(GLenum error = glGetError())
+    {
+        std::cout << "GL Error(Hex: "
+            << std::hex
+            << error
+            << std::dec
+            << ")\nError in File: "
+            << __FILE__
+            << "\nError in Line: "
+            <<  __LINE__
+            << "\nError in Function: "
+            << func
+            << "\n\n";
+        return false;
+    }
+    return true;
+}
+
+#define GLCall(x,y, z) GLClearError();\
+    x;\
+    ASSERT(GLLogCall(#x, y, z));
+
+int GLCall2(int test, const char* file, int line) //std::function<unsigned int(unsigned int, const char[])> func
+{
+    GLClearError();
+    ASSERT(GLLogCall(test, file, line));
+    return test;
 }
 
 struct ShaderProgramSource
@@ -175,9 +225,9 @@ int main(void)
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
 
     unsigned int ibo;
-    GLCall(glGenBuffers(1, &ibo));
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
-    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW));
+    GLCall(glGenBuffers(1, &ibo), __FILE__, __LINE__);
+    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo), __FILE__, __LINE__);
+    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW), __FILE__, __LINE__);
 
     ShaderProgramSource source = ParseShader("res/shaders/Basic.shader");
 
@@ -187,14 +237,14 @@ int main(void)
     std::cout << source.FragmentSource << std::endl;
 
     unsigned int shader = CreateShader(source.VertexSource, source.FragmentSource);
-    GLCall(glUseProgram(shader));
+    GLCall(glUseProgram(shader), __FILE__, __LINE__);
 
     float red = 0.6f, green = 0.0f, blue = 1.0f, alpha = 1.0f;
     //  change colors following the cherno video
     float incRed = -0.05f, incGreen = 0.05f;
     bool inc = true;
     int location;
-    location = glGetUniformLocation(shader, "u_Color");
+    location = GLCall2(glGetUniformLocation(shader, "u_Color"), __FILE__, __LINE__);
     //  ASSERT(location != -1);
 
     // gScaleLocation = glGetUniformLocation(shader, gScale);
@@ -215,9 +265,9 @@ int main(void)
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
-        GLCall(glClear(GL_COLOR_BUFFER_BIT));
+        GLCall(glClear(GL_COLOR_BUFFER_BIT), __FILE__, __LINE__);
 
-        GLCall(glUniform4f(location, red, green, blue, alpha));
+        GLCall(glUniform4f(location, red, green, blue, alpha), __FILE__, __LINE__);
         // glUniform1f(location2, red, green, blue, alpha);
 
         Scale += scaleDelta;
@@ -225,7 +275,7 @@ int main(void)
         {
             scaleDelta *= -1.0f;
         }
-        GLCall(glUniform1f(gScaleLocation, Scale));
+        GLCall(glUniform1f(gScaleLocation, Scale), __FILE__, __LINE__);
 
         incLoc += incDelta;
         if ((incLoc >= 1.0f) || (incLoc <= -1.0f))
@@ -233,10 +283,10 @@ int main(void)
             incDelta *= -1.0f;
         }
 
-        GLCall(glUniform1f(incLocation, incLoc));
+        GLCall(glUniform1f(incLocation, incLoc), __FILE__, __LINE__);
 
         //GLClearError();
-        GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+        GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr), __FILE__, __LINE__);
         //ASSERT(GLLogCall());
 
         //change green value
@@ -316,7 +366,7 @@ int main(void)
         glfwPollEvents();
     }
 
-    GLCall(glDeleteProgram(shader));
+    GLCall(glDeleteProgram(shader), __FILE__, __LINE__);
 
     glfwTerminate();
     return 0;
