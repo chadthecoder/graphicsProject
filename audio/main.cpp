@@ -2,6 +2,7 @@
 #include "res/cpp/miniaudio.h"
 
 #include <stdio.h>
+#include <iostream>
 
 int main(int argc, char **argv)
 {
@@ -23,8 +24,19 @@ int main(int argc, char **argv)
 
     ma_engine_play_sound(&engine, argv[1], NULL);
 
-    printf("Press Enter to quit...");
-    getchar();
+    //printf("Write play to play the sound or quit to quit...");
+    std::string ans;
+
+    while(1)
+    {
+        std::cout << "Write play to play the sound or quit to quit: ";
+        std::cin >> ans;
+        if(ans == "play") ma_engine_play_sound(&engine, argv[1], NULL);
+        else if(ans == "quit") break;
+        //else do go back in loop to cin
+    }
+
+    //getchar();
 
     ma_engine_uninit(&engine);
 
