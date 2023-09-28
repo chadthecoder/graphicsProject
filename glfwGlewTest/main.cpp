@@ -189,9 +189,9 @@ int main(void)
     unsigned int shader = CreateShader(source.VertexSource, source.FragmentSource);
     GLCall(glUseProgram(shader));
 
-    float red = 0.6f, green = 0.0f, blue = 0.6f, alpha = 1.0f;
+    float red = 0.6f, green = 0.0f, blue = 1.0f, alpha = 1.0f;
     //  change colors following the cherno video
-    float increment = 0.05f;
+    float incRed = -0.05f, incGreen = 0.05f;
     bool inc = true;
     int location;
     location = glGetUniformLocation(shader, "u_Color");
@@ -239,19 +239,35 @@ int main(void)
         GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
         //ASSERT(GLLogCall());
 
+        //change green value
         if (green > 1.0f)
         {
-            increment = -0.05f;
-            std::cout << "dec\n";
+            incGreen = -0.05f;
+            std::cout << "green dec\n";
         }
         else if (green < 0.0f)
         {
-            increment = 0.05f;
-            std::cout << "inc\n";
+            incGreen = 0.05f;
+            std::cout << "green inc\n";
         }
 
-        green += increment;
-        std::cout << green << "\n";
+        green += incGreen;
+        std::cout << "Green Value: " << green << "\n";
+
+        //change red color
+        if (red < 0.0f)
+        {
+            incRed = 0.05f;
+            std::cout << "red inc\n";
+        }
+        else if (red > 1.0f)
+        {
+            incRed = -0.05f;
+            std::cout << "red dec\n";
+        }
+
+        red += incRed;
+        std::cout << "Red Value: " << red << "\n";
 
         /* if (inc == true)
         {
