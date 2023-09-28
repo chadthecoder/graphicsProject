@@ -4,6 +4,38 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <csignal>
+
+#define ASSERT(x){ if(!x)\
+raise(SIGTRAP); } //__builtin_debugtrap(); //instead of raise(SIGTRAP) for windows
+
+static void GLClearError()
+{
+    while(glGetError() != GL_NO_ERROR);
+}
+
+#define GLCall(x) GLClearError();\
+    x;\
+    ASSERT(GLLogCall(#x, __FILE__, __LINE__));
+
+static bool GLLogCall(const char* function, const char* file, int line)
+{
+    while(GLenum error = glGetError())
+    {
+        std::cout << "GL Error(Hex: "
+            << std::hex
+            << error
+            << ")\nError in File: "
+            << __FILE__
+            << "\nError in Line: "
+            <<  __LINE__
+            << "\nError in Function: "
+            << function
+            << "\n\n";
+        return false;
+    }
+    return true;
+}
 
 struct ShaderProgramSource
 {
@@ -143,9 +175,9 @@ int main(void)
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
 
     unsigned int ibo;
-    glGenBuffers(1, &ibo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+    GLCall(glGenBuffers(1, &ibo));
+    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
+    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW));
 
     ShaderProgramSource source = ParseShader("res/shaders/Basic.shader");
 
@@ -155,21 +187,24 @@ int main(void)
     std::cout << source.FragmentSource << std::endl;
 
     unsigned int shader = CreateShader(source.VertexSource, source.FragmentSource);
-    glUseProgram(shader);
+    GLCall(glUseProgram(shader));
 
     float red = 0.6f, green = 0.0f, blue = 0.6f, alpha = 1.0f;
     //  change colors following the cherno video
     float increment = 0.05f;
     bool inc = true;
-    int location = glGetUniformLocation(shader, "u_Color");
+    int location;
+    location = glGetUniformLocation(shader, "u_Color");
     //  ASSERT(location != -1);
 
     // gScaleLocation = glGetUniformLocation(shader, gScale);
-    unsigned int gScaleLocation = glGetUniformLocation(shader, "u_gScale");
+    unsigned int gScaleLocation;
+    gScaleLocation = glGetUniformLocation(shader, "u_gScale");
     static float Scale = 0.0f;
     static float scaleDelta = 0.05f;
 
-    unsigned int incLocation = glGetUniformLocation(shader, "u_incLoc");
+    unsigned int incLocation;
+    incLocation = glGetUniformLocation(shader, "u_incLoc");
     static float incLoc = 0.0f;
     static float incDelta = 0.1f;
 
@@ -180,9 +215,9 @@ int main(void)
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+        GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
-        glUniform4f(location, red, green, blue, alpha);
+        GLCall(glUniform4f(location, red, green, blue, alpha));
         // glUniform1f(location2, red, green, blue, alpha);
 
         Scale += scaleDelta;
@@ -190,7 +225,7 @@ int main(void)
         {
             scaleDelta *= -1.0f;
         }
-        glUniform1f(gScaleLocation, Scale);
+        GLCall(glUniform1f(gScaleLocation, Scale));
 
         incLoc += incDelta;
         if ((incLoc >= 1.0f) || (incLoc <= -1.0f))
@@ -198,9 +233,11 @@ int main(void)
             incDelta *= -1.0f;
         }
 
-        glUniform1f(incLocation, incLoc);
+        GLCall(glUniform1f(incLocation, incLoc));
 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        //GLClearError();
+        GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+        //ASSERT(GLLogCall());
 
         if (green > 1.0f)
         {
@@ -263,7 +300,7 @@ int main(void)
         glfwPollEvents();
     }
 
-    glDeleteProgram(shader);
+    GLCall(glDeleteProgram(shader));
 
     glfwTerminate();
     return 0;
