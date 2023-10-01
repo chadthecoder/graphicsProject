@@ -177,6 +177,10 @@ int main(void)
         return -1;
     }
 
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
     /* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(1366, 768, "Hello World", NULL, NULL);
     if (!window)
@@ -215,6 +219,10 @@ int main(void)
     unsigned int indices[]{
         0, 1, 2,
         2, 3, 0};
+
+    //unsigned int vao;
+    //GLCall(glGenVertexArrays(1, &vao), __FILE__, __LINE__);
+    //GLCall(glBindVertexArray(vao), __FILE__, __LINE__);
 
     unsigned int buffer;
     glGenBuffers(1, &buffer);
