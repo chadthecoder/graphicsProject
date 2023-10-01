@@ -220,17 +220,17 @@ int main(void)
         0, 1, 2,
         2, 3, 0};
 
-    //unsigned int vao;
-    //GLCall(glGenVertexArrays(1, &vao), __FILE__, __LINE__);
-    //GLCall(glBindVertexArray(vao), __FILE__, __LINE__);
+    unsigned int vao;
+    GLCall(glGenVertexArrays(1, &vao), __FILE__, __LINE__);
+    GLCall(glBindVertexArray(vao), __FILE__, __LINE__);
 
     unsigned int buffer;
     glGenBuffers(1, &buffer);
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
     glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), positions, GL_STATIC_DRAW);
 
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
+    GLCall(glEnableVertexAttribArray(0), __FILE__, __LINE__);
+    GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0), __FILE__, __LINE__);
 
     unsigned int ibo;
     GLCall(glGenBuffers(1, &ibo), __FILE__, __LINE__);
@@ -249,7 +249,7 @@ int main(void)
 
     float red = 0.6f, green = 0.0f, blue = 1.0f, alpha = 1.0f;
     //  change colors following the cherno video
-    float incRed = -0.05f, incGreen = 0.05f;
+    float incRed = -0.05f, incGreen = 0.05f, incBlue = -0.05f;
     bool inc = true;
     int location;
     location = GLCall2(glGetUniformLocation(shader, "u_Color"), __FILE__, __LINE__);
@@ -269,13 +269,25 @@ int main(void)
     // int location = glGetUniformLocation(shader, "u_Green");
     // glUniform1f(location, green); // red, green, blue, alpha);
 
+    //test
+    GLCall(glBindVertexArray(0), __FILE__, __LINE__);
+    GLCall(glUseProgram(0), __FILE__, __LINE__);
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER,  0), __FILE__, __LINE__);
+    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0), __FILE__, __LINE__);
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
         GLCall(glClear(GL_COLOR_BUFFER_BIT), __FILE__, __LINE__);
 
+        //test
+        GLCall(glUseProgram(shader), __FILE__, __LINE__);
         GLCall(glUniform4f(location, red, green, blue, alpha), __FILE__, __LINE__);
+        
+        GLCall(glBindVertexArray(vao), __FILE__, __LINE__);
+        GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo), __FILE__, __LINE__);
+
         // glUniform1f(location2, red, green, blue, alpha);
 
         Scale += scaleDelta;
@@ -295,6 +307,7 @@ int main(void)
 
         //GLClearError();
         GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr), __FILE__, __LINE__);
+        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
         //ASSERT(GLLogCall());
 
         //change green value
@@ -311,6 +324,21 @@ int main(void)
 
         green += incGreen;
         std::cout << "Green Value: " << green << "\n";
+
+        //change blue value
+        if (blue < 0.0f)
+        {
+            incBlue = 0.05f;
+            std::cout << "blue inc\n";
+        }
+        else if (blue > 1.0f)
+        {
+            incBlue = -0.05f;
+            std::cout << "blue dec\n";
+        }
+
+        blue += incBlue;
+        std::cout << "Blue Value: " << blue << "\n";
 
         //change red color
         if (red < 0.0f)
