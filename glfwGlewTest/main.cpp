@@ -8,6 +8,9 @@
 #include <string>
 #include <csignal>
 #include <functional>
+#define STB_IMAGE_IMPLEMENTATION
+#include "res/cpp/stb_image.h"
+
 
 #define ASSERT(x){ if(!x)\
 raise(SIGTRAP); } //__builtin_debugtrap(); //instead of raise(SIGTRAP) for windows
@@ -290,6 +293,23 @@ int main(void)
     GLCall(glBindBuffer(GL_ARRAY_BUFFER,  0), __FILE__, __LINE__);
     GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0), __FILE__, __LINE__);
 
+    //texture, following victor gordon youtube, also has line in end to need uncomment, need to change buffers to add rest of code and in shader
+    /* int imgWidth, imgHeight, numColCh;
+    unsigned char* bytes = stbi_load("res/img/cpp.png", &imgWidth, &imgHeight, &numColCh, 0);
+    unsigned int texture;
+    glGenTextures(1, &texture);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imgWidth, imgHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, bytes);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    stbi_image_free(bytes);
+    glBindTexture(GL_TEXTURE_2D, 0); */
+
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
@@ -438,6 +458,9 @@ int main(void)
         glfwPollEvents();
     }
 
+    //victor gordon youtube, uncomment next line when done with other vertex buffer info
+    //glDeleteTextures(1, &texture);
+    
     GLCall(glDeleteProgram(shader), __FILE__, __LINE__);
 
     glfwTerminate();

@@ -5,9 +5,11 @@ main = main.cpp
 # need to add to linksWin?
 openGL = -lGLEW -lglfw -lGL 
 
+miniaudioLinks = -lpthread -lm -ldl
+
 linksWin = -lglew32 -lglfw3 -lgdi32 -lopengl32 -lmingw32
 
-linksLin = $(openGL)
+linksLin = $(openGL) $(miniaudioLinks)
 
 includeDepsWin = -I "libsWin\glew\include" -I "libsWin\glfw\include"
 
