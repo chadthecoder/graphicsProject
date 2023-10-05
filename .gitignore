@@ -1,2 +1,2 @@
-glfwGlewTest/linux/*.o
-glfwGlewTest/linux/"Rocket League"
+glfwGlewTest/bin/*.o
+glfwGlewTest/bin/"Rocket League"

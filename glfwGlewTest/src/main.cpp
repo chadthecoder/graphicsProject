@@ -1,97 +1,16 @@
-//purposely induced error at ln 266, GL_INT instead of GL_UNSIGNED_INT
-
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <csignal>
 #include <functional>
 #include <cmath>
-#define STB_IMAGE_IMPLEMENTATION
-#include "res/cpp/stb_image.h"
-#define MINIAUDIO_IMPLEMENTATION
-#include "res/cpp/miniaudio.h"
 
-
-#define ASSERT(x){ if(!x)\
-raise(SIGTRAP); } //__builtin_debugtrap(); //instead of raise(SIGTRAP) for windows
-
-static void GLClearError()
-{
-    while(glGetError() != GL_NO_ERROR);
-}
-
-static bool GLLogCall(int test, const char* file, int line)
-{
-    while(GLenum error = glGetError())
-    {
-        std::cout << "GL Error(Hex: "
-            << std::hex
-            << error
-            << ")\nError in File: "
-            << __FILE__
-            << "\nError in Line: "
-            <<  __LINE__
-            << "\nError in Function: "
-            << test
-            << "\n\n";
-        return false;
-    }
-    return true;
-}
-
-static bool GLLogCall(const char* func, const char* file, int line)
-{
-    while(GLenum error = glGetError())
-    {
-        std::cout << "GL Error(Hex: "
-            << std::hex
-            << error
-            << std::dec
-            << ")\nError in File: "
-            << file
-            << "\nError in Line: "
-            <<  line
-            << "\nError in Function: "
-            << func
-            << "\n\n";
-        return false;
-    }
-    return true;
-}
-
-static bool GLLogCall(const char* func)
-{
-    while(GLenum error = glGetError())
-    {
-        std::cout << "GL Error(Hex: "
-            << std::hex
-            << error
-            << std::dec
-            << ")\nError in File: "
-            << __FILE__
-            << "\nError in Line: "
-            <<  __LINE__
-            << "\nError in Function: "
-            << func
-            << "\n\n";
-        return false;
-    }
-    return true;
-}
-
-#define GLCall(x,y, z) GLClearError();\
-    x;\
-    ASSERT(GLLogCall(#x, y, z));
-
-int GLCall2(int test, const char* file, int line) //std::function<unsigned int(unsigned int, const char[])> func
-{
-    GLClearError();
-    ASSERT(GLLogCall(test, file, line));
-    return test;
-}
+#include "../include/Errors.hpp"
+#include "../include/VertexBuffer.hpp"
+#include "../include/IndexBuffer.hpp"
+#include "../include/Sound.hpp"
 
 bool cmpf(float A, float B, float epsilon = 0.005f)
 {
@@ -145,7 +64,7 @@ static unsigned int CompileShader(unsigned int type, const std::string &source)
 {
     unsigned int id = glCreateShader(type);
     const char *src = source.c_str();
-    glShaderSource(id, 1, &src, nullptr);
+    GLCall(glShaderSource(id, 1, &src, nullptr), __FILE__, __LINE__);
     glCompileShader(id);
 
     int result;
@@ -223,6 +142,9 @@ int main(void)
     // float move = -0.49f;
     // int frame = 1;
 
+    //temp scope to prevent errors
+    {
+
     float positions[] = {
         -0.5f,
         -0.5f, // 0
@@ -242,18 +164,13 @@ int main(void)
     GLCall(glGenVertexArrays(1, &vao), __FILE__, __LINE__);
     GLCall(glBindVertexArray(vao), __FILE__, __LINE__);
 
-    unsigned int buffer;
-    glGenBuffers(1, &buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), positions, GL_STATIC_DRAW);
+    //vertex buffer class
+    VertexBuffer vb(positions, 4 * 2 * sizeof(float));
 
     GLCall(glEnableVertexAttribArray(0), __FILE__, __LINE__);
     GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0), __FILE__, __LINE__);
 
-    unsigned int ibo;
-    GLCall(glGenBuffers(1, &ibo), __FILE__, __LINE__);
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo), __FILE__, __LINE__);
-    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW), __FILE__, __LINE__);
+    IndexBuffer ib(indices, 6);
 
     ShaderProgramSource source = ParseShader("res/shaders/Basic.shader");
 
@@ -317,17 +234,19 @@ int main(void)
     stbi_image_free(bytes);
     glBindTexture(GL_TEXTURE_2D, 0); */
 
-    ma_result sndResult;
-    ma_engine sndEngine;
+    //ma_result sndResult;
+    //ma_engine sndEngine;
 
-    sndResult = ma_engine_init(NULL, &sndEngine);
+    /* sndResult = ma_engine_init(NULL, &sndEngine);
     if (sndResult != MA_SUCCESS)
     {
         printf("Failed to initialize audio engine.");
         return -1;
-    }
+    } */
 
     //ma_engine_play_sound(&sndEngine, "res/snd/sound.mp3", NULL);    
+
+    Sound sndEngine;
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -361,7 +280,7 @@ int main(void)
         GLCall(glUniform2f(resolutionLocation, (float)resolutionWidth, (float)resolutionHeight), __FILE__, __LINE__);
         
         GLCall(glBindVertexArray(vao), __FILE__, __LINE__);
-        GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo), __FILE__, __LINE__);
+        ib.Bind();
 
         // glUniform1f(location2, red, green, blue, alpha);
 
@@ -372,7 +291,8 @@ int main(void)
         if ((Scale >= 1.0f) || (Scale <= -1.0f))
         {
             scaleDelta *= -1.0f;
-            ma_engine_play_sound(&sndEngine, "res/snd/sound.mp3", NULL);
+            //ma_engine_play_sound(&sndEngine, "res/snd/sound.mp3", NULL);
+            sndEngine.Play("res/snd/sound.mp3");
         }
         GLCall(glUniform1f(gScaleLocation, Scale), __FILE__, __LINE__);
 
@@ -486,7 +406,10 @@ int main(void)
     
     GLCall(glDeleteProgram(shader), __FILE__, __LINE__);
 
-    ma_engine_uninit(&sndEngine);
+    //ma_engine_uninit(&sndEngine);
+
+    //end of temp scope to prevent errors
+    }
 
     glfwTerminate();
     return 0;

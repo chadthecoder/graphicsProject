@@ -1,6 +1,8 @@
 cc = g++
 
-main = main.cpp
+programName = "openGL"
+
+main = src/main.cpp
 
 # need to add to linksWin?
 openGL = -lGLEW -lglfw -lGL 
@@ -25,13 +27,13 @@ libsLin = $(includeDepsLin) $(linkingDepsLin) $(linksLin)
 
 dotOWin = windows/main.o windows/Game.o
 
-dotOLin = linux/main.o #linux/Game.o
+dotOLin = bin/Links.o bin/Errors.o bin/VertexBuffer.o bin/IndexBuffer.o bin/Sound.o bin/main.o
 
 iconO = windows/windows.res
 
 outputWin = -o "windows/Rocket League"
 
-outputLin = -o "linux/Rocket League"
+outputLin = -o "bin/$(programName)"
 
 win: $(dotOWin)
 	windres windows/windows.rc -O coff -o $(iconO)
@@ -49,19 +51,31 @@ runWin:
 lin: $(dotOLin)
 	$(cc) $(outputLin) $(dotOLin) $(libsLin)
 
-linux/main.o: $(main)
-	$(cc) -c $(main) -o linux/main.o
+bin/main.o: $(main)
+	$(cc) -c $(main) -o bin/main.o
 
-#linux/Game.o: Game.cpp
-#	$(cc) -c Game.cpp -o linux/Game.o
+bin/Errors.o: src/Errors.cpp
+	$(cc) -c src/Errors.cpp -o bin/Errors.o
+
+bin/VertexBuffer.o: src/VertexBuffer.cpp
+	$(cc) -c src/VertexBuffer.cpp -o bin/VertexBuffer.o
+
+bin/IndexBuffer.o: src/IndexBuffer.cpp
+	$(cc) -c src/IndexBuffer.cpp -o bin/IndexBuffer.o
+
+bin/Sound.o: src/Sound.cpp
+	$(cc) -c src/Sound.cpp -o bin/Sound.o
+
+bin/Links.o: src/Links.cpp
+	$(cc) -c src/Links.cpp -o bin/Links.o
 
 runLin:
-	./linux/"Rocket League"
+	./bin/"$(programName)"
 
 cleanWin:
 	rm windows/*.o
 	rm windows/*.exe
 
 cleanLin:
-	rm linux/*.o
-	rm linux/"Rocket League"
+	rm bin/*.o
+	rm bin/"$(programName)"
