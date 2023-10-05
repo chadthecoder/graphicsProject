@@ -27,7 +27,7 @@ libsLin = $(includeDepsLin) $(linkingDepsLin) $(linksLin)
 
 dotOWin = windows/main.o windows/Game.o
 
-dotOLin = bin/Links.o bin/Errors.o bin/VertexBuffer.o bin/IndexBuffer.o bin/Sound.o bin/main.o
+dotOLin = bin/Links.o bin/Errors.o bin/VertexBuffer.o bin/IndexBuffer.o bin/VertexBufferLayout.o bin/VertexArray.o bin/Sound.o bin/main.o
 
 iconO = windows/windows.res
 
@@ -62,6 +62,12 @@ bin/VertexBuffer.o: src/VertexBuffer.cpp
 
 bin/IndexBuffer.o: src/IndexBuffer.cpp
 	$(cc) -c src/IndexBuffer.cpp -o bin/IndexBuffer.o
+
+bin/VertexBufferLayout.o: src/VertexBufferLayout.cpp
+	$(cc) -c src/VertexBufferLayout.cpp -o bin/VertexBufferLayout.o
+
+bin/VertexArray.o: src/VertexArray.cpp
+	$(cc) -c src/VertexArray.cpp -o bin/VertexArray.o
 
 bin/Sound.o: src/Sound.cpp
 	$(cc) -c src/Sound.cpp -o bin/Sound.o

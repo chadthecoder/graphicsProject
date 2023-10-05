@@ -11,6 +11,7 @@
 #include "../include/VertexBuffer.hpp"
 #include "../include/IndexBuffer.hpp"
 #include "../include/Sound.hpp"
+#include "../include/VertexArray.hpp"
 
 bool cmpf(float A, float B, float epsilon = 0.005f)
 {
@@ -164,11 +165,12 @@ int main(void)
     GLCall(glGenVertexArrays(1, &vao), __FILE__, __LINE__);
     GLCall(glBindVertexArray(vao), __FILE__, __LINE__);
 
-    //vertex buffer class
+    VertexArray va;
     VertexBuffer vb(positions, 4 * 2 * sizeof(float));
 
-    GLCall(glEnableVertexAttribArray(0), __FILE__, __LINE__);
-    GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0), __FILE__, __LINE__);
+    VertexBufferLayout layout;
+    layout.Push(GL_FLOAT, 2);
+    va.AddBuffer(vb, layout);
 
     IndexBuffer ib(indices, 6);
 
@@ -279,7 +281,8 @@ int main(void)
         //set shader window resolution
         GLCall(glUniform2f(resolutionLocation, (float)resolutionWidth, (float)resolutionHeight), __FILE__, __LINE__);
         
-        GLCall(glBindVertexArray(vao), __FILE__, __LINE__);
+        
+        va.Bind();
         ib.Bind();
 
         // glUniform1f(location2, red, green, blue, alpha);
