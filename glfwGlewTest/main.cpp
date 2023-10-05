@@ -8,8 +8,11 @@
 #include <string>
 #include <csignal>
 #include <functional>
+#include <cmath>
 #define STB_IMAGE_IMPLEMENTATION
 #include "res/cpp/stb_image.h"
+#define MINIAUDIO_IMPLEMENTATION
+#include "res/cpp/miniaudio.h"
 
 
 #define ASSERT(x){ if(!x)\
@@ -90,9 +93,14 @@ int GLCall2(int test, const char* file, int line) //std::function<unsigned int(u
     return test;
 }
 
+bool cmpf(float A, float B, float epsilon = 0.005f)
+{
+    return (fabs(A - B) < epsilon);
+}
+
 static void cursorPositionCallback(GLFWwindow *window, double xPos, double yPos)
 {
-    std::cout << xPos << " : " << yPos << "\n";
+    //std::cout << xPos << " : " << yPos << "\n";
 }
 
 struct ShaderProgramSource
@@ -309,6 +317,17 @@ int main(void)
     stbi_image_free(bytes);
     glBindTexture(GL_TEXTURE_2D, 0); */
 
+    ma_result sndResult;
+    ma_engine sndEngine;
+
+    sndResult = ma_engine_init(NULL, &sndEngine);
+    if (sndResult != MA_SUCCESS)
+    {
+        printf("Failed to initialize audio engine.");
+        return -1;
+    }
+
+    //ma_engine_play_sound(&sndEngine, "res/snd/sound.mp3", NULL);    
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -327,7 +346,7 @@ int main(void)
         //mouseX /= 800;
         //mouseY /= 600;
         //cout variables
-        std::cout << mouseX << " : " << mouseY << "\n";
+        //std::cout << mouseX << " : " << mouseY << "\n";
         //set shader mouse positions
         GLCall(glUniform2f(mouseLocation, (float)mouseX, (float)mouseY), __FILE__, __LINE__);
 
@@ -337,7 +356,7 @@ int main(void)
         //mouseX /= 800;
         //mouseY /= 600;
         //cout variables
-        std::cout << resolutionWidth << " : " << resolutionHeight << "\n";
+        //std::cout << resolutionWidth << " : " << resolutionHeight << "\n";
         //set shader window resolution
         GLCall(glUniform2f(resolutionLocation, (float)resolutionWidth, (float)resolutionHeight), __FILE__, __LINE__);
         
@@ -347,9 +366,13 @@ int main(void)
         // glUniform1f(location2, red, green, blue, alpha);
 
         Scale += scaleDelta;
+        //std::cout << "\n\n\n\n\n";
+        if(Scale <= -1.0f) std::cout << "\n\n\n\n\n\n\n\n\n hi \n\n\n\n\n\n\n\n"; //ma_engine_play_sound(&sndEngine, "res/snd/sound.mp3", NULL);
+        //std::cout <<  Scale << "\n\n\n\n\n";
         if ((Scale >= 1.0f) || (Scale <= -1.0f))
         {
             scaleDelta *= -1.0f;
+            ma_engine_play_sound(&sndEngine, "res/snd/sound.mp3", NULL);
         }
         GLCall(glUniform1f(gScaleLocation, Scale), __FILE__, __LINE__);
 
@@ -370,46 +393,46 @@ int main(void)
         if (green > 1.0f)
         {
             incGreen = -0.05f;
-            std::cout << "green dec\n";
+            //std::cout << "green dec\n";
         }
         else if (green < 0.0f)
         {
             incGreen = 0.05f;
-            std::cout << "green inc\n";
+            //std::cout << "green inc\n";
         }
 
         green += incGreen;
-        std::cout << "Green Value: " << green << "\n";
+        //std::cout << "Green Value: " << green << "\n";
 
         //change blue value
         if (blue < 0.0f)
         {
             incBlue = 0.05f;
-            std::cout << "blue inc\n";
+            //std::cout << "blue inc\n";
         }
         else if (blue > 1.0f)
         {
             incBlue = -0.05f;
-            std::cout << "blue dec\n";
+            //std::cout << "blue dec\n";
         }
 
         blue += incBlue;
-        std::cout << "Blue Value: " << blue << "\n";
+        //std::cout << "Blue Value: " << blue << "\n";
 
         //change red color
         if (red < 0.0f)
         {
             incRed = 0.05f;
-            std::cout << "red inc\n";
+            //std::cout << "red inc\n";
         }
         else if (red > 1.0f)
         {
             incRed = -0.05f;
-            std::cout << "red dec\n";
+            //std::cout << "red dec\n";
         }
 
         red += incRed;
-        std::cout << "Red Value: " << red << "\n";
+        //std::cout << "Red Value: " << red << "\n";
 
         /* if (inc == true)
         {
@@ -462,6 +485,8 @@ int main(void)
     //glDeleteTextures(1, &texture);
     
     GLCall(glDeleteProgram(shader), __FILE__, __LINE__);
+
+    ma_engine_uninit(&sndEngine);
 
     glfwTerminate();
     return 0;
