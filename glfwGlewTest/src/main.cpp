@@ -222,7 +222,7 @@ int main(void)
 
     //texture, following victor gordon youtube, also has line in end to need uncomment, need to change buffers to add rest of code and in shader
     /* int imgWidth, imgHeight, numColCh;
-    unsigned char* bytes = stbi_load("res/img/cpp.png", &imgWidth, &imgHeight, &numColCh, 0);
+    unsigned char* bytes = stbi_load("../res/img/cpp.png", &imgWidth, &imgHeight, &numColCh, 0);
     unsigned int texture;
     glGenTextures(1, &texture);
     glActiveTexture(GL_TEXTURE0);
