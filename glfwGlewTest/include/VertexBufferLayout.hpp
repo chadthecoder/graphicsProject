@@ -31,7 +31,7 @@ private:
     unsigned int m_Stride;
     std::vector<VertexBufferElement> m_Elements;
 public:
-    VertexBufferLayout() : m_Stride(0) {}
+    VertexBufferLayout();
     ~VertexBufferLayout();
 
     void Push(unsigned int type, unsigned int count);
