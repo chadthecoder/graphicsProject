@@ -95,6 +95,11 @@ void Shader::Unbind() const
     GLCall(glUseProgram(0), __FILE__, __LINE__);
 }
 
+void Shader::SetUniform1i(const std::string& name, int i0)
+{
+    GLCall(glUniform1i(GetUniformLocation(name), i0), __FILE__, __LINE__);
+}
+
 void Shader::SetUniform1f(const std::string& name, float f0)
 {
     GLCall(glUniform1f(GetUniformLocation(name), f0), __FILE__, __LINE__);
@@ -110,14 +115,14 @@ void Shader::SetUniform4f(const std::string &name, float f0, float f1, float f2,
     GLCall(glUniform4f(GetUniformLocation(name), f0, f1, f2, f3), __FILE__, __LINE__);
 }
 
-unsigned int Shader::GetUniformLocation(const std::string &name) 
+int Shader::GetUniformLocation(const std::string &name) 
 {
     if(m_UniformLocationCache.find(name) != m_UniformLocationCache.end())
     {
         return m_UniformLocationCache[name];
     }
 
-    unsigned int location = GLCall2(glGetUniformLocation(m_RendererID, name.c_str()), __FILE__, __LINE__);
+    int location = GLCall2(glGetUniformLocation(m_RendererID, name.c_str()), __FILE__, __LINE__);
     if(location == -1)
     {
         std::cout << "Warning: Uniform " << name << " doesn't exist!\n";

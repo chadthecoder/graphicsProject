@@ -14,6 +14,7 @@
 #include "../include/VertexArray.hpp"
 #include "../include/Shader.hpp"
 #include "../include/Renderer.hpp"
+#include "../include/Texture.hpp"
 
 bool cmpf(float A, float B, float epsilon = 0.005f)
 {
@@ -73,25 +74,30 @@ int main(void)
 
     float positions[] = {
         -0.5f,
-        -0.5f, // 0
+        -0.5f, 0.0f, 0.0f, // 0
         0.5f,
-        -0.5f, // 1
+        -0.5f, 1.0f, 0.0f, // 1
         0.5f,
-        0.5f, // 2
+        0.5f, 1.0f, 1.0f, // 2
         -0.5f,
-        0.5f, // 3
+        0.5f, 0.0f, 1.0f // 3
     };
 
     unsigned int indices[]{
         0, 1, 2,
         2, 3, 0};
 
+    GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), __FILE__, __LINE__);
+    GLCall(glEnable(GL_BLEND), __FILE__, __LINE__);
+
     //buffer and array stuff
 
+    int floatsPerVertex = 4;
     VertexArray va;
-    VertexBuffer vb(positions, 4 * 2 * sizeof(float));
+    VertexBuffer vb(positions, 4 * floatsPerVertex * sizeof(float));
 
     VertexBufferLayout layout;
+    layout.Push(GL_FLOAT, 2);
     layout.Push(GL_FLOAT, 2);
     va.AddBuffer(vb, layout);
 
@@ -102,6 +108,11 @@ int main(void)
     Shader shader("res/shaders/Basic.shader");
     shader.Bind();
 
+    //texture stuff, cpp logo
+    Texture texture("res/img/cpp.png");
+    texture.Bind();
+    shader.SetUniform1i("u_Texture", 0);
+
     //add get uniform locations from shader
     //better way to do multiple uniforms?
 
@@ -111,8 +122,8 @@ int main(void)
 
     shader.SetUniform4f("u_Color", red, green, blue, alpha);
 
-    static float Scale = 0.0f;
-    static float scaleDelta = 0.05f;
+    float Scale = 0.0f;
+    float scaleDelta = 0.05f;
     shader.SetUniform1f("u_gScale", Scale);
 
     static float incLoc = 0.0f;
@@ -155,14 +166,12 @@ int main(void)
         shader.SetUniform2f("u_resolution", resolutionWidth, resolutionHeight);
 
         Scale += scaleDelta;
-        //std::cout << "\n\n\n\n\n";
-        if(Scale <= -1.0f) std::cout << "\n\n\n\n\n\n\n\n\n hi \n\n\n\n\n\n\n\n"; //ma_engine_play_sound(&sndEngine, "res/snd/sound.mp3", NULL);
-        //std::cout <<  Scale << "\n\n\n\n\n";
-        if ((Scale >= 1.0f) || (Scale <= -1.0f))
+        if ((Scale > 1.0f) || (Scale < 0.0f))
         {
             scaleDelta *= -1.0f;
-            sndEngine.Play("res/snd/sound.mp3");
+            //sndEngine.Play("res/snd/sound.mp3");
         }
+        
         shader.SetUniform1f("u_gScale", Scale);
 
         incLoc += incDelta;
