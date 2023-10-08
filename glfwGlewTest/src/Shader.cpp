@@ -1,4 +1,4 @@
-#include "../include/Shader.hpp"
+#include "Shader.hpp"
 
 Shader::Shader(const std::string& filepath) : m_FilePath(filepath), m_RendererID(0)
 {
@@ -115,7 +115,12 @@ void Shader::SetUniform4f(const std::string &name, float f0, float f1, float f2,
     GLCall(glUniform4f(GetUniformLocation(name), f0, f1, f2, f3), __FILE__, __LINE__);
 }
 
-int Shader::GetUniformLocation(const std::string &name) 
+void Shader::SetUniformMat4f(const std::string &name, const glm::mat4& matrix)
+{
+     GLCall(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]), __FILE__, __LINE__);
+}
+
+int Shader::GetUniformLocation(const std::string &name)
 {
     if(m_UniformLocationCache.find(name) != m_UniformLocationCache.end())
     {

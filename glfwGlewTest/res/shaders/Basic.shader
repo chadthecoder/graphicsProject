@@ -8,11 +8,13 @@ uniform float u_gScale;
 uniform float u_incLoc;
 
 out vec2 v_texCoord;
-                               
+
+uniform mat4 u_MVP; //model view projection matrix, by multiplying with position, it shows in 4:3
+
 void main()
 {
     v_texCoord = texCoord;
-    gl_Position = vec4(u_gScale*position.x+u_incLoc, u_gScale*position.y, position.z, 1.0); // = position;
+    gl_Position = u_MVP * vec4(u_gScale*position.x+u_incLoc, u_gScale*position.y, position.z, 1.0); // = position;
 };
 
 #shader fragment
@@ -34,5 +36,5 @@ void main()
 
     vec4 texColor = texture(u_Texture, v_texCoord);
 
-    color = texColor; //vec4(mouseNormal.y, 0.0, mouseNormal.x, 1.0); //vec4(uv.x, 0.0, uv.y, 1.0); //u_Color; //vec4(0.6, 0.0, 0.6, 1.0); // purple
+    color = vec4(mouseNormal.y, 0.0, mouseNormal.x, 1.0); //texColor; //vec4(mouseNormal.y, 0.0, mouseNormal.x, 1.0); //vec4(uv.x, 0.0, uv.y, 1.0); //u_Color; //vec4(0.6, 0.0, 0.6, 1.0); // purple
 };

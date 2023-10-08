@@ -23,7 +23,8 @@
 #include "Shader.hpp"
 #include "Renderer.hpp"
 #include "Texture.hpp"
-//#include "glm"
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 bool cmpf(float A, float B, float epsilon = 0.005f)
 {
@@ -116,6 +117,11 @@ int main(void)
 
     Shader shader("res/shaders/Basic.shader");
     shader.Bind();
+
+    //model view projection matrix
+
+    glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+    shader.SetUniformMat4f("u_MVP", proj);
 
     //texture stuff, cpp logo
     Texture texture("res/img/cpp.png");

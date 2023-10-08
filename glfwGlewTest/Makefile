@@ -74,7 +74,7 @@ bin/VertexArray.o: src/VertexArray.cpp
 	$(cc) -c src/VertexArray.cpp -o bin/VertexArray.o
 
 bin/Shader.o: src/Shader.cpp
-	$(cc) -c src/Shader.cpp -o bin/Shader.o
+	$(cc) $(includes) -c src/Shader.cpp -o bin/Shader.o
 
 bin/Renderer.o: src/Renderer.cpp
 	$(cc) -c src/Renderer.cpp -o bin/Renderer.o
