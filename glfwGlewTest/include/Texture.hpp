@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../include/Renderer.hpp"
-#include "../include/stb_image.h"
+#include "Renderer.hpp"
+#include "stb/stb_image.h"
 
 class Texture
 {

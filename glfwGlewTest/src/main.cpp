@@ -7,14 +7,23 @@
 #include <functional>
 #include <cmath>
 
-#include "../include/Errors.hpp"
+/* #include "../include/Errors.hpp"
 #include "../include/VertexBuffer.hpp"
 #include "../include/IndexBuffer.hpp"
 #include "../include/Sound.hpp"
 #include "../include/VertexArray.hpp"
 #include "../include/Shader.hpp"
 #include "../include/Renderer.hpp"
-#include "../include/Texture.hpp"
+#include "../include/Texture.hpp" */
+#include "Errors.hpp"
+#include "VertexBuffer.hpp"
+#include "IndexBuffer.hpp"
+#include "Sound.hpp"
+#include "VertexArray.hpp"
+#include "Shader.hpp"
+#include "Renderer.hpp"
+#include "Texture.hpp"
+//#include "glm"
 
 bool cmpf(float A, float B, float epsilon = 0.005f)
 {

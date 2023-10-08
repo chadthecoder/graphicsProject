@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../include/miniaudio.h"
+#include "miniaudio/miniaudio.h"
 
 class Sound
 {

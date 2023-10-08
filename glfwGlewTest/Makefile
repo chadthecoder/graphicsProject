@@ -4,6 +4,8 @@ programName = "openGL"
 
 main = src/main.cpp
 
+includes = -Iinclude/
+
 # need to add to linksWin?
 openGL = -lGLEW -lglfw -lGL 
 
@@ -51,10 +53,10 @@ runWin:
 	"windows/Rocket League"
 
 lin: $(dotOLin)
-	$(cc) $(outputLin) $(dotOLin) $(libsLin)
+	$(cc) $(outputLin) $(dotOLin) $(libsLin) 
 
 bin/main.o: $(main)
-	$(cc) -c $(main) -o bin/main.o
+	$(cc) $(includes) -c $(main) -o bin/main.o
 
 bin/Errors.o: src/Errors.cpp
 	$(cc) -c src/Errors.cpp -o bin/Errors.o
@@ -84,7 +86,7 @@ bin/Sound.o: src/Sound.cpp
 	$(cc) -c src/Sound.cpp -o bin/Sound.o
 
 bin/Links.o: src/Links.cpp
-	$(cc) -c src/Links.cpp -o bin/Links.o
+	$(cc) $(includes) -c src/Links.cpp -o bin/Links.o
 
 runLin:
 	./bin/"$(programName)"
