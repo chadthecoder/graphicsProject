@@ -14,7 +14,9 @@ uniform mat4 u_MVP; //model view projection matrix, by multiplying with position
 void main()
 {
     v_texCoord = texCoord;
-    gl_Position = u_MVP * vec4(u_gScale*position.x+u_incLoc, u_gScale*position.y, position.z, 1.0); // = position;
+    vec4 tempPos = u_MVP * position;
+    vec4 tempPos2 = vec4(u_gScale*tempPos.x, u_gScale*tempPos.y, tempPos.z, tempPos.w);
+    gl_Position = vec4(tempPos2.x+u_incLoc, tempPos2.y, tempPos2.z, tempPos2.w);
 };
 
 #shader fragment

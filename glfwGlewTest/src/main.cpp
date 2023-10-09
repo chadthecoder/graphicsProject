@@ -52,8 +52,12 @@ int main(void)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE); //make so window is not resizable
 
     /* Create a windowed mode window and its OpenGL context */
+    GLFWmonitor* monitor = glfwGetPrimaryMonitor(); 
+    const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+    //window = glfwCreateWindow(mode->width, mode->height, "Hello World", glfwGetPrimaryMonitor(), NULL);
     window = glfwCreateWindow(800, 600, "Hello World", NULL, NULL);
     if (!window)
     {
@@ -80,17 +84,33 @@ int main(void)
     //temp scope to prevent errors
     {
 
+    //get shader from text
+
+    Shader shader("res/shaders/Basic.shader");
+    shader.Bind();
+    
+    //set shader uniform for resolution
+
+    int resolutionWidth, resolutionHeight;
+    shader.SetUniform2f("u_resolution", resolutionWidth, resolutionHeight);
+
+    //get window resolution from GLFW
+    shader.Bind();
+    glfwGetWindowSize(window, &resolutionWidth, &resolutionHeight);
+    shader.SetUniform2f("u_resolution", resolutionWidth, resolutionHeight);
+
     //positions and indices
 
     float positions[] = {
-        -0.5f,
-        -0.5f, 0.0f, 0.0f, // 0
-        0.5f,
-        -0.5f, 1.0f, 0.0f, // 1
-        0.5f,
-        0.5f, 1.0f, 1.0f, // 2
-        -0.5f,
-        0.5f, 0.0f, 1.0f // 3
+        (float)(resolutionWidth/4), (float)(resolutionWidth/4), 0.0f, 0.0f, // 0
+        (float)(3*resolutionWidth/4), (float)(resolutionWidth/4), 1.0f, 0.0f, // 1
+        (float)(3*resolutionWidth/4), (float)(3*resolutionWidth/4), 1.0f, 1.0f, // 2
+        (float)(resolutionWidth/4), (float)(3*resolutionWidth/4), 0.0f, 1.0f // 3
+
+        /* -0.5f, -0.5f, 0.0f, 0.0f, // 0
+        0.5f, -0.5f, 1.0f, 0.0f, // 1
+        0.5f, 0.5f, 1.0f, 1.0f, // 2
+        -0.5f, 0.5f, 0.0f, 1.0f // 3 */
     };
 
     unsigned int indices[]{
@@ -113,14 +133,10 @@ int main(void)
 
     IndexBuffer ib(indices, 6);
 
-    //get shader from text
-
-    Shader shader("res/shaders/Basic.shader");
-    shader.Bind();
-
     //model view projection matrix
 
-    glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+    shader.Bind();
+    glm::mat4 proj = glm::ortho(0.0f, (float)resolutionWidth, 0.0f, (float)resolutionHeight, -1.0f, 1.0f);
     shader.SetUniformMat4f("u_MVP", proj);
 
     //texture stuff, cpp logo
@@ -134,28 +150,28 @@ int main(void)
     float red = 0.6f, green = 0.0f, blue = 1.0f, alpha = 1.0f;
     float incRed = -0.05f, incGreen = 0.05f, incBlue = -0.05f;
     bool inc = true;
-
+    shader.Bind();
     shader.SetUniform4f("u_Color", red, green, blue, alpha);
 
     float Scale = 0.0f;
     float scaleDelta = 0.05f;
+    shader.Bind();
     shader.SetUniform1f("u_gScale", Scale);
 
     static float incLoc = 0.0f;
     static float incDelta = 0.1f;
+    shader.Bind();
     shader.SetUniform1f("u_incLoc", incLoc);
 
     double mouseX, mouseY;
+    shader.Bind();
     shader.SetUniform2f("u_mouse", mouseX, mouseY);
-
-    int resolutionWidth, resolutionHeight;
-    shader.SetUniform2f("u_resolution", resolutionWidth, resolutionHeight);
 
     //unbind stuff
     va.Unbind();
     vb.Unbind();
     ib.Unbind();
-    shader.Unbind();
+    //shader.Unbind();
 
     Renderer renderer;
 
@@ -170,18 +186,21 @@ int main(void)
 
         //test
         shader.Bind();
+
+        //get window resolution from GLFW
+        glfwGetWindowSize(window, &resolutionWidth, &resolutionHeight);
+        shader.SetUniform2f("u_resolution", resolutionWidth, resolutionHeight);
+        glm::mat4 proj = glm::ortho(0.0f, (float)resolutionWidth, 0.0f, (float)resolutionHeight, -1.0f, 1.0f);
+        shader.SetUniformMat4f("u_MVP", proj);
+
         shader.SetUniform4f("u_Color", red, green, blue, alpha);
 
         //get cursor position from GLFW
         glfwGetCursorPos(window, &mouseX, &mouseY);
         shader.SetUniform2f("u_mouse", mouseX, mouseY);
 
-        //get window resolution from GLFW
-        glfwGetWindowSize(window, &resolutionWidth, &resolutionHeight);
-        shader.SetUniform2f("u_resolution", resolutionWidth, resolutionHeight);
-
         Scale += scaleDelta;
-        if ((Scale > 1.0f) || (Scale < 0.0f))
+        if ((Scale > 0.5f) || (Scale < 0.0f))
         {
             scaleDelta *= -1.0f;
             //sndEngine.Play("res/snd/sound.mp3");
