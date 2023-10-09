@@ -36,6 +36,14 @@ static void cursorPositionCallback(GLFWwindow *window, double xPos, double yPos)
     //std::cout << xPos << " : " << yPos << "\n";
 }
 
+void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
+{
+    if(key == GLFW_KEY_ESCAPE)
+    {
+        glfwSetWindowShouldClose(window, GL_TRUE);
+    }
+}
+
 int main(void)
 {
     //glfw window and cursor stuff
@@ -66,6 +74,7 @@ int main(void)
     }
 
     glfwSetCursorPosCallback(window, cursorPositionCallback);
+    glfwSetKeyCallback(window, keyCallback);
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
@@ -137,7 +146,9 @@ int main(void)
 
     shader.Bind();
     glm::mat4 proj = glm::ortho(0.0f, (float)resolutionWidth, 0.0f, (float)resolutionHeight, -1.0f, 1.0f);
-    shader.SetUniformMat4f("u_MVP", proj);
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100, 0, 0));
+    glm::mat4 mvp = proj * view;
+    shader.SetUniformMat4f("u_MVP", mvp);
 
     //texture stuff, cpp logo
     Texture texture("res/img/cpp.png");
