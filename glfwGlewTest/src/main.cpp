@@ -65,8 +65,8 @@ int main(void)
     /* Create a windowed mode window and its OpenGL context */
     GLFWmonitor* monitor = glfwGetPrimaryMonitor(); 
     const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-    //window = glfwCreateWindow(mode->width, mode->height, "Hello World", glfwGetPrimaryMonitor(), NULL);
-    window = glfwCreateWindow(800, 600, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(mode->width, mode->height, "Hello World", glfwGetPrimaryMonitor(), NULL);
+    //window = glfwCreateWindow(800, 600, "Hello World", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -111,20 +111,39 @@ int main(void)
     //positions and indices
 
     float positions[] = {
-        (float)(resolutionWidth/4), (float)(resolutionWidth/4), 0.0f, 0.0f, // 0
+        /* (float)(resolutionWidth/4), (float)(resolutionWidth/4), 0.0f, 0.0f, // 0
         (float)(3*resolutionWidth/4), (float)(resolutionWidth/4), 1.0f, 0.0f, // 1
         (float)(3*resolutionWidth/4), (float)(3*resolutionWidth/4), 1.0f, 1.0f, // 2
-        (float)(resolutionWidth/4), (float)(3*resolutionWidth/4), 0.0f, 1.0f // 3
+        (float)(resolutionWidth/4), (float)(3*resolutionWidth/4), 0.0f, 1.0f // 3 */
+
+        /* 200.0f, 200.0f, 0.0f, 0.0f, // 0
+        400.0f, 200.0f, 1.0f, 0.0f, // 1
+        400.0f, 400.0f, 1.0f, 1.0f, // 2
+        200.0f, 400.0f, 0.0f, 1.0f // 3 */
 
         /* -0.5f, -0.5f, 0.0f, 0.0f, // 0
         0.5f, -0.5f, 1.0f, 0.0f, // 1
         0.5f, 0.5f, 1.0f, 1.0f, // 2
         -0.5f, 0.5f, 0.0f, 1.0f // 3 */
+
+        -0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+	 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+	 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+	 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	2.5f, 5.0f
     };
 
     unsigned int indices[]{
+        /* 0, 1, 2,
+        2, 3, 0 */
+        
         0, 1, 2,
-        2, 3, 0};
+	0, 2, 3,
+	0, 1, 4,
+	1, 2, 4,
+	2, 3, 4,
+	3, 0, 4
+        };
 
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), __FILE__, __LINE__);
     GLCall(glEnable(GL_BLEND), __FILE__, __LINE__);
@@ -133,22 +152,30 @@ int main(void)
 
     int floatsPerVertex = 4;
     VertexArray va;
-    VertexBuffer vb(positions, 4 * floatsPerVertex * sizeof(float));
+    //VertexBuffer vb(positions, 4 * floatsPerVertex * sizeof(float));
+    VertexBuffer vb(positions, sizeof(positions));
 
     VertexBufferLayout layout;
-    layout.Push(GL_FLOAT, 2);
+    layout.Push(GL_FLOAT, 3);
+    layout.Push(GL_FLOAT, 3);
     layout.Push(GL_FLOAT, 2);
     va.AddBuffer(vb, layout);
 
-    IndexBuffer ib(indices, 6);
+    IndexBuffer ib(indices, 18);
+
+    //time stuff
+    float rotation = 0.0f;
+	double prevTime = glfwGetTime();
+
 
     //model view projection matrix
 
     shader.Bind();
-    glm::mat4 proj = glm::ortho(0.0f, (float)resolutionWidth, 0.0f, (float)resolutionHeight, -1.0f, 1.0f);
+    /* glm::mat4 proj = glm::ortho(0.0f, (float)resolutionWidth, 0.0f, (float)resolutionHeight, -1.0f, 1.0f);
     glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100, 0, 0));
-    glm::mat4 mvp = proj * view;
-    shader.SetUniformMat4f("u_MVP", mvp);
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200, 200, 0));
+    glm::mat4 mvp = proj * view * model;
+    shader.SetUniformMat4f("u_MVP", mvp); */
 
     //texture stuff, cpp logo
     Texture texture("res/img/cpp.png");
@@ -201,8 +228,38 @@ int main(void)
         //get window resolution from GLFW
         glfwGetWindowSize(window, &resolutionWidth, &resolutionHeight);
         shader.SetUniform2f("u_resolution", resolutionWidth, resolutionHeight);
-        glm::mat4 proj = glm::ortho(0.0f, (float)resolutionWidth, 0.0f, (float)resolutionHeight, -1.0f, 1.0f);
-        shader.SetUniformMat4f("u_MVP", proj);
+        //glm::mat4 proj = glm::ortho(0.0f, (float)resolutionWidth, 0.0f, (float)resolutionHeight, -1.0f, 1.0f);
+        
+        //time stuff
+
+        double crntTime = glfwGetTime();
+
+        //std::cout << crntTime-prevTime << "\n";
+
+		if (crntTime - prevTime >= 1 / 60)
+		{
+			rotation += 0.5f;
+			prevTime = crntTime;
+		}
+
+        
+
+		// Initializes matrices so they are not the null matrix
+		glm::mat4 model = glm::mat4(1.0f);
+		glm::mat4 view = glm::mat4(1.0f);
+		glm::mat4 proj = glm::mat4(1.0f);
+
+		// Assigns different transformations to each matrix
+		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
+		view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
+		proj = glm::perspective(glm::radians(45.0f), ((float)mode->width/(float)mode->height), 0.1f, 100.0f);
+
+        //shader.SetUniformMat4f("u_Model", model);
+        //shader.SetUniformMat4f("u_View", proj);
+        //shader.SetUniformMat4f("u_Proj", proj);
+
+        glm::mat4 mvp = proj * view * model;
+        shader.SetUniformMat4f("u_MVP", mvp);
 
         shader.SetUniform4f("u_Color", red, green, blue, alpha);
 

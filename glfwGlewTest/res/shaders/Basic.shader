@@ -15,7 +15,7 @@ void main()
 {
     v_texCoord = texCoord;
 
-    vec4 tempPos =  u_MVP * position;
+    //vec4 tempPos =  u_MVP * position;
     //gl_Position = vec4(u_gScale*tempPos.x+u_incLoc, u_gScale*tempPos.y, tempPos.z, tempPos.w);
     gl_Position = u_MVP * position;
 };
@@ -52,5 +52,5 @@ void main()
     if(v_texCoord.y > 0.49 && v_texCoord.y < 0.51) cLine.xyz = vec3(1.0, 0.0, 0.0);
     vec4 cFun = mix(cLine, u_Color, v_texCoord.x);
 
-    color = cFun; //cPartial; //cGradient; //cLine; //texColor; //vec4(mouseNormal.y, 0.0, mouseNormal.x, 1.0); //vec4(uv.x, 0.0, uv.y, 1.0); //u_Color; //vec4(0.6, 0.0, 0.6, 1.0); // purple
+    color = c2; //vec4(1.0, 1.0, 1.0, 1.0); //white color //cPartial; //cGradient; //cLine; //texColor; //vec4(mouseNormal.y, 0.0, mouseNormal.x, 1.0); //vec4(uv.x, 0.0, uv.y, 1.0); //u_Color; //vec4(0.6, 0.0, 0.6, 1.0); // purple
 };
