@@ -61,6 +61,7 @@ int main(void)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE); //make so window is not resizable
+    glfwWindowHint(GLFW_SAMPLES, 4);
 
     /* Create a windowed mode window and its OpenGL context */
     GLFWmonitor* monitor = glfwGetPrimaryMonitor(); 
@@ -178,7 +179,7 @@ int main(void)
     shader.SetUniformMat4f("u_MVP", mvp); */
 
     //texture stuff, cpp logo
-    Texture texture("res/img/cpp.png");
+    Texture texture("res/img/brick.png");
     texture.Bind();
     shader.SetUniform1i("u_Texture", 0);
 
@@ -238,7 +239,8 @@ int main(void)
 
 		if (crntTime - prevTime >= 1 / 60)
 		{
-			rotation += 0.5f;
+			//rotation += 0.5f;
+            rotation -= 2.0f;
 			prevTime = crntTime;
 		}
 
