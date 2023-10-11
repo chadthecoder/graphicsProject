@@ -25,6 +25,7 @@
 #include "Texture.hpp"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+#include "imgui/imgui.h"
 
 bool cmpf(float A, float B, float epsilon = 0.005f)
 {
@@ -213,6 +214,8 @@ int main(void)
     //shader.Unbind();
 
     Renderer renderer;
+
+    ImGui::CreateContext();
 
     //setup engine for playing sound
     Sound sndEngine;
