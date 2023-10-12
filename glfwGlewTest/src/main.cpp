@@ -250,15 +250,6 @@ int main(void)
     //timed rotation stuff
         double crntTime = glfwGetTime();
 
-        //std::cout << crntTime-prevTime << "\n";
-
-		if (crntTime - prevTime >= 1 / 60)
-		{
-			//rotation += 0.5f;
-            rotation -= 2.0f;
-			prevTime = crntTime;
-		}
-
 		// Initializes matrices so they are not the null matrix
 		glm::mat4 model = glm::mat4(1.0f);
 		glm::mat4 view = glm::mat4(1.0f);
@@ -282,20 +273,31 @@ int main(void)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        //translate and rotate model
+        //timed rotation calculation
+        crntTime = glfwGetTime();
 
-        //checkbox option
+        //std::cout << crntTime-prevTime << "\n";
+
+		if (crntTime - prevTime >= 1 / 60)
+		{   
+            //rotation += 0.5f;
+            rotation -= 2.0f;
+            if(rotation >= 360.0f || rotation <= -360.0f) rotation = 0.0f;
+			prevTime = crntTime;
+		}
+
+        //translate model
+        model = glm::translate(glm::mat4(1.0f), modelTranslation);
+
+        //rotate model with timed and untimed checkbox option
         if(timed)
         {
-            //rotates each frame
-            model = glm::translate(model, modelTranslation);
             //timed rotation option
-            model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f)); //glm::vec3(modelTranslation.x, modelTranslation.y-1.0f, modelTranslation.z));
+            std::cout <<  "Rotation: " << rotation << "\n";
         }
         else
-        {
-            //translates based on variable
-            model = glm::translate(glm::mat4(1.0f), modelTranslation);
+        {   
             //untimed slider rotation
             model = glm::rotate(model, glm::radians(rotationAngle), glm::vec3(0.0f, 1.0f, 0.0f));
         }
@@ -388,13 +390,12 @@ int main(void)
 
             ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
             ImGui::Checkbox("Timed rotation or nah?", &timed);
-            if(!timed) ImGui::SliderFloat("Rotation Angle", &rotationAngle, 0.0f, 100.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+            if(!timed) ImGui::SliderFloat("Rotation Angle", &rotationAngle, 0.0f, 360.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
             ImGui::SliderFloat3("Translation Test", &modelTranslation.x, -1.0f, 1.0f);
             if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
                 counter++;
             ImGui::SameLine();
             ImGui::Text("counter = %d", counter);
-
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::End();
         }
