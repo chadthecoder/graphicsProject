@@ -23,9 +23,14 @@
 #include "Shader.hpp"
 #include "Renderer.hpp"
 #include "Texture.hpp"
+
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+
 #include "imgui/imgui.h"
+#include "imgui/backends/imgui_impl_glfw.h"
+//#include "imgui/backends/imgui_impl_opengl3_loader.h"
+#include "imgui/backends/imgui_impl_opengl3.h"
 
 bool cmpf(float A, float B, float epsilon = 0.005f)
 {
@@ -60,6 +65,8 @@ int main(void)
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    //glsl_version currently only used for imgui code
+    const char* glsl_version = "#version 330"; //if 3.3, then 330 and same for newer versions
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE); //make so window is not resizable
     glfwWindowHint(GLFW_SAMPLES, 4);
@@ -215,27 +222,32 @@ int main(void)
 
     Renderer renderer;
 
+    //imgui stuff
+    // Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
-    //setup engine for playing sound
-    Sound sndEngine;
+    // Setup Dear ImGui style
+    ImGui::StyleColorsDark();
+    //ImGui::StyleColorsLight();
 
-    /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
-    {
-        /* Render here */
-        renderer.Clear();
+    // Setup Platform/Renderer backends
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init(glsl_version);
 
-        //test
-        shader.Bind();
+    //change font to google font
+    io.Fonts->AddFontFromFileTTF("res/fonts/kellyFont/KellySlab-Regular.ttf", 16.0f);
 
-        //get window resolution from GLFW
-        glfwGetWindowSize(window, &resolutionWidth, &resolutionHeight);
-        shader.SetUniform2f("u_resolution", resolutionWidth, resolutionHeight);
-        //glm::mat4 proj = glm::ortho(0.0f, (float)resolutionWidth, 0.0f, (float)resolutionHeight, -1.0f, 1.0f);
-        
-        //time stuff
+    //imgui variables
+    static float rotationAngle = 0.0f;
+    static int counter = 0;
+    bool timed = true;
+    //end imgui stuff
 
+    //timed rotation stuff
         double crntTime = glfwGetTime();
 
         //std::cout << crntTime-prevTime << "\n";
@@ -247,24 +259,58 @@ int main(void)
 			prevTime = crntTime;
 		}
 
-        
-
 		// Initializes matrices so they are not the null matrix
 		glm::mat4 model = glm::mat4(1.0f);
 		glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 proj = glm::mat4(1.0f);
 
-		// Assigns different transformations to each matrix
-		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
-		view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
-		proj = glm::perspective(glm::radians(45.0f), ((float)mode->width/(float)mode->height), 0.1f, 100.0f);
+    // Assigns different transformations to each matrix
+	view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
+	proj = glm::perspective(glm::radians(45.0f), ((float)mode->width/(float)mode->height), 0.1f, 100.0f);
+    glm::vec3 modelTranslation(0.0f, 0.0f, 0.0f);
 
-        //shader.SetUniformMat4f("u_Model", model);
-        //shader.SetUniformMat4f("u_View", proj);
-        //shader.SetUniformMat4f("u_Proj", proj);
+    //setup engine for playing sound
+    Sound sndEngine;
 
+    /* Loop until the user closes the window */
+    while (!glfwWindowShouldClose(window))
+    {
+        /* Render here */
+        renderer.Clear();
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        //translate and rotate model
+
+        //checkbox option
+        if(timed)
+        {
+            //rotates each frame
+            model = glm::translate(model, modelTranslation);
+            //timed rotation option
+            model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
+        }
+        else
+        {
+            //translates based on variable
+            model = glm::translate(glm::mat4(1.0f), modelTranslation);
+            //untimed slider rotation
+            model = glm::rotate(model, glm::radians(rotationAngle), glm::vec3(0.0f, 1.0f, 0.0f));
+        }
+
+        //calculate mvp
         glm::mat4 mvp = proj * view * model;
         shader.SetUniformMat4f("u_MVP", mvp);
+
+        //test
+        shader.Bind();
+
+        //get window resolution from GLFW
+        glfwGetWindowSize(window, &resolutionWidth, &resolutionHeight);
+        shader.SetUniform2f("u_resolution", resolutionWidth, resolutionHeight);
+        //glm::mat4 proj = glm::ortho(0.0f, (float)resolutionWidth, 0.0f, (float)resolutionHeight, -1.0f, 1.0f);
 
         shader.SetUniform4f("u_Color", red, green, blue, alpha);
 
@@ -335,6 +381,29 @@ int main(void)
 
         red += incRed;
 
+        //imgui options
+        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
+        {
+            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+
+            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+            ImGui::Checkbox("Timed rotation or nah?", &timed);
+            if(!timed) ImGui::SliderFloat("Rotation Angle", &rotationAngle, 0.0f, 100.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+            ImGui::SliderFloat3("Translation Test", &modelTranslation.x, -1.0f, 1.0f);
+            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+                counter++;
+            ImGui::SameLine();
+            ImGui::Text("counter = %d", counter);
+
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+            ImGui::End();
+        }
+        
+
+        //imgui rendering
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
 
@@ -348,6 +417,12 @@ int main(void)
     //end of temp scope to prevent errors
     }
 
+    //imgui Cleanup
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+
+    glfwDestroyWindow(window);
     glfwTerminate();
     return 0;
 }

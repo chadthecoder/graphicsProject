@@ -1,5 +1,4 @@
-#include "../include/IndexBuffer.hpp"
-#include "../include/Errors.hpp"
+#include "IndexBuffer.hpp"
 
 IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count) : m_Count(count)
 {

@@ -47,7 +47,7 @@ bin/%.o:$(IMGUI_DIR)/backends/%.cpp
 	$(cc) $(libsLin) -c -o $@ $<
 
 lin: bin/$(programName)
-	@echo Build complete for $(ECHO_MESSAGE)
+	@echo Build complete for Linux
 
 bin/$(programName): $(OBJS)
 	$(cc) -o $@ $^ $(libsLin)

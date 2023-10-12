@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Errors.hpp"
+
 class IndexBuffer
 {
 private:
