@@ -7,14 +7,6 @@
 #include <functional>
 #include <cmath>
 
-/* #include "../include/Errors.hpp"
-#include "../include/VertexBuffer.hpp"
-#include "../include/IndexBuffer.hpp"
-#include "../include/Sound.hpp"
-#include "../include/VertexArray.hpp"
-#include "../include/Shader.hpp"
-#include "../include/Renderer.hpp"
-#include "../include/Texture.hpp" */
 #include "Errors.hpp"
 #include "VertexBuffer.hpp"
 #include "IndexBuffer.hpp"
@@ -26,6 +18,7 @@
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtx/string_cast.hpp"
 
 #include "imgui/imgui.h"
 #include "imgui/backends/imgui_impl_glfw.h"
@@ -113,7 +106,7 @@ int main(void)
     shader.SetUniform2f("u_resolution", resolutionWidth, resolutionHeight);
 
     //get window resolution from GLFW
-    shader.Bind();
+    //shader.Bind();
     glfwGetWindowSize(window, &resolutionWidth, &resolutionHeight);
     shader.SetUniform2f("u_resolution", resolutionWidth, resolutionHeight);
 
@@ -130,12 +123,14 @@ int main(void)
         400.0f, 400.0f, 1.0f, 1.0f, // 2
         200.0f, 400.0f, 0.0f, 1.0f // 3 */
 
-        /* -0.5f, -0.5f, 0.0f, 0.0f, // 0
-        0.5f, -0.5f, 1.0f, 0.0f, // 1
-        0.5f, 0.5f, 1.0f, 1.0f, // 2
-        -0.5f, 0.5f, 0.0f, 1.0f // 3 */
+        -0.5f, -0.5f,   0.0f, 0.0f, // 0
+        0.5f, -0.5f,    1.0f, 0.0f, // 1
+        0.5f, 0.5f,     1.0f, 1.0f, // 2
+        -0.5f, 0.5f,    0.0f, 1.0f // 3
+    };
 
-        -0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+    float positionsPyramid[] = {
+    -0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
 	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
 	 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
 	 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
@@ -143,15 +138,16 @@ int main(void)
     };
 
     unsigned int indices[]{
-        /* 0, 1, 2,
-        2, 3, 0 */
-        
         0, 1, 2,
-	0, 2, 3,
-	0, 1, 4,
-	1, 2, 4,
-	2, 3, 4,
-	3, 0, 4
+        2, 3, 0 };
+
+    unsigned int indicesPyramid[]{        
+        0, 1, 2,
+	    0, 2, 3,
+	    0, 1, 4,
+	    1, 2, 4,
+	    2, 3, 4,
+	    3, 0, 4
         };
 
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), __FILE__, __LINE__);
@@ -162,15 +158,20 @@ int main(void)
     int floatsPerVertex = 4;
     VertexArray va;
     //VertexBuffer vb(positions, 4 * floatsPerVertex * sizeof(float));
-    VertexBuffer vb(positions, sizeof(positions));
+    VertexBuffer vb(positionsPyramid, sizeof(positionsPyramid));
 
     VertexBufferLayout layout;
-    layout.Push(GL_FLOAT, 3);
-    layout.Push(GL_FLOAT, 3);
     layout.Push(GL_FLOAT, 2);
-    va.AddBuffer(vb, layout);
+    layout.Push(GL_FLOAT, 2);
 
-    IndexBuffer ib(indices, 18);
+    VertexBufferLayout layoutPyramid;
+    layoutPyramid.Push(GL_FLOAT, 3);
+    layoutPyramid.Push(GL_FLOAT, 3);
+    layoutPyramid.Push(GL_FLOAT, 2);
+    
+    va.AddBuffer(vb, layoutPyramid);
+
+    IndexBuffer ib(indicesPyramid, 18);
 
     //time stuff
     float rotation = 0.0f;
@@ -179,15 +180,10 @@ int main(void)
 
     //model view projection matrix
 
-    shader.Bind();
-    /* glm::mat4 proj = glm::ortho(0.0f, (float)resolutionWidth, 0.0f, (float)resolutionHeight, -1.0f, 1.0f);
-    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100, 0, 0));
-    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200, 200, 0));
-    glm::mat4 mvp = proj * view * model;
-    shader.SetUniformMat4f("u_MVP", mvp); */
+    //shader.Bind();
 
     //texture stuff, cpp logo
-    Texture texture("res/img/brick.png");
+    Texture texture("res/img/brick.png", "3D");
     texture.Bind();
     shader.SetUniform1i("u_Texture", 0);
 
@@ -197,21 +193,21 @@ int main(void)
     float red = 0.6f, green = 0.0f, blue = 1.0f, alpha = 1.0f;
     float incRed = -0.05f, incGreen = 0.05f, incBlue = -0.05f;
     bool inc = true;
-    shader.Bind();
+    //shader.Bind();
     shader.SetUniform4f("u_Color", red, green, blue, alpha);
 
     float Scale = 0.0f;
     float scaleDelta = 0.05f;
-    shader.Bind();
+    //shader.Bind();
     shader.SetUniform1f("u_gScale", Scale);
 
     static float incLoc = 0.0f;
     static float incDelta = 0.1f;
-    shader.Bind();
+    //shader.Bind();
     shader.SetUniform1f("u_incLoc", incLoc);
 
     double mouseX, mouseY;
-    shader.Bind();
+    //shader.Bind();
     shader.SetUniform2f("u_mouse", mouseX, mouseY);
 
     //unbind stuff
@@ -242,23 +238,35 @@ int main(void)
     io.Fonts->AddFontFromFileTTF("res/fonts/kellyFont/KellySlab-Regular.ttf", 16.0f);
 
     //imgui variables
-    static float rotationAngle = 0.0f;
+    static float rotationAngle1 = 0.0f;
+    static float rotationAngle2 = 45.0f;
     static int counter = 0;
     bool timed = true;
     //end imgui stuff
 
     //timed rotation stuff
-        double crntTime = glfwGetTime();
+    double crntTime = glfwGetTime();
 
-		// Initializes matrices so they are not the null matrix
-		glm::mat4 model = glm::mat4(1.0f);
-		glm::mat4 view = glm::mat4(1.0f);
-		glm::mat4 proj = glm::mat4(1.0f);
+    //cherno 2d proj matrix
+    /* glm::mat4 proj = glm::ortho(0.0f, (float)resolutionWidth, 0.0f, (float)resolutionHeight, -1.0f, 1.0f);
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100, 0, 0));
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200, 200, 0));
+    glm::mat4 mvp = proj * view * model;
+    shader.SetUniformMat4f("u_MVP", mvp); */
+
+    //3d victor gordon matrices
+	// Initializes matrices so they are not the null matrix
+	glm::mat4 model1 = glm::mat4(1.0f);
+    glm::mat4 model2 = glm::mat4(1.0f);
+	glm::mat4 view = glm::mat4(1.0f);
+	glm::mat4 proj = glm::mat4(1.0f);
+    glm::mat4 mvp;
 
     // Assigns different transformations to each matrix
-	view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
+	view = glm::translate(view, glm::vec3(0.0f, -0.5f, -3.0f));
 	proj = glm::perspective(glm::radians(45.0f), ((float)mode->width/(float)mode->height), 0.1f, 100.0f);
-    glm::vec3 modelTranslation(0.0f, 0.0f, 0.0f);
+    glm::vec3 modelTranslation1(-0.5f, 0.0f, 0.0f);
+    glm::vec3 modelTranslation2(0.5f, 0.0f, 0.0f);
 
     //setup engine for playing sound
     Sound sndEngine;
@@ -268,7 +276,8 @@ int main(void)
     {
         /* Render here */
         renderer.Clear();
-
+        //shader.Bind();
+        
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
@@ -286,28 +295,56 @@ int main(void)
 			prevTime = crntTime;
 		}
 
-        //translate model
-        model = glm::translate(glm::mat4(1.0f), modelTranslation);
+        //translate model 1
+        model1 = glm::translate(glm::mat4(1.0f), modelTranslation1);
 
         //rotate model with timed and untimed checkbox option
         if(timed)
         {
             //timed rotation option
-            model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f)); //glm::vec3(modelTranslation.x, modelTranslation.y-1.0f, modelTranslation.z));
-            std::cout <<  "Rotation: " << rotation << "\n";
+            model1 = glm::rotate(model1, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
         }
         else
         {   
             //untimed slider rotation
-            model = glm::rotate(model, glm::radians(rotationAngle), glm::vec3(0.0f, 1.0f, 0.0f));
+            model1 = glm::rotate(model1, glm::radians(rotationAngle1), glm::vec3(0.0f, 1.0f, 0.0f));
         }
 
         //calculate mvp
-        glm::mat4 mvp = proj * view * model;
+        mvp = proj * view * model1;
+        std::cout << "mvp1: " << glm::to_string(mvp) << "\n\n\n";
         shader.SetUniformMat4f("u_MVP", mvp);
 
+        //draw
+        renderer.Draw(va, ib, shader);
+
+        //translate model 2
+        model2 = glm::translate(glm::mat4(1.0f), modelTranslation2);
+
+        //rotate model with timed and untimed checkbox option
+        if(timed)
+        {
+            //timed rotation option
+            model2 = glm::rotate(model2, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
+        }
+        else
+        {   
+            //untimed slider rotation
+            model2 = glm::rotate(model2, glm::radians(rotationAngle2), glm::vec3(0.0f, 1.0f, 0.0f));
+        }
+
+        model2 = glm::scale(model2, glm::vec3(2.0f, 2.0f, 2.0f));
+
+        //calculate mvp
+        mvp = proj * view * model2;
+        std::cout << "mvp2: " << glm::to_string(mvp) << "\n\n\n";
+        shader.SetUniformMat4f("u_MVP", mvp);
+
+        //draw
+        renderer.Draw(va, ib, shader);
+
         //test
-        shader.Bind();
+        //shader.Bind();
 
         //get window resolution from GLFW
         glfwGetWindowSize(window, &resolutionWidth, &resolutionHeight);
@@ -335,9 +372,6 @@ int main(void)
             incDelta *= -1.0f;
         }
         shader.SetUniform1f("u_incLoc", incLoc);
-
-        //draw
-        renderer.Draw(va, ib, shader);
 
         //change green value
         if (green > 1.0f)
@@ -388,10 +422,15 @@ int main(void)
         {
             ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
-            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+            ImGui::Text("Translate and rotate two identical pyramids at will!");               // Display some text (you can use a format strings too)
             ImGui::Checkbox("Timed rotation or nah?", &timed);
-            if(!timed) ImGui::SliderFloat("Rotation Angle", &rotationAngle, 0.0f, 360.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::SliderFloat3("Translation Test", &modelTranslation.x, -1.0f, 1.0f);
+            if(!timed)
+            {
+                ImGui::SliderFloat("Model 1 Rotation Angle", &rotationAngle1, 0.0f, 360.0f);
+                ImGui::SliderFloat("Model 2 Rotation Angle", &rotationAngle2, 0.0f, 360.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+            }
+            ImGui::SliderFloat3("Translate Model 1", &modelTranslation1.x, -1.0f, 1.0f);
+            ImGui::SliderFloat3("Translate Model 2", &modelTranslation2.x, -1.0f, 1.0f);
             if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
                 counter++;
             ImGui::SameLine();
@@ -414,7 +453,7 @@ int main(void)
 
     //victor gordon youtube, uncomment next line when done with other vertex buffer info
     //glDeleteTextures(1, &texture);
-
+    shader.Unbind();
     //end of temp scope to prevent errors
     }
 

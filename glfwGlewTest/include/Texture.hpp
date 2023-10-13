@@ -12,7 +12,7 @@ private:
     int m_Width, m_Height, m_BPP;
     bool firstLoad;
 public:
-    Texture(const std::string& path);
+    Texture(const std::string& path, std::string dimension);
     ~Texture();
 
     void Bind(unsigned int slot = 0) const;
