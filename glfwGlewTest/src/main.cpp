@@ -33,19 +33,24 @@ bool cmpf(float A, float B, float epsilon = 0.005f)
 
 static void cursorPositionCallback(GLFWwindow *window, double xPos, double yPos)
 {
-    //std::cout << xPos << " : " << yPos << "\n";
+    // (1) ALWAYS forward mouse data to ImGui! This is automatic with default backends. With your own backend:
+    ImGuiIO& io = ImGui::GetIO();
+
+    // (2) ONLY forward mouse data to your underlying app/game.
+    if (!io.WantCaptureMouse) std::cout << xPos << " : " << yPos << "\n";
+    //my_game->HandleMouseData(...);
 }
 
 static void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
 {
-    std::cout << button << " : " << action << " : " << mods << "\n";
+    
     
     // (1) ALWAYS forward mouse data to ImGui! This is automatic with default backends. With your own backend:
     ImGuiIO& io = ImGui::GetIO();
-    //io.AddMouseButtonEvent(button, down);
+    io.AddMouseButtonEvent(button, action);
 
     // (2) ONLY forward mouse data to your underlying app/game.
-    if (!io.WantCaptureMouse);
+    if (!io.WantCaptureMouse) std::cout << button << " : " << action << " : " << mods << "\n";
     //my_game->HandleMouseData(...);
 }
 
@@ -81,8 +86,8 @@ int main(void)
     /* Create a windowed mode window and its OpenGL context */
     GLFWmonitor* monitor = glfwGetPrimaryMonitor(); 
     const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-    window = glfwCreateWindow(mode->width, mode->height, "Hello World", glfwGetPrimaryMonitor(), NULL);
-    //window = glfwCreateWindow(800, 600, "Hello World", NULL, NULL);
+    //window = glfwCreateWindow(mode->width, mode->height, "Hello World", glfwGetPrimaryMonitor(), NULL);
+    window = glfwCreateWindow(800, 600, "Hello World", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -297,7 +302,7 @@ int main(void)
         //shader.Bind();
 
         //get inputs and set camera shader
-        //camera.MnKInputs(window);
+        if (!io.WantCaptureMouse) camera.MnKInputs(window);
         camera.Matrix(45.0f, 0.1f, 100.f, shader, "u_camMatrix");
         
         ImGui_ImplOpenGL3_NewFrame();
