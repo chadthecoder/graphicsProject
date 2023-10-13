@@ -15,6 +15,7 @@
 #include "Shader.hpp"
 #include "Renderer.hpp"
 #include "Texture.hpp"
+#include "Camera.hpp"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -33,6 +34,19 @@ bool cmpf(float A, float B, float epsilon = 0.005f)
 static void cursorPositionCallback(GLFWwindow *window, double xPos, double yPos)
 {
     //std::cout << xPos << " : " << yPos << "\n";
+}
+
+static void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
+{
+    std::cout << button << " : " << action << " : " << mods << "\n";
+    
+    // (1) ALWAYS forward mouse data to ImGui! This is automatic with default backends. With your own backend:
+    ImGuiIO& io = ImGui::GetIO();
+    //io.AddMouseButtonEvent(button, down);
+
+    // (2) ONLY forward mouse data to your underlying app/game.
+    if (!io.WantCaptureMouse);
+    //my_game->HandleMouseData(...);
 }
 
 void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
@@ -76,6 +90,7 @@ int main(void)
     }
 
     glfwSetCursorPosCallback(window, cursorPositionCallback);
+    glfwSetMouseButtonCallback(window, mouseButtonCallback);
     glfwSetKeyCallback(window, keyCallback);
 
     /* Make the window's context current */
@@ -271,12 +286,19 @@ int main(void)
     //setup engine for playing sound
     Sound sndEngine;
 
+    //setup camera
+    Camera camera(mode->width, mode->height, glm::vec3(0.0f, 0.0f, 2.0f));
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
         renderer.Clear();
         //shader.Bind();
+
+        //get inputs and set camera shader
+        //camera.MnKInputs(window);
+        camera.Matrix(45.0f, 0.1f, 100.f, shader, "u_camMatrix");
         
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -312,8 +334,9 @@ int main(void)
 
         //calculate mvp
         mvp = proj * view * model1;
-        std::cout << "mvp1: " << glm::to_string(mvp) << "\n\n\n";
+        //std::cout << "mvp1: " << glm::to_string(mvp) << "\n\n\n";
         shader.SetUniformMat4f("u_MVP", mvp);
+        shader.SetUniformMat4f("u_model", model1);
 
         //draw
         renderer.Draw(va, ib, shader);
@@ -337,7 +360,7 @@ int main(void)
 
         //calculate mvp
         mvp = proj * view * model2;
-        std::cout << "mvp2: " << glm::to_string(mvp) << "\n\n\n";
+        //std::cout << "mvp2: " << glm::to_string(mvp) << "\n\n\n";
         shader.SetUniformMat4f("u_MVP", mvp);
 
         //draw

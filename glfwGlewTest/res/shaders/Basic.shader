@@ -15,6 +15,8 @@ out vec3 v_color;
 out vec2 v_texCoord;
 
 uniform mat4 u_MVP; //model view projection matrix, by multiplying with position, it shows in 4:3
+uniform mat4 u_model;
+uniform mat4 u_camMatrix;
 
 void main()
 {
@@ -23,7 +25,8 @@ void main()
 
     //vec4 tempPos =  u_MVP * position;
     //gl_Position = vec4(u_gScale*tempPos.x+u_incLoc, u_gScale*tempPos.y, tempPos.z, tempPos.w);
-    gl_Position = u_MVP * aPos;
+    //gl_Position = u_MVP * aPos;
+    gl_Position = u_camMatrix * u_model * aPos;
 };
 
 #shader fragment
