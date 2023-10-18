@@ -1,11 +1,25 @@
+//glew and glfw includes
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+
+//C and C++ std lib includes
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <functional>
 #include <cmath>
+
+//glm includes
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/string_cast.hpp>
+
+//imgui includes
+#include <imgui/imgui.h>
+#include <imgui/backends/imgui_impl_glfw.h>
+//#include <imgui/backends/imgui_impl_opengl3_loader.h>
+#include <imgui/backends/imgui_impl_opengl3.h>
 
 #include "Errors.hpp"
 #include "VertexBuffer.hpp"
@@ -16,15 +30,6 @@
 #include "Renderer.hpp"
 #include "Texture.hpp"
 #include "Camera.hpp"
-
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtx/string_cast.hpp"
-
-#include "imgui/imgui.h"
-#include "imgui/backends/imgui_impl_glfw.h"
-//#include "imgui/backends/imgui_impl_opengl3_loader.h"
-#include "imgui/backends/imgui_impl_opengl3.h"
 
 bool cmpf(float A, float B, float epsilon = 0.005f)
 {
