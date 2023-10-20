@@ -30,6 +30,7 @@
 #include "Renderer.hpp"
 #include "Texture.hpp"
 #include "Camera.hpp"
+#include "RenderAPI.hpp"
 
 bool cmpf(float A, float B, float epsilon = 0.005f)
 {
@@ -42,7 +43,7 @@ static void cursorPositionCallback(GLFWwindow *window, double xPos, double yPos)
     ImGuiIO& io = ImGui::GetIO();
 
     // (2) ONLY forward mouse data to your underlying app/game.
-    if (!io.WantCaptureMouse) std::cout << xPos << " : " << yPos << "\n";
+    //if (!io.WantCaptureMouse) std::cout << xPos << " : " << yPos << "\n";
     //my_game->HandleMouseData(...);
 }
 
@@ -137,7 +138,7 @@ int main(void)
 
     //positions and indices
 
-    float positions[] = {
+    float vertices[] = {
         /* (float)(resolutionWidth/4), (float)(resolutionWidth/4), 0.0f, 0.0f, // 0
         (float)(3*resolutionWidth/4), (float)(resolutionWidth/4), 1.0f, 0.0f, // 1
         (float)(3*resolutionWidth/4), (float)(3*resolutionWidth/4), 1.0f, 1.0f, // 2
@@ -154,7 +155,7 @@ int main(void)
         -0.5f, 0.5f,    0.0f, 1.0f // 3
     };
 
-    float positionsPyramid[] = {
+    float verticesPyramid[] = {
     -0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
 	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
 	 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
@@ -180,10 +181,14 @@ int main(void)
 
     //buffer and array stuff
 
-    int floatsPerVertex = 4;
+    //std::cout << "api debug: " << sizeof()
+    
+    RenderAPI api("3D", verticesPyramid, sizeof(verticesPyramid), indicesPyramid, sizeof(indicesPyramid));
+
+     /* int floatsPerVertex = 4;
     VertexArray va;
     //VertexBuffer vb(positions, 4 * floatsPerVertex * sizeof(float));
-    VertexBuffer vb(positionsPyramid, sizeof(positionsPyramid));
+    VertexBuffer vb(verticesPyramid, sizeof(verticesPyramid));
 
     VertexBufferLayout layout;
     layout.Push(GL_FLOAT, 2);
@@ -196,7 +201,7 @@ int main(void)
     
     va.AddBuffer(vb, layoutPyramid);
 
-    IndexBuffer ib(indicesPyramid, 18);
+    IndexBuffer ib(indicesPyramid, 18); */
 
     //time stuff
     float rotation = 0.0f;
@@ -236,9 +241,10 @@ int main(void)
     shader.SetUniform2f("u_mouse", mouseX, mouseY);
 
     //unbind stuff
-    va.Unbind();
-    vb.Unbind();
-    ib.Unbind();
+    //va.Unbind();
+    //vb.Unbind();
+    //ib.Unbind();
+    api.Unbind();
     //shader.Unbind();
 
     Renderer renderer;
@@ -349,7 +355,8 @@ int main(void)
         shader.SetUniformMat4f("u_model", model1);
 
         //draw
-        renderer.Draw(va, ib, shader);
+        api.Draw(renderer, shader);
+        //renderer.Draw(va, ib, shader);
 
         //translate model 2
         model2 = glm::translate(glm::mat4(1.0f), modelTranslation2);
@@ -374,7 +381,8 @@ int main(void)
         shader.SetUniformMat4f("u_MVP", mvp);
 
         //draw
-        renderer.Draw(va, ib, shader);
+        api.Draw(renderer, shader);
+        //renderer.Draw(verticesPyramid, indicesPyramid, shader); //renderer.Draw(va, ib, shader);
 
         //test
         //shader.Bind();
