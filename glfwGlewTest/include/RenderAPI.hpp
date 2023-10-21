@@ -20,8 +20,9 @@ private:
     VertexBuffer vb;
     VertexBufferLayout layout;
     IndexBuffer ib;
+
+    RenderAPI();
 public:
-    RenderAPI(std::string dimension, float *vertices, int sizeVertex, unsigned int *indices, int sizeIndex);
     ~RenderAPI();
 
     int Draw(const Renderer& renderer, const Shader& shader);

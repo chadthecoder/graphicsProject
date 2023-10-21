@@ -139,16 +139,6 @@ int main(void)
     //positions and indices
 
     float vertices[] = {
-        /* (float)(resolutionWidth/4), (float)(resolutionWidth/4), 0.0f, 0.0f, // 0
-        (float)(3*resolutionWidth/4), (float)(resolutionWidth/4), 1.0f, 0.0f, // 1
-        (float)(3*resolutionWidth/4), (float)(3*resolutionWidth/4), 1.0f, 1.0f, // 2
-        (float)(resolutionWidth/4), (float)(3*resolutionWidth/4), 0.0f, 1.0f // 3 */
-
-        /* 200.0f, 200.0f, 0.0f, 0.0f, // 0
-        400.0f, 200.0f, 1.0f, 0.0f, // 1
-        400.0f, 400.0f, 1.0f, 1.0f, // 2
-        200.0f, 400.0f, 0.0f, 1.0f // 3 */
-
         -0.5f, -0.5f,   0.0f, 0.0f, // 0
         0.5f, -0.5f,    1.0f, 0.0f, // 1
         0.5f, 0.5f,     1.0f, 1.0f, // 2
@@ -176,44 +166,12 @@ int main(void)
 	    3, 0, 4
         };
 
-    GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), __FILE__, __LINE__);
-    GLCall(glEnable(GL_BLEND), __FILE__, __LINE__);
-
-    //buffer and array stuff
-
-    //std::cout << "api debug: " << sizeof()
-    
-    RenderAPI api("3D", verticesPyramid, sizeof(verticesPyramid), indicesPyramid, sizeof(indicesPyramid));
-
-     /* int floatsPerVertex = 4;
-    VertexArray va;
-    //VertexBuffer vb(positions, 4 * floatsPerVertex * sizeof(float));
-    VertexBuffer vb(verticesPyramid, sizeof(verticesPyramid));
-
-    VertexBufferLayout layout;
-    layout.Push(GL_FLOAT, 2);
-    layout.Push(GL_FLOAT, 2);
-
-    VertexBufferLayout layoutPyramid;
-    layoutPyramid.Push(GL_FLOAT, 3);
-    layoutPyramid.Push(GL_FLOAT, 3);
-    layoutPyramid.Push(GL_FLOAT, 2);
-    
-    va.AddBuffer(vb, layoutPyramid);
-
-    IndexBuffer ib(indicesPyramid, 18); */
-
     //time stuff
     float rotation = 0.0f;
 	double prevTime = glfwGetTime();
 
-
-    //model view projection matrix
-
-    //shader.Bind();
-
     //texture stuff, cpp logo
-    Texture texture("res/img/brick.png", "3D");
+    Texture texture("res/img/cpp.png", "3D");
     texture.Bind();
     shader.SetUniform1i("u_Texture", 0);
 
@@ -240,14 +198,13 @@ int main(void)
     //shader.Bind();
     shader.SetUniform2f("u_mouse", mouseX, mouseY);
 
-    //unbind stuff
-    //va.Unbind();
-    //vb.Unbind();
-    //ib.Unbind();
-    api.Unbind();
-    //shader.Unbind();
+    //unbind stuff was here before
 
-    Renderer renderer;
+    Renderer renderer("3D", verticesPyramid, sizeof(verticesPyramid), indicesPyramid, sizeof(indicesPyramid));
+
+    //unbind stuff
+    renderer.Unbind();
+    //shader.Unbind();
 
     //imgui stuff
     // Setup Dear ImGui context
@@ -341,6 +298,10 @@ int main(void)
         {
             //timed rotation option
             model1 = glm::rotate(model1, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
+
+            //std::cout << "rotation: " << rotation << "\n";
+            
+            if(rotation==-180.0f || rotation==180.0f) sndEngine.Play("res/snd/sound.mp3");
         }
         else
         {   
@@ -355,7 +316,8 @@ int main(void)
         shader.SetUniformMat4f("u_model", model1);
 
         //draw
-        api.Draw(renderer, shader);
+        //api.Draw(renderer, shader);
+        renderer.Draw(shader);
         //renderer.Draw(va, ib, shader);
 
         //translate model 2
@@ -381,7 +343,8 @@ int main(void)
         shader.SetUniformMat4f("u_MVP", mvp);
 
         //draw
-        api.Draw(renderer, shader);
+        //api.Draw(renderer, shader);
+        renderer.Draw(shader);
         //renderer.Draw(verticesPyramid, indicesPyramid, shader); //renderer.Draw(va, ib, shader);
 
         //test

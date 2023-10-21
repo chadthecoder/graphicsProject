@@ -1,4 +1,4 @@
-cc = g++
+cc = g++-10
 
 programName = openGL
 
