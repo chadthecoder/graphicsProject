@@ -12,18 +12,18 @@ Texture::Texture(const std::string& path, std::string dimension)
 
     GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR), __FILE__, __LINE__);
     GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR), __FILE__, __LINE__);
-    if(dimension=="2D")
-    {
-        GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE), __FILE__, __LINE__);
-        GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE), __FILE__, __LINE__);
-    }
-    else if(dimension=="3D")
-    {
+    //if(dimension=="2D")
+    //{
+    //    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE), __FILE__, __LINE__);
+    //    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE), __FILE__, __LINE__);
+    //}
+    //else if(dimension=="3D")
+    //{
         GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT), __FILE__, __LINE__);
         GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT), __FILE__, __LINE__);
-    }
-    else //handle later?
-    {}    
+    //}
+    //else //handle later?
+    //{}    
     
     GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_LocalBuffer), __FILE__, __LINE__);
     GLCall(glBindTexture(GL_TEXTURE_2D, 0), __FILE__, __LINE__);

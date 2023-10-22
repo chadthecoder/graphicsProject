@@ -139,10 +139,10 @@ int main(void)
     //positions and indices
 
     std::vector<float> vertices {
-        -0.5f, -0.5f,   0.0f, 0.0f, // 0
-        0.5f, -0.5f,    1.0f, 0.0f, // 1
-        0.5f, 0.5f,     1.0f, 1.0f, // 2
-        -0.5f, 0.5f,    0.0f, 1.0f // 3
+        -0.5f, -0.5f, 0.0f,    0.83f, 0.70f, 0.44f,     0.0f, 0.0f, // 0
+        0.5f, -0.5f, 0.0f,     0.83f, 0.70f, 0.44f,     1.0f, 0.0f, // 1
+        0.5f, 0.5f, 0.0f,      0.83f, 0.70f, 0.44f,     1.0f, 1.0f, // 2
+        -0.5f, 0.5f, 0.0f,     0.92f, 0.86f, 0.76f,     0.0f, 1.0f // 3
     };
 
     std::vector<float> verticesPyramid {
@@ -171,7 +171,7 @@ int main(void)
 	double prevTime = glfwGetTime();
 
     //texture stuff, cpp logo
-    Texture texture("res/img/cpp.png", "3D");
+    Texture texture("res/img/brick.png", "3D");
     texture.Bind();
     shader.SetUniform1i("u_Texture", 0);
 
@@ -200,7 +200,7 @@ int main(void)
 
     //unbind stuff was here before
 
-    Renderer renderer("3D", verticesPyramid.data(), verticesPyramid.size() * sizeof(float), indicesPyramid.data(), indicesPyramid.size() * sizeof(unsigned int));
+    Renderer renderer("3D", verticesPyramid.data(), verticesPyramid.size() * sizeof(float), indicesPyramid.data(), indicesPyramid.size());
     //shader.Unbind();
 
     //imgui stuff

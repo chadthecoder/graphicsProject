@@ -11,9 +11,12 @@ Renderer::Renderer(std::string dimension, float *vertices, int sizeVertex, unsig
     //square
     if(dimension == "2D")
     {
-        int floatsPerVertex = 4;
 
-        layout.Push(GL_FLOAT, 2);
+       /*  layout.Push(GL_FLOAT, 2);
+        layout.Push(GL_FLOAT, 2); */
+        
+        layout.Push(GL_FLOAT, 3);
+        layout.Push(GL_FLOAT, 3);
         layout.Push(GL_FLOAT, 2);
 
         va.AddBuffer(vb, layout);

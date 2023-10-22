@@ -11,21 +11,18 @@
 class RenderAPI
 {
 private:
-    float *vertices;
-    int sizeVertex;
-    unsigned int *indices;
-    int sizeIndex;
-
-    VertexArray va;
-    VertexBuffer vb;
-    VertexBufferLayout layout;
-    IndexBuffer ib;
-
+    struct Vertex
+    {
+        glm::vec3 Position;
+        glm::vec3 Color;
+        glm::vec2 Texture;
+        int TexIndex;
+    };
     RenderAPI();
 public:
     ~RenderAPI();
 
-    int Draw(const Renderer& renderer, const Shader& shader);
+    int DrawSqaure(const Renderer& renderer, const Shader& shader);
     
     void Bind();
     void Unbind();
