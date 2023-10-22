@@ -16,9 +16,22 @@ Game Programming in C++ by Sanjay Madhav
 # install packages on ubunbtu
 
 sudo apt-get install libglew-dev
-sudo apt install libsdl2-dev libsdl2-2.0-0 -y
 
-# Read Makefilw in order to install on Linux
+if building glfw from source
+must have doxygen and cmake installed for curent process for glfw build
+"make buildDeps"
+otherwise must install glfw using apt install on Debian, unsupported on non-Debian may work
+sudo apt-get install libglfw3
+sudo apt-get install libglfw3-dev
+
+not using glad right now but maybe in future
+git clone https://github.com/Dav1dde/glad.git
+cd glad
+cmake ./
+make
+sudo cp -a include /usr/local/
+
+# Read Makefile in order to install on Linux
 
 make lin
 make runLin

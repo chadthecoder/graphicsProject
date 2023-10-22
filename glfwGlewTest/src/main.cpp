@@ -150,7 +150,13 @@ int main(void)
 	    -0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
 	    0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
 	    0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
-	    0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	    2.5f, 5.0f
+	    0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	    2.5f, 5.0f,
+
+        0.6f+(-0.5f, 0.0f,  0.5f),     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
+	    0.6f+(-0.5f, 0.0f, -0.5f),     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
+	    0.6f+(0.5f, 0.0f, -0.5f),     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
+	    0.6f+(0.5f, 0.0f,  0.5f),     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
+	    0.6f+(0.0f, 0.8f,  0.0f),     0.92f, 0.86f, 0.76f,	    2.5f, 5.0f
     };
 
     std::vector<unsigned int> indices {
@@ -163,8 +169,32 @@ int main(void)
 	    0, 1, 4,
 	    1, 2, 4,
 	    2, 3, 4,
+	    3, 0, 4,
+
+        0, 1, 2,
+	    0, 2, 3,
+	    0, 1, 4,
+	    1, 2, 4,
+	    2, 3, 4,
 	    3, 0, 4
+
+        /* 5, 6, 7,
+	    5, 7, 8,
+	    5, 6, 9,
+	    6, 7, 9,
+	    7, 8, 9,
+	    8, 5, 9 */
         };
+
+        int stride = indicesPyramid.size()/2;
+        std::cout << "Stride: " << stride << "\n";
+
+        for(int i=stride; i<(stride+stride); i++)
+        {
+            std::cout << "Index " << i << " is " << indicesPyramid[i] << "\n";
+            indicesPyramid[i] = (indicesPyramid[i]+5);
+            std::cout << "Index " << i << " is now " << indicesPyramid[i] << "\n";
+        }
 
     //time stuff
     float rotation = 0.0f;
@@ -200,7 +230,7 @@ int main(void)
 
     //unbind stuff was here before
 
-    Renderer renderer("3D", verticesPyramid.data(), verticesPyramid.size() * sizeof(float), indicesPyramid.data(), indicesPyramid.size());
+    Renderer renderer("3D", verticesPyramid.data(), verticesPyramid.size() * sizeof(float) *2, indicesPyramid.data(), indicesPyramid.size()*2);
     //shader.Unbind();
 
     //imgui stuff
