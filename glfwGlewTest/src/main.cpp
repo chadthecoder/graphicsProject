@@ -138,26 +138,26 @@ int main(void)
 
     //positions and indices
 
-    float vertices[] = {
+    std::vector<float> vertices {
         -0.5f, -0.5f,   0.0f, 0.0f, // 0
         0.5f, -0.5f,    1.0f, 0.0f, // 1
         0.5f, 0.5f,     1.0f, 1.0f, // 2
         -0.5f, 0.5f,    0.0f, 1.0f // 3
     };
 
-    float verticesPyramid[] = {
-    -0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	2.5f, 5.0f
+    std::vector<float> verticesPyramid {
+        -0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+	    -0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+	    0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
+	    0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
+	    0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	    2.5f, 5.0f
     };
 
-    unsigned int indices[]{
+    std::vector<unsigned int> indices {
         0, 1, 2,
         2, 3, 0 };
 
-    unsigned int indicesPyramid[]{        
+    std::vector<unsigned int> indicesPyramid {        
         0, 1, 2,
 	    0, 2, 3,
 	    0, 1, 4,
@@ -200,10 +200,7 @@ int main(void)
 
     //unbind stuff was here before
 
-    Renderer renderer("3D", verticesPyramid, sizeof(verticesPyramid), indicesPyramid, sizeof(indicesPyramid));
-
-    //unbind stuff
-    renderer.Unbind();
+    Renderer renderer("3D", verticesPyramid.data(), verticesPyramid.size() * sizeof(float), indicesPyramid.data(), indicesPyramid.size() * sizeof(unsigned int));
     //shader.Unbind();
 
     //imgui stuff
