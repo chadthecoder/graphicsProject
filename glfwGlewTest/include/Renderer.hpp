@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../include/Errors.hpp"
-#include "../include/VertexArray.hpp"
-#include "../include/IndexBuffer.hpp"
-#include "../include/Shader.hpp"
+#include "Errors.hpp"
+#include "VertexArray.hpp"
+#include "IndexBuffer.hpp"
+#include "Shader.hpp"
 
 class Renderer
 {

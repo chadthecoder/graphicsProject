@@ -1,2 +1,3 @@
 glfwGlewTest/bin/*.o
-glfwGlewTest/bin/"Rocket League"
+glfwGlewTest/bin/openGL
+glfwGlewTest/include/glfw/build/

@@ -1,5 +1,7 @@
 #pragma once
 
+#pragma once
+
 #include "../include/Errors.hpp"
 #include "../include/VertexBuffer.hpp"
 #include "../include/VertexBufferLayout.hpp"
