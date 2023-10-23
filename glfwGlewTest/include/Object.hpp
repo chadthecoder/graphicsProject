@@ -1,18 +1,11 @@
 #pragma once
 
-#include "glm/glm.hpp"
+#include "Vertex.hpp"
 
 class Object
 {
 private:
-    struct Vertex
-    {
-        glm::vec3 Position;
-        glm::vec3 Color;
-        glm::vec2 Texture;
-        //int TexIndex;
-    };
-    
+    //data
 public:
     Object(/* args */);
     ~Object();

@@ -4,6 +4,7 @@
 #include "VertexArray.hpp"
 #include "IndexBuffer.hpp"
 #include "Shader.hpp"
+#include "Vertex.hpp"
 
 class Renderer
 {

@@ -1,6 +1,7 @@
 #include "Renderer.hpp"
 
 Renderer::Renderer(std::string dimension, float *vertices, int sizeVertex, unsigned int *indices, int sizeIndex)
+    //: vb(nullptr, sizeVertex, GL_DYNAMIC_DRAW), ib(indices, sizeIndex, GL_DYNAMIC_DRAW)
     : vb(vertices, sizeVertex, GL_DYNAMIC_DRAW), ib(indices, sizeIndex, GL_DYNAMIC_DRAW)
 {
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), __FILE__, __LINE__);

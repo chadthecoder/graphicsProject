@@ -9,22 +9,22 @@ Camera::Camera(int width, int height, glm::vec3 position)
 
 void Camera::MoveBack()
 {
-    Position += speed * -Orientation;
+    Position += speed * Orientation;
 }
 
 void Camera::MoveIn()
 {
-    Position += speed * Orientation;
+    Position += speed * -Orientation;
 }
 
 void Camera::MoveLeft()
 {
-    Position += speed * glm::normalize(glm::cross(Orientation, Up));
+    Position += speed * -glm::normalize(glm::cross(Orientation, Up));
 }
 
 void Camera::MoveRight()
 {
-    Position += speed * -glm::normalize(glm::cross(Orientation, Up));
+    Position += speed * glm::normalize(glm::cross(Orientation, Up));
 }
 
 void Camera::Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform)

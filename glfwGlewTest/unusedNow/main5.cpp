@@ -31,7 +31,6 @@
 #include "Texture.hpp"
 #include "Camera.hpp"
 #include "RenderAPI.hpp"
-#include "Vertex.hpp"
 
 bool cmpf(float A, float B, float epsilon = 0.005f)
 {
@@ -126,6 +125,16 @@ int main(void)
 
     Shader shader("res/shaders/Basic.shader");
     shader.Bind();
+    
+    //set shader uniform for resolution
+
+    int resolutionWidth, resolutionHeight;
+    shader.SetUniform2f("u_resolution", resolutionWidth, resolutionHeight);
+
+    //get window resolution from GLFW
+    //shader.Bind();
+    glfwGetWindowSize(window, &resolutionWidth, &resolutionHeight);
+    shader.SetUniform2f("u_resolution", resolutionWidth, resolutionHeight);
 
     //positions and indices
 
@@ -136,33 +145,18 @@ int main(void)
         -0.5f, 0.5f, 0.0f,     0.92f, 0.86f, 0.76f,     0.0f, 1.0f // 3
     };
 
-    float incBy = 1.0f;
-
     std::vector<float> verticesPyramid {
-
-        0.0f, 0.5f,  1.0f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
-	    0.0f, 0.5f, 0.0f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
-	    1.0f, 0.5f, 0.0f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
-	    1.0f, 0.5f,  1.0f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
-	    0.5f, 1.3f,  0.5f,     0.92f, 0.86f, 0.76f,	    2.5f, 5.0f,
-
-        0.0f+incBy, 0.5f,  1.0f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	    0.0f+incBy, 0.5f, 0.0f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	    1.0f+incBy, 0.5f, 0.0f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
-	    1.0f+incBy, 0.5f,  1.0f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
-	    0.5f+incBy, 1.3f,  0.5f,     0.92f, 0.86f, 0.76f,	    2.5f, 5.0f
-
-        /* -0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+        -0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
 	    -0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
 	    0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
 	    0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
 	    0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	    2.5f, 5.0f,
 
-        incBy-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
-	    incBy-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
-	    incBy+0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
-	    incBy+0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
-	    incBy+0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	    2.5f, 5.0f */
+        1.5f-0.5f, 1.5f+0.0f,  1.5f+0.5f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
+	    1.5f-0.5f, 1.5f+0.0f, 1.5f-0.5f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
+	    1.5f+0.5f, 1.5f+0.0f, 1.5f-0.5f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
+	    1.5f+0.5f, 1.5f+0.0f,  1.5f+0.5f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
+	    1.5f+0.0f, 1.5f+0.8f,  1.5f+0.0f,     0.92f, 0.86f, 0.76f,	    2.5f, 5.0f
     };
 
     std::vector<unsigned int> indices {
@@ -211,8 +205,32 @@ int main(void)
     texture.Bind();
     shader.SetUniform1i("u_Texture", 0);
 
-    //Renderer renderer("3D", verticesPyramid.data(), verticesPyramid.size() * sizeof(float), indicesPyramid.data(), indicesPyramid.size());
-    Renderer renderer("3D", verticesPyramid.data(), sizeof(Vertex) * 1000, indicesPyramid.data(), indicesPyramid.size());
+    //add get uniform locations from shader
+    //better way to do multiple uniforms?
+
+    float red = 0.6f, green = 0.0f, blue = 1.0f, alpha = 1.0f;
+    float incRed = -0.05f, incGreen = 0.05f, incBlue = -0.05f;
+    bool inc = true;
+    //shader.Bind();
+    shader.SetUniform4f("u_Color", red, green, blue, alpha);
+
+    float Scale = 0.0f;
+    float scaleDelta = 0.05f;
+    //shader.Bind();
+    shader.SetUniform1f("u_gScale", Scale);
+
+    static float incLoc = 0.0f;
+    static float incDelta = 0.1f;
+    //shader.Bind();
+    shader.SetUniform1f("u_incLoc", incLoc);
+
+    double mouseX, mouseY;
+    //shader.Bind();
+    shader.SetUniform2f("u_mouse", mouseX, mouseY);
+
+    //unbind stuff was here before
+
+    Renderer renderer("3D", verticesPyramid.data(), verticesPyramid.size() * sizeof(float) *2, indicesPyramid.data(), indicesPyramid.size()*2);
     //shader.Unbind();
 
     //imgui stuff
@@ -244,6 +262,13 @@ int main(void)
     //timed rotation stuff
     double crntTime = glfwGetTime();
 
+    //cherno 2d proj matrix
+    /* glm::mat4 proj = glm::ortho(0.0f, (float)resolutionWidth, 0.0f, (float)resolutionHeight, -1.0f, 1.0f);
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100, 0, 0));
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200, 200, 0));
+    glm::mat4 mvp = proj * view * model;
+    shader.SetUniformMat4f("u_MVP", mvp); */
+
     //3d victor gordon matrices
 	// Initializes matrices so they are not the null matrix
 	glm::mat4 model1 = glm::mat4(1.0f);
@@ -262,7 +287,7 @@ int main(void)
     Sound sndEngine;
 
     //setup camera
-    Camera camera(mode->width, mode->height, glm::vec3(0.8f, 0.8f, 3.0f));
+    Camera camera(mode->width, mode->height, glm::vec3(0.0f, 0.0f, 2.0f));
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -280,7 +305,7 @@ int main(void)
         ImGui::NewFrame();
 
         //timed rotation calculation
-        /* crntTime = glfwGetTime();
+        crntTime = glfwGetTime();
 
         //std::cout << crntTime-prevTime << "\n";
 
@@ -314,8 +339,8 @@ int main(void)
         //calculate mvp
         mvp = proj * view * model1;
         //std::cout << "mvp1: " << glm::to_string(mvp) << "\n\n\n";
-        shader.SetUniformMat4f("u_MVP", mvp); */
-        //shader.SetUniformMat4f("u_model", model1);
+        shader.SetUniformMat4f("u_MVP", mvp);
+        shader.SetUniformMat4f("u_model", model1);
 
         //draw
         //api.Draw(renderer, shader);
@@ -323,7 +348,7 @@ int main(void)
         //renderer.Draw(va, ib, shader);
 
         //translate model 2
-        /* model2 = glm::translate(glm::mat4(1.0f), modelTranslation2);
+        model2 = glm::translate(glm::mat4(1.0f), modelTranslation2);
 
         //rotate model with timed and untimed checkbox option
         if(timed)
@@ -347,8 +372,81 @@ int main(void)
         //draw
         //api.Draw(renderer, shader);
         renderer.Draw(shader);
-        //renderer.Draw(verticesPyramid, indicesPyramid, shader); //renderer.Draw(va, ib, shader); */
-       
+        //renderer.Draw(verticesPyramid, indicesPyramid, shader); //renderer.Draw(va, ib, shader);
+
+        //test
+        //shader.Bind();
+
+        //get window resolution from GLFW
+        glfwGetWindowSize(window, &resolutionWidth, &resolutionHeight);
+        shader.SetUniform2f("u_resolution", resolutionWidth, resolutionHeight);
+        //glm::mat4 proj = glm::ortho(0.0f, (float)resolutionWidth, 0.0f, (float)resolutionHeight, -1.0f, 1.0f);
+
+        shader.SetUniform4f("u_Color", red, green, blue, alpha);
+
+        //get cursor position from GLFW
+        glfwGetCursorPos(window, &mouseX, &mouseY);
+        shader.SetUniform2f("u_mouse", mouseX, mouseY);
+
+        Scale += scaleDelta;
+        if ((Scale > 0.5f) || (Scale < 0.0f))
+        {
+            scaleDelta *= -1.0f;
+            //sndEngine.Play("res/snd/sound.mp3");
+        }
+        
+        shader.SetUniform1f("u_gScale", Scale);
+
+        incLoc += incDelta;
+        if ((incLoc >= 1.0f) || (incLoc <= -1.0f))
+        {
+            incDelta *= -1.0f;
+        }
+        shader.SetUniform1f("u_incLoc", incLoc);
+
+        //change green value
+        if (green > 1.0f)
+        {
+            incGreen = -0.05f;
+            //std::cout << "green dec\n";
+        }
+        else if (green < 0.0f)
+        {
+            incGreen = 0.05f;
+            //std::cout << "green inc\n";
+        }
+
+        green += incGreen;
+        //std::cout << "Green Value: " << green << "\n";
+
+        //change blue value
+        if (blue < 0.0f)
+        {
+            incBlue = 0.05f;
+            //std::cout << "blue inc\n";
+        }
+        else if (blue > 1.0f)
+        {
+            incBlue = -0.05f;
+            //std::cout << "blue dec\n";
+        }
+
+        blue += incBlue;
+        //std::cout << "Blue Value: " << blue << "\n";
+
+        //change red color
+        if (red < 0.0f)
+        {
+            incRed = 0.05f;
+            //std::cout << "red inc\n";
+        }
+        else if (red > 1.0f)
+        {
+            incRed = -0.05f;
+            //std::cout << "red dec\n";
+        }
+
+        red += incRed;
 
         //imgui options
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.

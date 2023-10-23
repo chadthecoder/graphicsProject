@@ -22,3 +22,8 @@ void VertexBuffer::Unbind() const
 {
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0), __FILE__, __LINE__);
 }
+
+unsigned int VertexBuffer::GetRendererID()
+{
+    return m_RendererID;
+}
