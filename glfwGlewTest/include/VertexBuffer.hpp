@@ -11,5 +11,6 @@ public:
     void Bind() const;
     void Unbind() const;
 
-    unsigned int GetRendererID();
+    //for some reason gives error if this function isnt const
+    unsigned int GetRendererID() const;
 };

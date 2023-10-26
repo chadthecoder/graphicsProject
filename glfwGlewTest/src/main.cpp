@@ -138,32 +138,21 @@ int main(void)
 
     float incBy = 1.0f;
 
-    std::vector<float> verticesPyramid {
+/*     std::vector<float> verticesPyramid {
 
         0.0f, 0.5f,  1.0f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
 	    0.0f, 0.5f, 0.0f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
 	    1.0f, 0.5f, 0.0f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
 	    1.0f, 0.5f,  1.0f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
-	    0.5f, 1.3f,  0.5f,     0.92f, 0.86f, 0.76f,	    2.5f, 5.0f,
+	    0.5f, 1.0f,  0.5f,     0.92f, 0.86f, 0.76f,	    2.5f, 5.0f,
 
         0.0f+incBy, 0.5f,  1.0f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
 	    0.0f+incBy, 0.5f, 0.0f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
 	    1.0f+incBy, 0.5f, 0.0f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
 	    1.0f+incBy, 0.5f,  1.0f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
-	    0.5f+incBy, 1.3f,  0.5f,     0.92f, 0.86f, 0.76f,	    2.5f, 5.0f
+	    0.5f+incBy, 1.0f,  0.5f,     0.92f, 0.86f, 0.76f,	    2.5f, 5.0f
+    }; */
 
-        /* -0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	    -0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	    0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
-	    0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
-	    0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	    2.5f, 5.0f,
-
-        incBy-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
-	    incBy-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
-	    incBy+0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
-	    incBy+0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
-	    incBy+0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	    2.5f, 5.0f */
-    };
 
     std::vector<unsigned int> indices {
         0, 1, 2,
@@ -192,14 +181,14 @@ int main(void)
 	    8, 5, 9 */
         };
 
+        //changes the second half of the indices to be the same pattern but for the new vertices
         int stride = indicesPyramid.size()/2;
-        std::cout << "Stride: " << stride << "\n";
-
+        //std::cout << "Stride: " << stride << "\n";
         for(int i=stride; i<(stride+stride); i++)
         {
-            std::cout << "Index " << i << " is " << indicesPyramid[i] << "\n";
+            //std::cout << "Index " << i << " is " << indicesPyramid[i] << "\n";
             indicesPyramid[i] = (indicesPyramid[i]+5);
-            std::cout << "Index " << i << " is now " << indicesPyramid[i] << "\n";
+            //std::cout << "Index " << i << " is now " << indicesPyramid[i] << "\n";
         }
 
     //time stuff
@@ -212,8 +201,17 @@ int main(void)
     shader.SetUniform1i("u_Texture", 0);
 
     //Renderer renderer("3D", verticesPyramid.data(), verticesPyramid.size() * sizeof(float), indicesPyramid.data(), indicesPyramid.size());
-    Renderer renderer("3D", verticesPyramid.data(), sizeof(Vertex) * 1000, indicesPyramid.data(), indicesPyramid.size());
+    Renderer renderer("3D", sizeof(openglStuff::Vertex) * 1000, indicesPyramid.data(), indicesPyramid.size(), "res/shaders/Basic.shader");
     //shader.Unbind();
+
+    //create pyramids
+    auto q0 = renderer.Pyramid(0.0f, 0.0f, 0.0f);
+    auto q1 = renderer.Pyramid(1.0f, 0.0f, 0.0f);
+    openglStuff::Vertex verticesPyramid[10];
+    memcpy(verticesPyramid, q0.data(), q0.size()*sizeof(openglStuff::Vertex));
+    memcpy(verticesPyramid+q0.size(), q1.data(), q1.size()*sizeof(openglStuff::Vertex));
+
+    std::cout << q0.size() << "\n";
 
     //imgui stuff
     // Setup Dear ImGui context
@@ -264,6 +262,8 @@ int main(void)
     //setup camera
     Camera camera(mode->width, mode->height, glm::vec3(0.8f, 0.8f, 3.0f));
 
+    renderer.Bind();
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
@@ -279,76 +279,11 @@ int main(void)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        //timed rotation calculation
-        /* crntTime = glfwGetTime();
-
-        //std::cout << crntTime-prevTime << "\n";
-
-		if (crntTime - prevTime >= 1 / 60)
-		{   
-            //rotation += 0.5f;
-            rotation -= 2.0f;
-            if(rotation >= 360.0f || rotation <= -360.0f) rotation = 0.0f;
-			prevTime = crntTime;
-		}
-
-        //translate model 1
-        model1 = glm::translate(glm::mat4(1.0f), modelTranslation1);
-
-        //rotate model with timed and untimed checkbox option
-        if(timed)
-        {
-            //timed rotation option
-            model1 = glm::rotate(model1, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
-
-            //std::cout << "rotation: " << rotation << "\n";
-            
-            if(rotation==-180.0f || rotation==180.0f) sndEngine.Play("res/snd/sound.mp3");
-        }
-        else
-        {   
-            //untimed slider rotation
-            model1 = glm::rotate(model1, glm::radians(rotationAngle1), glm::vec3(0.0f, 1.0f, 0.0f));
-        }
-
-        //calculate mvp
-        mvp = proj * view * model1;
-        //std::cout << "mvp1: " << glm::to_string(mvp) << "\n\n\n";
-        shader.SetUniformMat4f("u_MVP", mvp); */
-        //shader.SetUniformMat4f("u_model", model1);
-
         //draw
         //api.Draw(renderer, shader);
-        renderer.Draw(shader);
-        //renderer.Draw(va, ib, shader);
-
-        //translate model 2
-        /* model2 = glm::translate(glm::mat4(1.0f), modelTranslation2);
-
-        //rotate model with timed and untimed checkbox option
-        if(timed)
-        {
-            //timed rotation option
-            model2 = glm::rotate(model2, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
-        }
-        else
-        {   
-            //untimed slider rotation
-            model2 = glm::rotate(model2, glm::radians(rotationAngle2), glm::vec3(0.0f, 1.0f, 0.0f));
-        }
-
-        model2 = glm::scale(model2, glm::vec3(2.0f, 2.0f, 2.0f));
-
-        //calculate mvp
-        mvp = proj * view * model2;
-        //std::cout << "mvp2: " << glm::to_string(mvp) << "\n\n\n";
-        shader.SetUniformMat4f("u_MVP", mvp);
-
-        //draw
-        //api.Draw(renderer, shader);
-        renderer.Draw(shader);
-        //renderer.Draw(verticesPyramid, indicesPyramid, shader); //renderer.Draw(va, ib, shader); */
-       
+        //renderer.Draw(verticesPyramid.data(), verticesPyramid.size() * sizeof(float), shader);
+        renderer.Draw(verticesPyramid, sizeof(verticesPyramid) * sizeof(float));
+        
 
         //imgui options
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.

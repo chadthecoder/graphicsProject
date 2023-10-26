@@ -1,8 +1,8 @@
 #include "Renderer.hpp"
 
-Renderer::Renderer(std::string dimension, float *vertices, int sizeVertex, unsigned int *indices, int sizeIndex)
-    //: vb(nullptr, sizeVertex, GL_DYNAMIC_DRAW), ib(indices, sizeIndex, GL_DYNAMIC_DRAW)
-    : vb(vertices, sizeVertex, GL_DYNAMIC_DRAW), ib(indices, sizeIndex, GL_DYNAMIC_DRAW)
+Renderer::Renderer(std::string dimension, int maxVerticesSize, unsigned int *indices, int sizeIndex, const std::string& filepath)
+    : vb(nullptr, maxVerticesSize, GL_DYNAMIC_DRAW), ib(indices, sizeIndex, GL_DYNAMIC_DRAW), shader(filepath)
+    //: vb(vertices, sizeVertex, GL_DYNAMIC_DRAW), ib(indices, sizeIndex, GL_DYNAMIC_DRAW)
 {
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), __FILE__, __LINE__);
     GLCall(glEnable(GL_BLEND), __FILE__, __LINE__);
@@ -41,22 +41,68 @@ Renderer::~Renderer()
     //ib.Unbind();
 }
 
+
+//gives pyramid rendered in positive directions from given point
+std::array<openglStuff::Vertex, 5> Renderer::Pyramid(float x, float y, float z)
+{
+
+    float size = 1.0f;
+
+/* 0.0f, 0.5f,  1.0f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
+	0.0f, 0.5f, 0.0f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
+	1.0f, 0.5f, 0.0f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
+	1.0f, 0.5f,  1.0f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
+	0.5f, 1.3f,  0.5f,     0.92f, 0.86f, 0.76f,	    2.5f, 5.0f, */
+
+    openglStuff::Vertex v0;
+    //float* data = glm::value_ptr(vec);
+    v0.Position = glm::vec3(x+0.0f, y+0.5f,  z+1.0f);
+    v0.Color = glm::vec3(0.83f, 0.70f, 0.44f);
+    v0.Texture = glm::vec2(0.0f, 0.0f);
+
+    openglStuff::Vertex v1;
+    v1.Position = glm::vec3(x+0.0f, y+0.5f, z+0.0f);
+    v1.Color = glm::vec3(0.83f, 0.70f, 0.44);
+    v1.Texture = glm::vec2(5.0f, 0.0f);
+
+    openglStuff::Vertex v2;
+    v2.Position = glm::vec3(x+1.0f, y+0.5f, z+0.0f);
+    v2.Color = glm::vec3(0.83f, 0.70f, 0.44);
+    v2.Texture = glm::vec2(0.0f, 0.0f);
+
+    openglStuff::Vertex v3;
+    v3.Position = glm::vec3(x+1.0f, y+0.5f,  z+1.0f);
+    v3.Color = glm::vec3(0.83f, 0.70f, 0.44);
+    v3.Texture = glm::vec2(5.0f, 0.0f);
+
+    openglStuff::Vertex v4;
+    v4.Position = glm::vec3(x+0.5f, y+1.0f,  z+0.5f);
+    v4.Color = glm::vec3(0.92f, 0.86f, 0.76f);
+    v4.Texture = glm::vec2(2.5f, 5.0f);
+
+    return { v0, v1, v2, v3, v4 };
+}
+
 void Renderer::Clear() const
 {
     GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT), __FILE__, __LINE__);
 }
 
-void Renderer::Draw(const Shader& shader) const //Draw(float* vertices, unsigned int* indexArray, const Shader& shader) const
+void Renderer::Draw(const void* data, unsigned int size) const //Draw(float* vertices, unsigned int* indexArray, const Shader& shader) const
 {
-    shader.Bind();
-    va.Bind();
-    ib.Bind();
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, vb.GetRendererID()), __FILE__, __LINE__);
+    GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, size, data), __FILE__, __LINE__);
+
+    
 
     GLCall(glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr), __FILE__, __LINE__);
 }
 
 void Renderer::Bind()
 {
+    shader.Bind();
+    va.Bind();
+    ib.Bind();
 }
 
 void Renderer::Unbind()
