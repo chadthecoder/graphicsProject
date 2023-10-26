@@ -117,7 +117,7 @@ int main(void)
     }
 
     //get opengl version
-    std::cout << glGetString(GL_VERSION) << "\n";
+    //std::cout << glGetString(GL_VERSION) << "\n";
 
     //temp scope to prevent errors
     {
@@ -214,7 +214,7 @@ int main(void)
     memcpy(verticesPyramid, q0.data(), q0.size()*sizeof(openglStuff::Vertex));
     memcpy(verticesPyramid+q0.size(), q1.data(), q1.size()*sizeof(openglStuff::Vertex));
 
-    std::cout << q0.size() << "\n";
+    //std::cout << q0.size() << "\n";
 
     //imgui stuff
     // Setup Dear ImGui context
@@ -268,25 +268,17 @@ int main(void)
 
     renderer.Bind();
 
-    double previousTime = glfwGetTime();
-    int frameCount = 0;
-    double currentTime;
+    clock_t current_ticks, delta_ticks;
+clock_t fps = 0;
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
-        currentTime = glfwGetTime();
-        frameCount++;
-        // If a second has passed.
-        if ( currentTime - previousTime >= 1.0 )
-        {
-            // Display the frame count here any way you want.
-            //displayFPS(frameCount);
-            std::cout << "fps: " << frameCount << "\n";
+        current_ticks = clock();
 
-            frameCount = 0;
-            previousTime = currentTime;
-        }
+       
+
+        
 
         /* Render here */
         renderer.Clear();
@@ -336,6 +328,11 @@ int main(void)
 
         /* Poll for and process events */
         glfwPollEvents();
+
+        delta_ticks = clock() - current_ticks; //the time, in ms, that took to render the scene
+    if(delta_ticks > 0)
+        fps = CLOCKS_PER_SEC / delta_ticks;
+    std::cout << "fps: " << fps << std::endl;
     }
 
     //victor gordon youtube, uncomment next line when done with other vertex buffer info
