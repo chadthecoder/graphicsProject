@@ -41,7 +41,7 @@ bool cmpf(float A, float B, float epsilon = 0.005f)
 static void cursorPositionCallback(GLFWwindow *window, double xPos, double yPos)
 {
     // (1) ALWAYS forward mouse data to ImGui! This is automatic with default backends. With your own backend:
-    ImGuiIO& io = ImGui::GetIO();
+    //ImGuiIO& io = ImGui::GetIO();
 
     // (2) ONLY forward mouse data to your underlying app/game.
     //if (!io.WantCaptureMouse) std::cout << xPos << " : " << yPos << "\n";
@@ -53,11 +53,11 @@ static void mouseButtonCallback(GLFWwindow *window, int button, int action, int 
     
     
     // (1) ALWAYS forward mouse data to ImGui! This is automatic with default backends. With your own backend:
-    ImGuiIO& io = ImGui::GetIO();
-    io.AddMouseButtonEvent(button, action);
+    /* ImGuiIO& io = ImGui::GetIO();
+    io.AddMouseButtonEvent(button, action); */
 
     // (2) ONLY forward mouse data to your underlying app/game.
-    if (!io.WantCaptureMouse) std::cout << button << " : " << action << " : " << mods << "\n";
+    //if (!io.WantCaptureMouse) std::cout << button << " : " << action << " : " << mods << "\n";
     //my_game->HandleMouseData(...);
 }
 
@@ -124,8 +124,8 @@ int main(void)
 
     //get shader from text
 
-    Shader shader("res/shaders/Basic.shader");
-    shader.Bind();
+    //Shader shader("res/shaders/Basic.shader");
+    //shader.Bind();
 
     //positions and indices
 
@@ -196,13 +196,16 @@ int main(void)
 	double prevTime = glfwGetTime();
 
     //texture stuff, cpp logo
-    Texture texture("res/img/brick.png", "3D");
-    texture.Bind();
-    shader.SetUniform1i("u_Texture", 0);
+    //Texture texture("res/img/brick.png", "3D");
+    //texture.Bind();
+    
+    
 
     //Renderer renderer("3D", verticesPyramid.data(), verticesPyramid.size() * sizeof(float), indicesPyramid.data(), indicesPyramid.size());
-    Renderer renderer("3D", sizeof(openglStuff::Vertex) * 1000, indicesPyramid.data(), indicesPyramid.size(), "res/shaders/Basic.shader");
-    //shader.Unbind();
+    Renderer renderer("3D", sizeof(openglStuff::Vertex) * 1000, indicesPyramid.data(),
+        indicesPyramid.size(), "res/shaders/Basic.shader", "res/img/brick.png");
+    
+    //renderer.SetUniform1i("u_Texture", 0);
 
     //create pyramids
     auto q0 = renderer.Pyramid(0.0f, 0.0f, 0.0f);
@@ -215,7 +218,7 @@ int main(void)
 
     //imgui stuff
     // Setup Dear ImGui context
-    IMGUI_CHECKVERSION();
+    /* IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
@@ -227,10 +230,10 @@ int main(void)
 
     // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init(glsl_version);
+    ImGui_ImplOpenGL3_Init(glsl_version); */
 
     //change font to google font
-    io.Fonts->AddFontFromFileTTF("res/fonts/kellyFont/KellySlab-Regular.ttf", 16.0f);
+    //io.Fonts->AddFontFromFileTTF("res/fonts/kellyFont/KellySlab-Regular.ttf", 16.0f);
 
     //imgui variables
     static float rotationAngle1 = 0.0f;
@@ -261,33 +264,49 @@ int main(void)
 
     //setup camera
     Camera camera(mode->width, mode->height, glm::vec3(0.8f, 0.8f, 3.0f));
+    
 
     renderer.Bind();
+
+    double previousTime = glfwGetTime();
+    int frameCount = 0;
+    double currentTime;
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
+        currentTime = glfwGetTime();
+        frameCount++;
+        // If a second has passed.
+        if ( currentTime - previousTime >= 1.0 )
+        {
+            // Display the frame count here any way you want.
+            //displayFPS(frameCount);
+            std::cout << "fps: " << frameCount << "\n";
+
+            frameCount = 0;
+            previousTime = currentTime;
+        }
+
         /* Render here */
         renderer.Clear();
         //shader.Bind();
 
         //get inputs and set camera shader
-        if (!io.WantCaptureMouse) camera.MnKInputs(window);
-        camera.Matrix(45.0f, 0.1f, 100.f, shader, "u_camMatrix");
+        //if (!io.WantCaptureMouse) camera.MnKInputs(window);
+        camera.Matrix(45.0f, 0.1f, 100.f, renderer.GetShader(), "u_camMatrix");
         
-        ImGui_ImplOpenGL3_NewFrame();
+        /* ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
+        ImGui::NewFrame(); */
 
         //draw
-        //api.Draw(renderer, shader);
-        //renderer.Draw(verticesPyramid.data(), verticesPyramid.size() * sizeof(float), shader);
         renderer.Draw(verticesPyramid, sizeof(verticesPyramid) * sizeof(float));
         
 
         //imgui options
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
-        {
+        /* {
             ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
             ImGui::Text("Translate and rotate two identical pyramids at will!");               // Display some text (you can use a format strings too)
@@ -310,7 +329,7 @@ int main(void)
 
         //imgui rendering
         ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData()); */
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -321,14 +340,14 @@ int main(void)
 
     //victor gordon youtube, uncomment next line when done with other vertex buffer info
     //glDeleteTextures(1, &texture);
-    shader.Unbind();
+    //shader.Unbind();
     //end of temp scope to prevent errors
     }
 
     //imgui Cleanup
-    ImGui_ImplOpenGL3_Shutdown();
+    /* ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
+    ImGui::DestroyContext(); */
 
     glfwDestroyWindow(window);
     glfwTerminate();

@@ -33,7 +33,7 @@ libsLin = $(includeDepsLin) $(linkingDepsLin) $(linksLin)
 
 SOURCES = src/main.cpp src/Links.cpp src/Errors.cpp src/VertexBuffer.cpp src/IndexBuffer.cpp
 SOURCES += src/VertexBufferLayout.cpp src/VertexArray.cpp src/Shader.cpp
-SOURCES += src/Renderer.cpp src/Texture.cpp src/Sound.cpp src/Camera.cpp src/RenderAPI.cpp
+SOURCES += src/Texture.cpp src/Renderer.cpp src/Sound.cpp src/Camera.cpp src/RenderAPI.cpp
 #SOURCES += src/Object.cpp
 SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp
 SOURCES += $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp

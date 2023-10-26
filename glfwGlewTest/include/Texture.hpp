@@ -1,6 +1,10 @@
 #pragma once
 
-#include "Renderer.hpp"
+//#include "Renderer.hpp"
+#include <GL/glew.h>
+
+#include "Errors.hpp"
+
 #include "stb/stb_image.h"
 
 class Texture

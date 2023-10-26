@@ -97,6 +97,7 @@ void Shader::Unbind() const
 
 void Shader::SetUniform1i(const std::string& name, int i0)
 {
+    std::cout << "error?: " << name << " : i0: " << i0 << "\n";
     GLCall(glUniform1i(GetUniformLocation(name), i0), __FILE__, __LINE__);
 }
 

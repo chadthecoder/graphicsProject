@@ -1,7 +1,9 @@
 #include "Renderer.hpp"
 
-Renderer::Renderer(std::string dimension, int maxVerticesSize, unsigned int *indices, int sizeIndex, const std::string& filepath)
-    : vb(nullptr, maxVerticesSize, GL_DYNAMIC_DRAW), ib(indices, sizeIndex, GL_DYNAMIC_DRAW), shader(filepath)
+Renderer::Renderer(std::string dimension, int maxVerticesSize, unsigned int *indices,
+     int sizeIndex, const std::string& shaderPath, const std::string& texturePath)
+    : vb(nullptr, maxVerticesSize, GL_DYNAMIC_DRAW), ib(indices, sizeIndex, GL_DYNAMIC_DRAW),
+        shader(shaderPath), texture(texturePath, dimension)
     //: vb(vertices, sizeVertex, GL_DYNAMIC_DRAW), ib(indices, sizeIndex, GL_DYNAMIC_DRAW)
 {
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA), __FILE__, __LINE__);
@@ -36,9 +38,7 @@ Renderer::Renderer(std::string dimension, int maxVerticesSize, unsigned int *ind
 Renderer::~Renderer()
 {
     //need to take care of unbinding later, where?
-    //va.Unbind();
-    //vb.Unbind();
-    //ib.Unbind();
+    Unbind();
 }
 
 
@@ -93,21 +93,53 @@ void Renderer::Draw(const void* data, unsigned int size) const //Draw(float* ver
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, vb.GetRendererID()), __FILE__, __LINE__);
     GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, size, data), __FILE__, __LINE__);
 
-    
-
     GLCall(glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr), __FILE__, __LINE__);
+}
+
+void Renderer::SetUniform1i(const std::string& name, int i0)
+{
+    shader.SetUniform1i(name, i0);
+}
+
+void Renderer::SetUniform1f(const std::string& name, float f0)
+{
+    shader.SetUniform1f(name, f0);
+}
+
+void Renderer::SetUniform2f(const std::string& name, float f0, float f1)
+{
+    shader.SetUniform2f(name, f0, f1);
+}
+
+void Renderer::SetUniform4f(const std::string& name, float f0, float f1, float f2, float f3)
+{
+    shader.SetUniform4f(name, f0, f1, f2, f3);
+}
+
+void Renderer::SetUniformMat4f(const std::string& name, const glm::mat4& matrix)
+{
+    shader.SetUniformMat4f(name, matrix);
+}
+
+Shader& Renderer::GetShader()
+{
+    return shader;
 }
 
 void Renderer::Bind()
 {
     shader.Bind();
     va.Bind();
+    vb.Bind();
     ib.Bind();
+    texture.Bind();
 }
 
 void Renderer::Unbind()
 {
+    shader.Unbind();
     va.Unbind();
     vb.Unbind();
     ib.Unbind();
+    texture.Unbind();
 }
