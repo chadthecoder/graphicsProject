@@ -76,11 +76,68 @@ std::array<openglStuff::Vertex, 5> Renderer::Pyramid(float x, float y, float z)
     v3.Texture = glm::vec2(5.0f, 0.0f);
 
     openglStuff::Vertex v4;
-    v4.Position = glm::vec3(x+0.5f, y+1.0f,  z+0.5f);
+    v4.Position = glm::vec3(x+0.5f, y+1.3f,  z+0.5f);
     v4.Color = glm::vec3(0.92f, 0.86f, 0.76f);
     v4.Texture = glm::vec2(2.5f, 5.0f);
 
     return { v0, v1, v2, v3, v4 };
+}
+
+//gives cube rendered in positive directions from given point
+std::array<openglStuff::Vertex, 8> Renderer::Cube(float x, float y, float z)
+{
+
+    float size = 1.0f;
+
+/* 0.0f, 0.5f,  1.0f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
+	0.0f, 0.5f, 0.0f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
+	1.0f, 0.5f, 0.0f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
+	1.0f, 0.5f,  1.0f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
+	0.5f, 1.3f,  0.5f,     0.92f, 0.86f, 0.76f,	    2.5f, 5.0f, */
+
+    openglStuff::Vertex v0;
+    //float* data = glm::value_ptr(vec);
+    v0.Position = glm::vec3(x+0.0f, y+0.0f,  z+1.0f);
+    v0.Color = glm::vec3(0.83f, 0.70f, 0.44f);
+    v0.Texture = glm::vec2(0.0f, 0.0f);
+
+    openglStuff::Vertex v1;
+    v1.Position = glm::vec3(x+0.0f, y+0.0f, z+0.0f);
+    v1.Color = glm::vec3(0.83f, 0.70f, 0.44);
+    v1.Texture = glm::vec2(5.0f, 0.0f);
+
+    openglStuff::Vertex v2;
+    v2.Position = glm::vec3(x+1.0f, y+0.0f, z+0.0f);
+    v2.Color = glm::vec3(0.83f, 0.70f, 0.44);
+    v2.Texture = glm::vec2(0.0f, 0.0f);
+
+    openglStuff::Vertex v3;
+    v3.Position = glm::vec3(x+1.0f, y+0.0f,  z+1.0f);
+    v3.Color = glm::vec3(0.83f, 0.70f, 0.44);
+    v3.Texture = glm::vec2(5.0f, 0.0f);
+
+    openglStuff::Vertex v4;
+    //float* data = glm::value_ptr(vec);
+    v4.Position = glm::vec3(x+0.0f, y+1.0f,  z+1.0f);
+    v4.Color = glm::vec3(0.83f, 0.70f, 0.44f);
+    v4.Texture = glm::vec2(0.0f, 0.0f);
+
+    openglStuff::Vertex v5;
+    v5.Position = glm::vec3(x+0.0f, y+1.0f, z+0.0f);
+    v5.Color = glm::vec3(0.83f, 0.70f, 0.44);
+    v5.Texture = glm::vec2(5.0f, 0.0f);
+
+    openglStuff::Vertex v6;
+    v6.Position = glm::vec3(x+1.0f, y+1.0f, z+0.0f);
+    v6.Color = glm::vec3(0.83f, 0.70f, 0.44);
+    v6.Texture = glm::vec2(0.0f, 0.0f);
+
+    openglStuff::Vertex v7;
+    v7.Position = glm::vec3(x+1.0f, y+1.0f,  z+1.0f);
+    v7.Color = glm::vec3(0.83f, 0.70f, 0.44);
+    v7.Texture = glm::vec2(5.0f, 0.0f);
+
+    return { v0, v1, v2, v3, v4, v5, v6, v7 };
 }
 
 void Renderer::Clear() const

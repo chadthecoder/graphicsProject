@@ -28,6 +28,7 @@ public:
     ~Renderer();
 
     static std::array<openglStuff::Vertex, 5> Pyramid(float x, float y, float z);
+    static std::array<openglStuff::Vertex, 8> Cube(float x, float y, float z);
 
     void Clear() const;
     void Draw(const void* data, unsigned int size) const; // unsigned int* indexArray void Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;

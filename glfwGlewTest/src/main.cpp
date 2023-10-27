@@ -181,6 +181,21 @@ int main(void)
 	    8, 5, 9 */
         };
 
+        std::vector<unsigned int> indicesCube {        
+        4, 5, 6,
+        6, 5, 7,
+        0, 4, 5,
+        4, 5, 1,
+        0, 1, 2,
+        1, 2, 3,
+        7, 6, 2,
+        6, 2, 3,
+        4, 7, 3,
+        7, 3, 0,
+        5, 6, 2,
+        6, 2, 1
+        };
+
         //changes the second half of the indices to be the same pattern but for the new vertices
         int stride = indicesPyramid.size()/2;
         //std::cout << "Stride: " << stride << "\n";
@@ -199,20 +214,27 @@ int main(void)
     //Texture texture("res/img/brick.png", "3D");
     //texture.Bind();
     
-    
-
-    //Renderer renderer("3D", verticesPyramid.data(), verticesPyramid.size() * sizeof(float), indicesPyramid.data(), indicesPyramid.size());
-    Renderer renderer("3D", sizeof(openglStuff::Vertex) * 1000, indicesPyramid.data(),
-        indicesPyramid.size(), "res/shaders/Basic.shader", "res/img/brick.png");
+    Renderer renderer("3D", sizeof(openglStuff::Vertex) * 1000, indicesCube.data(),
+        indicesCube.size(), "res/shaders/Basic.shader", "res/img/brick.png");
     
     //renderer.SetUniform1i("u_Texture", 0);
 
-    //create pyramids
+    /* //create pyramids
     auto q0 = renderer.Pyramid(0.0f, 0.0f, 0.0f);
     auto q1 = renderer.Pyramid(1.0f, 0.0f, 0.0f);
     openglStuff::Vertex verticesPyramid[10];
     memcpy(verticesPyramid, q0.data(), q0.size()*sizeof(openglStuff::Vertex));
     memcpy(verticesPyramid+q0.size(), q1.data(), q1.size()*sizeof(openglStuff::Vertex));
+ */
+
+    //create cubes
+    auto q0 = renderer.Cube(0.0f, 0.0f, 0.0f);
+    //auto q1 = renderer.Cube(1.0f, 0.0f, 0.0f);
+    openglStuff::Vertex verticesCube[8];
+    memcpy(verticesCube, q0.data(), q0.size()*sizeof(openglStuff::Vertex));
+    //memcpy(verticesCube+q0.size(), q1.data(), q1.size()*sizeof(openglStuff::Vertex));
+
+    std::cout << "hi: " << verticesCube[7].Position.z << "\n";
 
     //std::cout << q0.size() << "\n";
 
@@ -293,7 +315,7 @@ clock_t fps = 0;
         ImGui::NewFrame(); */
 
         //draw
-        renderer.Draw(verticesPyramid, sizeof(verticesPyramid) * sizeof(float));
+        renderer.Draw(verticesCube, sizeof(verticesCube) * sizeof(float));
         
 
         //imgui options
@@ -332,7 +354,7 @@ clock_t fps = 0;
         delta_ticks = clock() - current_ticks; //the time, in ms, that took to render the scene
     if(delta_ticks > 0)
         fps = CLOCKS_PER_SEC / delta_ticks;
-    std::cout << "fps: " << fps << std::endl;
+    //std::cout << "fps: " << fps << std::endl;
     }
 
     //victor gordon youtube, uncomment next line when done with other vertex buffer info
