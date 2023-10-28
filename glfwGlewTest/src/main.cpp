@@ -182,7 +182,7 @@ int main(void)
         };
 
         std::vector<unsigned int> indicesCube {        
-        4, 5, 6,
+        /* 4, 5, 6,
         6, 5, 7,
         0, 4, 5,
         4, 5, 1,
@@ -193,17 +193,53 @@ int main(void)
         4, 7, 3,
         7, 3, 0,
         5, 6, 2,
-        6, 2, 1
+        6, 2, 1 */
+
+        4, 5, 6,
+        4, 6, 7,
+        1, 5, 4,
+        1, 4, 0,
+        1, 0, 3,
+        1, 3, 2,
+        3, 7, 6,
+        3, 6, 2,
+        0, 4, 7,
+        0, 7, 3,
+        2, 6, 5,
+        2, 5, 1,
+
+        4, 5, 6,
+        4, 6, 7,
+        1, 5, 4,
+        1, 4, 0,
+        1, 0, 3,
+        1, 3, 2,
+        3, 7, 6,
+        3, 6, 2,
+        0, 4, 7,
+        0, 7, 3,
+        2, 6, 5,
+        2, 5, 1
         };
 
         //changes the second half of the indices to be the same pattern but for the new vertices
         int stride = indicesPyramid.size()/2;
-        //std::cout << "Stride: " << stride << "\n";
+        //std::cout << "Stride Pyramid: " << stride << "\n";
         for(int i=stride; i<(stride+stride); i++)
         {
             //std::cout << "Index " << i << " is " << indicesPyramid[i] << "\n";
             indicesPyramid[i] = (indicesPyramid[i]+5);
             //std::cout << "Index " << i << " is now " << indicesPyramid[i] << "\n";
+        }
+
+        //changes the second half of the indices to be the same pattern but for the new vertices
+        int strideC = indicesCube.size()/2;
+        //std::cout << "Stride Cube: " << strideC << "\n";
+        for(int i=strideC; i<(strideC+strideC); i++)
+        {
+            //std::cout << "Index " << i << " is " << indicesCube[i] << "\n";
+            indicesCube[i] = (indicesCube[i]+8);
+            //std::cout << "Index " << i << " is now " << indicesCube[i] << "\n";
         }
 
     //time stuff
@@ -219,22 +255,19 @@ int main(void)
     
     //renderer.SetUniform1i("u_Texture", 0);
 
-    /* //create pyramids
+    //create pyramids
     auto q0 = renderer.Pyramid(0.0f, 0.0f, 0.0f);
     auto q1 = renderer.Pyramid(1.0f, 0.0f, 0.0f);
     openglStuff::Vertex verticesPyramid[10];
     memcpy(verticesPyramid, q0.data(), q0.size()*sizeof(openglStuff::Vertex));
     memcpy(verticesPyramid+q0.size(), q1.data(), q1.size()*sizeof(openglStuff::Vertex));
- */
 
     //create cubes
-    auto q0 = renderer.Cube(0.0f, 0.0f, 0.0f);
-    //auto q1 = renderer.Cube(1.0f, 0.0f, 0.0f);
-    openglStuff::Vertex verticesCube[8];
-    memcpy(verticesCube, q0.data(), q0.size()*sizeof(openglStuff::Vertex));
-    //memcpy(verticesCube+q0.size(), q1.data(), q1.size()*sizeof(openglStuff::Vertex));
-
-    std::cout << "hi: " << verticesCube[7].Position.z << "\n";
+    auto q2 = renderer.Cube(0.0f, 0.0f, 0.0f);
+    auto q3 = renderer.Cube(1.0f, 0.0f, 0.0f);
+    openglStuff::Vertex verticesCube[16];
+    memcpy(verticesCube, q2.data(), q2.size()*sizeof(openglStuff::Vertex));
+    memcpy(verticesCube+q2.size(), q3.data(), q3.size()*sizeof(openglStuff::Vertex));
 
     //std::cout << q0.size() << "\n";
 
@@ -308,6 +341,7 @@ clock_t fps = 0;
 
         //get inputs and set camera shader
         //if (!io.WantCaptureMouse) camera.MnKInputs(window);
+        camera.MnKInputs(window);
         camera.Matrix(45.0f, 0.1f, 100.f, renderer.GetShader(), "u_camMatrix");
         
         /* ImGui_ImplOpenGL3_NewFrame();
