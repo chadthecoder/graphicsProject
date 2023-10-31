@@ -11,6 +11,8 @@ Renderer::Renderer(std::string dimension, int maxVerticesSize, unsigned int *ind
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE); 
 
+    Bind();
+
     //square
     if(dimension == "2D")
     {
@@ -84,16 +86,12 @@ std::array<openglStuff::Vertex, 5> Renderer::Pyramid(float x, float y, float z)
 }
 
 //gives cube rendered in positive directions from given point
-std::array<openglStuff::Vertex, 8> Renderer::Cube(float x, float y, float z)
+/* std::array<openglStuff::Vertex, 8> Renderer::Cube(float x, float y, float z)
 {
 
-    float size = 1.0f;
+    //float size = 1.0f;
 
-/* 0.0f, 0.5f,  1.0f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
-	0.0f, 0.5f, 0.0f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
-	1.0f, 0.5f, 0.0f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
-	1.0f, 0.5f,  1.0f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
-	0.5f, 1.3f,  0.5f,     0.92f, 0.86f, 0.76f,	    2.5f, 5.0f, */
+
 
     openglStuff::Vertex v0;
     //float* data = glm::value_ptr(vec);
@@ -138,6 +136,70 @@ std::array<openglStuff::Vertex, 8> Renderer::Cube(float x, float y, float z)
     v7.Texture = glm::vec2(5.0f, 0.0f);
 
     return { v0, v1, v2, v3, v4, v5, v6, v7 };
+} */
+
+openglStuff::Vertex* Renderer::Cube(openglStuff::Vertex* target, float x, float y, float z)
+{
+
+    float size = 1.0f;
+
+/* 0.0f, 0.5f,  1.0f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
+	0.0f, 0.5f, 0.0f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
+	1.0f, 0.5f, 0.0f,     0.83f, 0.70f, 0.44f,	    0.0f, 0.0f,
+	1.0f, 0.5f,  1.0f,     0.83f, 0.70f, 0.44f,	    5.0f, 0.0f,
+	0.5f, 1.3f,  0.5f,     0.92f, 0.86f, 0.76f,	    2.5f, 5.0f, */
+
+    //openglStuff::Vertex v0;
+    //float* data = glm::value_ptr(vec);
+    target->Position = glm::vec3(x+0.0f, y+0.0f,  z+1.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44f);
+    target->Texture = glm::vec2(0.0f, 0.0f);
+    target++;
+
+    //openglStuff::Vertex v1;
+    target->Position = glm::vec3(x+0.0f, y+0.0f, z+0.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
+    target->Texture = glm::vec2(5.0f, 0.0f);
+    target++;
+
+    //openglStuff::Vertex v2;
+    target->Position = glm::vec3(x+1.0f, y+0.0f, z+0.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
+    target->Texture = glm::vec2(0.0f, 0.0f);
+    target++;
+
+    //openglStuff::Vertex v3;
+    target->Position = glm::vec3(x+1.0f, y+0.0f,  z+1.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
+    target->Texture = glm::vec2(5.0f, 0.0f);
+    target++;
+
+    //openglStuff::Vertex v4;
+    //float* data = glm::value_ptr(vec);
+    target->Position = glm::vec3(x+0.0f, y+1.0f,  z+1.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44f);
+    target->Texture = glm::vec2(0.0f, 0.0f);
+    target++;
+
+    //openglStuff::Vertex v5;
+    target->Position = glm::vec3(x+0.0f, y+1.0f, z+0.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
+    target->Texture = glm::vec2(5.0f, 0.0f);
+    target++;
+
+    //openglStuff::Vertex v6;
+    target->Position = glm::vec3(x+1.0f, y+1.0f, z+0.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
+    target->Texture = glm::vec2(0.0f, 0.0f);
+    target++;
+
+    //openglStuff::Vertex v7;
+    target->Position = glm::vec3(x+1.0f, y+1.0f,  z+1.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
+    target->Texture = glm::vec2(5.0f, 0.0f);
+    target++;
+
+    return target;
 }
 
 void Renderer::Clear() const
@@ -147,7 +209,8 @@ void Renderer::Clear() const
 
 void Renderer::Draw(const void* data, unsigned int size) const //Draw(float* vertices, unsigned int* indexArray, const Shader& shader) const
 {
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, vb.GetRendererID()), __FILE__, __LINE__);
+    Bind();
+    std::cout << "subdata: " << size << " : " << data << "\n";
     GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, size, data), __FILE__, __LINE__);
 
     GLCall(glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr), __FILE__, __LINE__);
@@ -183,7 +246,7 @@ Shader& Renderer::GetShader()
     return shader;
 }
 
-void Renderer::Bind()
+void Renderer::Bind() const
 {
     shader.Bind();
     va.Bind();

@@ -127,16 +127,6 @@ int main(void)
     //Shader shader("res/shaders/Basic.shader");
     //shader.Bind();
 
-    const size_t vertPerPoint = 8;
-    const size_t vertPerCube = vertPerPoint * 8;
-    const size_t indexPerCube = 36;
-    const size_t strideC = indexPerCube;
-    const size_t numCube = 7; //memory leak causes less to be able to be drawn w/o creating a segfault?
-    const size_t maxCubeCount = 166; //166
-    const size_t maxQuadCount = maxCubeCount * 6;
-    const size_t maxVertexCount = maxCubeCount * vertPerCube;
-    const size_t maxIndexCount = maxCubeCount * indexPerCube;
-
     //positions and indices
 
     std::vector<float> vertices {
@@ -191,8 +181,8 @@ int main(void)
 	    8, 5, 9 */
         };
 
-        /* std::vector<unsigned int> indicesCube {        
-         4, 5, 6,
+        std::vector<unsigned int> indicesCube {        
+        /* 4, 5, 6,
         6, 5, 7,
         0, 4, 5,
         4, 5, 1,
@@ -203,7 +193,7 @@ int main(void)
         4, 7, 3,
         7, 3, 0,
         5, 6, 2,
-        6, 2, 1
+        6, 2, 1 */
 
         4, 5, 6,
         4, 6, 7,
@@ -218,7 +208,7 @@ int main(void)
         2, 6, 5,
         2, 5, 1
 
-        4, 5, 6,
+        /* 4, 5, 6,
         4, 6, 7,
         1, 5, 4,
         1, 4, 0,
@@ -229,61 +219,8 @@ int main(void)
         0, 4, 7,
         0, 7, 3,
         2, 6, 5,
-        2, 5, 1 
-        }; */
-
-        //add cubeIndices
-        uint32_t indicesCube[maxIndexCount];
-        uint32_t offset = 0;
-        uint32_t indexCount = 0;
-        for(size_t i = 0; i < maxIndexCount; i += indexPerCube)
-        {
-            indicesCube[i+0] = 4 + offset;
-            indicesCube[i+1] = 5 + offset;
-            indicesCube[i+2] = 6 + offset;
-            indicesCube[i+3] = 4 + offset;
-            indicesCube[i+4] = 6 + offset;
-            indicesCube[i+5] = 7 + offset;
-
-            indicesCube[i+6] = 1 + offset;
-            indicesCube[i+7] = 5 + offset;
-            indicesCube[i+8] = 4 + offset;
-            indicesCube[i+9] = 1 + offset;
-            indicesCube[i+10] = 4 + offset;
-            indicesCube[i+11] = 0 + offset;
-
-            indicesCube[i+12] = 1 + offset;
-            indicesCube[i+13] = 0 + offset;
-            indicesCube[i+14] = 3 + offset;
-            indicesCube[i+15] = 1 + offset;
-            indicesCube[i+16] = 3 + offset;
-            indicesCube[i+17] = 2 + offset;
-
-            indicesCube[i+18] = 3 + offset;
-            indicesCube[i+19] = 7 + offset;
-            indicesCube[i+20] = 6 + offset;
-            indicesCube[i+21] = 3 + offset;
-            indicesCube[i+22] = 6 + offset;
-            indicesCube[i+23] = 2 + offset;
-
-            indicesCube[i+24] = 0 + offset;
-            indicesCube[i+25] = 4 + offset;
-            indicesCube[i+26] = 7 + offset;
-            indicesCube[i+27] = 0 + offset;
-            indicesCube[i+28] = 7 + offset;
-            indicesCube[i+29] = 3 + offset;
-
-            indicesCube[i+30] = 2 + offset;
-            indicesCube[i+31] = 6 + offset;
-            indicesCube[i+32] = 5 + offset;
-            indicesCube[i+33] = 2 + offset;
-            indicesCube[i+34] = 5 + offset;
-            indicesCube[i+35] = 1 + offset;
-
-            std::cout << "stuff: " << maxIndexCount << " : " << i << " : " << offset << "\n";
-
-            offset += vertPerPoint;
-        }
+        2, 5, 1 */
+        };
 
         //changes the second half of the indices to be the same pattern but for the new vertices
         int stride = indicesPyramid.size()/2;
@@ -296,16 +233,19 @@ int main(void)
         }
 
         //changes the second half of the indices to be the same pattern but for the new vertices
-        
+        const unsigned int numCube = 20; //memory leak causes less to be able to be drawn w/o creating a segfault?
+        const unsigned int vertPerCube = 8;
+        const unsigned int numIndexPerCube = 36;
+        const unsigned int strideC = numIndexPerCube;
         //std::cout << "Stride Cube: " << strideC << "\n";
 
         //add indices for cubes
-        /* for(unsigned int i=strideC; i<(strideC * numCube); i++)
+        for(unsigned int i=strideC; i<(strideC * numCube); i++)
         {
             //std::cout << "Index " << i << " is " << indicesCube[i] << "\n";
-            indicesCube.push_back(indicesCube[i-indexPerCube]+vertPerCube);
+            indicesCube.push_back(indicesCube[i-numIndexPerCube]+vertPerCube);
             //std::cout << "Index " << i << " is now " << indicesCube[i] << "\n";
-        } */
+        }
 
     //time stuff
     float rotation = 0.0f;
@@ -315,8 +255,8 @@ int main(void)
     //Texture texture("res/img/brick.png", "3D");
     //texture.Bind();
     
-    Renderer renderer("3D", sizeof(openglStuff::Vertex) * maxVertexCount, indicesCube,
-        maxIndexCount, "res/shaders/Basic.shader", "res/img/brick.png");
+    Renderer renderer("3D", sizeof(openglStuff::Vertex) * 1000, indicesCube.data(),
+        indicesCube.size(), "res/shaders/Basic.shader", "res/img/brick.png");
     
     //renderer.SetUniform1i("u_Texture", 0);
 
@@ -327,29 +267,15 @@ int main(void)
     memcpy(verticesPyramid, q0.data(), q0.size()*sizeof(openglStuff::Vertex));
     memcpy(verticesPyramid+q0.size(), q1.data(), q1.size()*sizeof(openglStuff::Vertex));
 
-
-    size_t vertexCount = 0;
-    std::array<openglStuff::Vertex, maxVertexCount> verticesCube;
-    openglStuff::Vertex* bufferC = verticesCube.data();
-    for(int y = 0; y < 5; y++)
-    {
-        for(int x = 0; x < 5; x++)
-        {
-            bufferC = renderer.Cube(bufferC, (float)x, (float)y, 0.0f);
-            indexCount += 36;
-            vertexCount += vertPerCube;
-        }
-    }
-
     //create vertex buffer for numCubes, can change Cube function to change color and texture of cubes
-    /* openglStuff::Vertex verticesCube[vertPerCube*numCube];
+    openglStuff::Vertex verticesCube[vertPerCube*numCube];
     for(int i = 0; i < numCube; i++)
     {
         auto q = renderer.Cube(0.0f, (float)i, -(float)i);
         memcpy(verticesCube+(q.size()*i), q.data(), q.size()*sizeof(openglStuff::Vertex));
          std::cout << "sizey: " << verticesCube+(q.size()*i) << " : " << i << " : "
             << q.size() << " : " << verticesCube << " : " << verticesCube+0x8 << "\n"; 
-    } */
+    }
 
     /* auto q2 = renderer.Cube(0.0f, 0.0f, 0.0f);
     auto q3 = renderer.Cube(1.0f, 0.0f, 0.0f);
@@ -447,7 +373,7 @@ clock_t fps = 0;
         //std::cout << "size: " << sizeof(verticesCube)/sizeof(openglStuff::Vertex) << "\n";
         //std::cout << "size: " << verticesCube << "\n";
         std::cout << "size: " << sizeof(float) << "\n";
-        renderer.Draw(verticesCube.data(), vertexCount * sizeof(float));
+        renderer.Draw(verticesCube, sizeof(verticesCube) * sizeof(float));
         //std::cout << "size: " << sizeof(float) << "\n";
         
 
