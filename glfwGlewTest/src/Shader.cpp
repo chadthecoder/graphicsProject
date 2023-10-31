@@ -87,7 +87,7 @@ unsigned int Shader::CreateShader(const std::string &vertexShader, const std::st
 
 void Shader::Bind() const
 {
-    std::cout << "calling shader bind, id is: " << m_RendererID << "\n";
+    //std::cout << "calling shader bind, id is: " << m_RendererID << "\n";
     GLCall(glUseProgram(m_RendererID), __FILE__, __LINE__);
 }
 
@@ -98,7 +98,7 @@ void Shader::Unbind() const
 
 void Shader::SetUniform1i(const std::string& name, int i0)
 {
-    std::cout << "error?: " << name << " : i0: " << i0 << "\n";
+    //std::cout << "error?: " << name << " : i0: " << i0 << "\n";
     GLCall(glUniform1i(GetUniformLocation(name), i0), __FILE__, __LINE__);
 }
 

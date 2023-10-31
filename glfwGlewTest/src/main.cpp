@@ -280,7 +280,7 @@ int main(void)
             indicesCube[i+34] = 5 + offset;
             indicesCube[i+35] = 1 + offset;
 
-            std::cout << "stuff: " << maxIndexCount << " : " << i << " : " << offset << "\n";
+            //std::cout << "stuff: " << maxIndexCount << " : " << i << " : " << offset << "\n";
 
             offset += vertPerPoint;
         }
@@ -335,7 +335,7 @@ int main(void)
     {
         for(int x = 0; x < 5; x++)
         {
-            bufferC = renderer.Cube(bufferC, (float)x, (float)y, 0.0f);
+            bufferC = renderer.Cube(bufferC, (float)x, (float)y, -(float)y);
             indexCount += 36;
             vertexCount += vertPerCube;
         }
@@ -446,7 +446,7 @@ clock_t fps = 0;
         //draw
         //std::cout << "size: " << sizeof(verticesCube)/sizeof(openglStuff::Vertex) << "\n";
         //std::cout << "size: " << verticesCube << "\n";
-        std::cout << "size: " << sizeof(float) << "\n";
+        //std::cout << "size: " << sizeof(float) << "\n";
         renderer.Draw(verticesCube.data(), vertexCount * sizeof(float));
         //std::cout << "size: " << sizeof(float) << "\n";
         

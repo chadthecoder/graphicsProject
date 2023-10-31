@@ -210,7 +210,7 @@ void Renderer::Clear() const
 void Renderer::Draw(const void* data, unsigned int size) const //Draw(float* vertices, unsigned int* indexArray, const Shader& shader) const
 {
     Bind();
-    std::cout << "subdata: " << size << " : " << data << "\n";
+    //std::cout << "subdata: " << size << " : " << data << "\n";
     GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, size, data), __FILE__, __LINE__);
 
     GLCall(glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr), __FILE__, __LINE__);
