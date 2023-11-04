@@ -38,5 +38,5 @@ void main()
 {
     vec4 texColor = texture(u_Texture, v_texCoord);
 
-    color = texColor; //vec4(1.0, 1.0, 1.0, 1.0); //white color //cPartial; //cGradient; //cLine; //texColor; //vec4(mouseNormal.y, 0.0, mouseNormal.x, 1.0); //vec4(uv.x, 0.0, uv.y, 1.0); //u_Color; //vec4(0.6, 0.0, 0.6, 1.0); // purple
+    color = texColor; //vec4(v_color, 1.0f); //vec4(1.0, 1.0, 1.0, 1.0); //white color //cPartial; //cGradient; //cLine; //texColor; //vec4(mouseNormal.y, 0.0, mouseNormal.x, 1.0); //vec4(uv.x, 0.0, uv.y, 1.0); //u_Color; //vec4(0.6, 0.0, 0.6, 1.0); // purple
 };
