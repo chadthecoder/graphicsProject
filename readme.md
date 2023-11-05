@@ -2,6 +2,7 @@
 
 This is a graphics project written in C++ that utilizes SDL2 and OpenGL using GLEW and GLM libraries to create graphical applications. The project aims to provide a starting point for learning graphics programming in C++. The pong game has been moved to https://github.com/chadthecoder/NetworkPongGame as it is now its own project to work on using what I have learned while experimenting in this repo.
 
+Here are two drawings I made to show how the cube should be rendered using my current plan.
 ![Alt text](readmeStuff/cube1.jpeg?raw=true "Cube1")
 ![Alt text](readmeStuff/cube2.jpeg?raw=true "Cube2")
 
