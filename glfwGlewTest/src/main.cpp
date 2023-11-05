@@ -236,6 +236,54 @@ int main(void)
         uint32_t indicesCube[maxIndexCount];
         uint32_t offset = 0;
         uint32_t indexCount = 0;
+        /* for(size_t i = 0; i < maxIndexCount; i += indexPerCube)
+        {
+            indicesCube[i+0] = 4 + offset;
+            indicesCube[i+1] = 5 + offset;
+            indicesCube[i+2] = 6 + offset;
+            indicesCube[i+3] = 4 + offset;
+            indicesCube[i+4] = 6 + offset;
+            indicesCube[i+5] = 7 + offset;
+
+            indicesCube[i+6] = 1 + offset;
+            indicesCube[i+7] = 5 + offset;
+            indicesCube[i+8] = 4 + offset;
+            indicesCube[i+9] = 1 + offset;
+            indicesCube[i+10] = 4 + offset;
+            indicesCube[i+11] = 0 + offset;
+
+            indicesCube[i+12] = 1 + offset;
+            indicesCube[i+13] = 0 + offset;
+            indicesCube[i+14] = 3 + offset;
+            indicesCube[i+15] = 1 + offset;
+            indicesCube[i+16] = 3 + offset;
+            indicesCube[i+17] = 2 + offset;
+
+            indicesCube[i+18] = 3 + offset;
+            indicesCube[i+19] = 7 + offset;
+            indicesCube[i+20] = 6 + offset;
+            indicesCube[i+21] = 3 + offset;
+            indicesCube[i+22] = 6 + offset;
+            indicesCube[i+23] = 2 + offset;
+
+            indicesCube[i+24] = 0 + offset;
+            indicesCube[i+25] = 4 + offset;
+            indicesCube[i+26] = 7 + offset;
+            indicesCube[i+27] = 0 + offset;
+            indicesCube[i+28] = 7 + offset;
+            indicesCube[i+29] = 3 + offset;
+
+            indicesCube[i+30] = 2 + offset;
+            indicesCube[i+31] = 6 + offset;
+            indicesCube[i+32] = 5 + offset;
+            indicesCube[i+33] = 2 + offset;
+            indicesCube[i+34] = 5 + offset;
+            indicesCube[i+35] = 1 + offset;
+
+            //std::cout << "stuff: " << maxIndexCount << " : " << i << " : " << offset << "\n";
+
+            offset += vertPerPoint;
+        } */
         for(size_t i = 0; i < maxIndexCount; i += indexPerCube)
         {
             indicesCube[i+0] = 4 + offset;
