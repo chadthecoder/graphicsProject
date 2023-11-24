@@ -249,7 +249,7 @@ openglStuff::Vertex* Renderer::Cube2(openglStuff::Vertex* target, float x, float
         -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
         -0.5f,  0.5f, -0.5f,  0.0f, 1.0f */
 
-    //1
+    //left
     //openglStuff::Vertex v0;
     //float* data = glm::value_ptr(vec);
     target->Position = glm::vec3(x+0.0f, y+0.0f,  z+0.0f);
@@ -258,37 +258,37 @@ openglStuff::Vertex* Renderer::Cube2(openglStuff::Vertex* target, float x, float
     target++;
 
     //openglStuff::Vertex v1;
-    target->Position = glm::vec3(x+1.0f, y+0.0f, z+0.0f);
+    target->Position = glm::vec3(x+0.0f, y+1.0f, z+0.0f);
     target->Color = glm::vec3(0.83f, 0.70f, 0.44);
-    target->Texture = glm::vec2(1.0f, 0.0f);
+    target->Texture = glm::vec2(0.0f, 1.0f);
     target++;
 
     //openglStuff::Vertex v2;
-    target->Position = glm::vec3(x+1.0f, y+1.0f, z+0.0f);
+    target->Position = glm::vec3(x+0.0f, y+1.0f, z+1.0f);
     target->Color = glm::vec3(0.83f, 0.70f, 0.44);
     target->Texture = glm::vec2(1.0f, 1.0f);
     target++;
 
     //openglStuff::Vertex v3;
-    target->Position = glm::vec3(x+1.0f, y+1.0f,  z+0.0f);
-    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
-    target->Texture = glm::vec2(1.0f, 1.0f);
-    target++;
-
-    //openglStuff::Vertex v4;
-    //float* data = glm::value_ptr(vec);
-    target->Position = glm::vec3(x+0.0f, y+1.0f,  z+0.0f);
-    target->Color = glm::vec3(0.83f, 0.70f, 0.44f);
-    target->Texture = glm::vec2(0.0f, 1.0f);
-    target++;
-
-    //openglStuff::Vertex v5;
-    target->Position = glm::vec3(x+0.0f, y+0.0f, z+0.0f);
+    target->Position = glm::vec3(x+0.0f, y+0.0f,  z+0.0f);
     target->Color = glm::vec3(0.83f, 0.70f, 0.44);
     target->Texture = glm::vec2(0.0f, 0.0f);
     target++;
 
-    //2
+    //openglStuff::Vertex v4;
+    //float* data = glm::value_ptr(vec);
+    target->Position = glm::vec3(x+0.0f, y+1.0f,  z+1.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44f);
+    target->Texture = glm::vec2(1.0f, 1.0f);
+    target++;
+
+    //openglStuff::Vertex v5;
+    target->Position = glm::vec3(x+0.0f, y+0.0f, z+1.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
+    target->Texture = glm::vec2(1.0f, 0.0f);
+    target++;
+
+    //front
    //openglStuff::Vertex v0;
     //float* data = glm::value_ptr(vec);
     target->Position = glm::vec3(x+0.0f, y+0.0f,  z+1.0f);
@@ -297,9 +297,9 @@ openglStuff::Vertex* Renderer::Cube2(openglStuff::Vertex* target, float x, float
     target++;
 
     //openglStuff::Vertex v1;
-    target->Position = glm::vec3(x+1.0f, y+0.0f, z+1.0f);
+    target->Position = glm::vec3(x+0.0f, y+1.0f, z+1.0f);
     target->Color = glm::vec3(0.83f, 0.70f, 0.44);
-    target->Texture = glm::vec2(1.0f, 0.0f);
+    target->Texture = glm::vec2(0.0f, 1.0f);
     target++;
 
     //openglStuff::Vertex v2;
@@ -309,180 +309,178 @@ openglStuff::Vertex* Renderer::Cube2(openglStuff::Vertex* target, float x, float
     target++;
 
     //openglStuff::Vertex v3;
-    target->Position = glm::vec3(x+1.0f, y+1.0f,  z+1.0f);
-    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
-    target->Texture = glm::vec2(1.0f, 1.0f);
-    target++;
-
-    //openglStuff::Vertex v4;
-    //float* data = glm::value_ptr(vec);
-    target->Position = glm::vec3(x+0.0f, y+1.0f,  z+1.0f);
-    target->Color = glm::vec3(0.83f, 0.70f, 0.44f);
-    target->Texture = glm::vec2(0.0f, 1.0f);
-    target++;
-
-    //openglStuff::Vertex v5;
-    target->Position = glm::vec3(x+0.0f, y+0.0f, z+1.0f);
-    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
-    target->Texture = glm::vec2(0.0f, 0.0f);
-    target++;
-
-    //3
-    //openglStuff::Vertex v0;
-    //float* data = glm::value_ptr(vec);
-    target->Position = glm::vec3(x+0.0f, y+1.0f,  z+1.0f);
-    target->Color = glm::vec3(0.83f, 0.70f, 0.44f);
-    target->Texture = glm::vec2(1.0f, 0.0f);
-    target++;
-
-    //openglStuff::Vertex v1;
-    target->Position = glm::vec3(x+0.0f, y+1.0f, z+0.0f);
-    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
-    target->Texture = glm::vec2(1.0f, 1.0f);
-    target++;
-
-    //openglStuff::Vertex v2;
-    target->Position = glm::vec3(x+0.0f, y+0.0f, z+0.0f);
-    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
-    target->Texture = glm::vec2(0.0f, 1.0f);
-    target++;
-
-    //openglStuff::Vertex v3;
-    target->Position = glm::vec3(x+0.0f, y+0.0f,  z+0.0f);
-    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
-    target->Texture = glm::vec2(0.0f, 1.0f);
-    target++;
-
-    //openglStuff::Vertex v4;
-    //float* data = glm::value_ptr(vec);
     target->Position = glm::vec3(x+0.0f, y+0.0f,  z+1.0f);
-    target->Color = glm::vec3(0.83f, 0.70f, 0.44f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
     target->Texture = glm::vec2(0.0f, 0.0f);
     target++;
 
-
+    //openglStuff::Vertex v4;
+    //float* data = glm::value_ptr(vec);
+    target->Position = glm::vec3(x+1.0f, y+1.0f,  z+1.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44f);
+    target->Texture = glm::vec2(1.0f, 1.0f);
+    target++;
 
     //openglStuff::Vertex v5;
-    target->Position = glm::vec3(x+0.0f, y+1.0f, z+1.0f);
+    target->Position = glm::vec3(x+1.0f, y+0.0f, z+1.0f);
     target->Color = glm::vec3(0.83f, 0.70f, 0.44);
     target->Texture = glm::vec2(1.0f, 0.0f);
     target++;
 
-    //4
+    //back
     //openglStuff::Vertex v0;
     //float* data = glm::value_ptr(vec);
-    target->Position = glm::vec3(x+1.0f, y+1.0f,  z+1.0f);
+    target->Position = glm::vec3(x+1.0f, y+0.0f,  z+0.0f);
     target->Color = glm::vec3(0.83f, 0.70f, 0.44f);
-    target->Texture = glm::vec2(1.0f, 0.0f);
+    target->Texture = glm::vec2(0.0f, 0.0f);
     target++;
 
     //openglStuff::Vertex v1;
     target->Position = glm::vec3(x+1.0f, y+1.0f, z+0.0f);
     target->Color = glm::vec3(0.83f, 0.70f, 0.44);
-    target->Texture = glm::vec2(1.0f, 1.0f);
+    target->Texture = glm::vec2(0.0f, 1.0f);
     target++;
 
     //openglStuff::Vertex v2;
-    target->Position = glm::vec3(x+1.0f, y+0.0f, z+0.0f);
+    target->Position = glm::vec3(x+0.0f, y+1.0f, z+0.0f);
     target->Color = glm::vec3(0.83f, 0.70f, 0.44);
-    target->Texture = glm::vec2(0.0f, 1.0f);
+    target->Texture = glm::vec2(1.0f, 1.0f);
     target++;
 
     //openglStuff::Vertex v3;
     target->Position = glm::vec3(x+1.0f, y+0.0f,  z+0.0f);
     target->Color = glm::vec3(0.83f, 0.70f, 0.44);
-    target->Texture = glm::vec2(0.0f, 1.0f);
+    target->Texture = glm::vec2(0.0f, 0.0f);
     target++;
 
     //openglStuff::Vertex v4;
     //float* data = glm::value_ptr(vec);
-    target->Position = glm::vec3(x+1.0f, y+0.0f,  z+1.0f);
+    target->Position = glm::vec3(x+0.0f, y+1.0f,  z+0.0f);
     target->Color = glm::vec3(0.83f, 0.70f, 0.44f);
-    target->Texture = glm::vec2(0.0f, 0.0f);
-    target++;
-
-    //openglStuff::Vertex v5;
-    target->Position = glm::vec3(x+1.0f, y+1.0f, z+1.0f);
-    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
-    target->Texture = glm::vec2(1.0f, 0.0f);
-    target++;
-
-    //5
-    //openglStuff::Vertex v0;
-    //float* data = glm::value_ptr(vec);
-    target->Position = glm::vec3(x+0.0f, y+0.0f,  z+0.0f);
-    target->Color = glm::vec3(0.83f, 0.70f, 0.44f);
-    target->Texture = glm::vec2(0.0f, 1.0f);
-    target++;
-
-    //openglStuff::Vertex v1;
-    target->Position = glm::vec3(x+1.0f, y+0.0f, z+0.0f);
-    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
     target->Texture = glm::vec2(1.0f, 1.0f);
-    target++;
-
-    //openglStuff::Vertex v2;
-    target->Position = glm::vec3(x+1.0f, y+0.0f, z+1.0f);
-    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
-    target->Texture = glm::vec2(1.0f, 0.0f);
-    target++;
-
-    //openglStuff::Vertex v3;
-    target->Position = glm::vec3(x+1.0f, y+0.0f,  z+1.0f);
-    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
-    target->Texture = glm::vec2(1.0f, 0.0f);
-    target++;
-
-    //openglStuff::Vertex v4;
-    //float* data = glm::value_ptr(vec);
-    target->Position = glm::vec3(x+0.0f, y+0.0f,  z+1.0f);
-    target->Color = glm::vec3(0.83f, 0.70f, 0.44f);
-    target->Texture = glm::vec2(0.0f, 0.0f);
     target++;
 
     //openglStuff::Vertex v5;
     target->Position = glm::vec3(x+0.0f, y+0.0f, z+0.0f);
     target->Color = glm::vec3(0.83f, 0.70f, 0.44);
-    target->Texture = glm::vec2(0.0f, 1.0f);
+    target->Texture = glm::vec2(1.0f, 0.0f);
     target++;
 
-    //6
+    //bottom
     //openglStuff::Vertex v0;
     //float* data = glm::value_ptr(vec);
-    target->Position = glm::vec3(x+0.0f, y+1.0f,  z+0.0f);
+    target->Position = glm::vec3(x+0.0f, y+0.0f,  z+0.0f);
     target->Color = glm::vec3(0.83f, 0.70f, 0.44f);
-    target->Texture = glm::vec2(0.0f, 1.0f);
+    target->Texture = glm::vec2(0.0f, 0.0f);
     target++;
 
     //openglStuff::Vertex v1;
-    target->Position = glm::vec3(x+1.0f, y+1.0f, z+0.0f);
+    target->Position = glm::vec3(x+0.0f, y+0.0f, z+1.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
+    target->Texture = glm::vec2(0.0f, 1.0f);
+    target++;
+
+    //openglStuff::Vertex v2;
+    target->Position = glm::vec3(x+1.0f, y+0.0f, z+1.0f);
     target->Color = glm::vec3(0.83f, 0.70f, 0.44);
     target->Texture = glm::vec2(1.0f, 1.0f);
     target++;
 
-    //openglStuff::Vertex v2;
-    target->Position = glm::vec3(x+1.0f, y+1.0f, z+1.0f);
-    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
-    target->Texture = glm::vec2(1.0f, 0.0f);
-    target++;
-
     //openglStuff::Vertex v3;
-    target->Position = glm::vec3(x+1.0f, y+1.0f,  z+1.0f);
+    target->Position = glm::vec3(x+0.0f, y+0.0f,  z+0.0f);
     target->Color = glm::vec3(0.83f, 0.70f, 0.44);
-    target->Texture = glm::vec2(1.0f, 0.0f);
+    target->Texture = glm::vec2(0.0f, 0.0f);
     target++;
 
     //openglStuff::Vertex v4;
+    //float* data = glm::value_ptr(vec);
+    target->Position = glm::vec3(x+1.0f, y+0.0f,  z+1.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44f);
+    target->Texture = glm::vec2(1.0f, 1.0f);
+    target++;
+
+    //openglStuff::Vertex v5;
+    target->Position = glm::vec3(x+1.0f, y+0.0f, z+0.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
+    target->Texture = glm::vec2(1.0f, 0.0f);
+    target++;
+
+    //top
+    //openglStuff::Vertex v0;
     //float* data = glm::value_ptr(vec);
     target->Position = glm::vec3(x+0.0f, y+1.0f,  z+1.0f);
     target->Color = glm::vec3(0.83f, 0.70f, 0.44f);
     target->Texture = glm::vec2(0.0f, 0.0f);
     target++;
 
-    //openglStuff::Vertex v5;
+    //openglStuff::Vertex v1;
     target->Position = glm::vec3(x+0.0f, y+1.0f, z+0.0f);
     target->Color = glm::vec3(0.83f, 0.70f, 0.44);
     target->Texture = glm::vec2(0.0f, 1.0f);
+    target++;
+
+    //openglStuff::Vertex v2;
+    target->Position = glm::vec3(x+1.0f, y+1.0f, z+0.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
+    target->Texture = glm::vec2(1.0f, 1.0f);
+    target++;
+
+    //openglStuff::Vertex v3;
+    target->Position = glm::vec3(x+0.0f, y+1.0f,  z+1.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
+    target->Texture = glm::vec2(0.0f, 0.0f);
+    target++;
+
+    //openglStuff::Vertex v4;
+    //float* data = glm::value_ptr(vec);
+    target->Position = glm::vec3(x+1.0f, y+1.0f,  z+0.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44f);
+    target->Texture = glm::vec2(1.0f, 1.0f);
+    target++;
+
+    //openglStuff::Vertex v5;
+    target->Position = glm::vec3(x+1.0f, y+1.0f, z+1.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
+    target->Texture = glm::vec2(1.0f, 0.0f);
+    target++;
+
+    //right
+    //openglStuff::Vertex v0;
+    //float* data = glm::value_ptr(vec);
+    target->Position = glm::vec3(x+1.0f, y+0.0f,  z+1.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44f);
+    target->Texture = glm::vec2(0.0f, 0.0f);
+    target++;
+
+    //openglStuff::Vertex v1;
+    target->Position = glm::vec3(x+1.0f, y+1.0f, z+1.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
+    target->Texture = glm::vec2(0.0f, 1.0f);
+    target++;
+
+    //openglStuff::Vertex v2;
+    target->Position = glm::vec3(x+1.0f, y+1.0f, z+0.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
+    target->Texture = glm::vec2(1.0f, 1.0f);
+    target++;
+
+    //openglStuff::Vertex v3;
+    target->Position = glm::vec3(x+1.0f, y+0.0f,  z+1.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
+    target->Texture = glm::vec2(0.0f, 0.0f);
+    target++;
+
+    //openglStuff::Vertex v4;
+    //float* data = glm::value_ptr(vec);
+    target->Position = glm::vec3(x+1.0f, y+1.0f,  z+0.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44f);
+    target->Texture = glm::vec2(1.0f, 1.0f);
+    target++;
+
+    //openglStuff::Vertex v5;
+    target->Position = glm::vec3(x+1.0f, y+0.0f, z+0.0f);
+    target->Color = glm::vec3(0.83f, 0.70f, 0.44);
+    target->Texture = glm::vec2(1.0f, 0.0f);
     target++;
 
     return target;
@@ -500,6 +498,7 @@ void Renderer::Draw(const void* data, unsigned int size) const //Draw(float* ver
     GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, size, data), __FILE__, __LINE__);
 
     GLCall(glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr), __FILE__, __LINE__);
+    ib.GetCount2();
     //GLCall(glDrawArrays(GL_TRIANGLES, 0, (36*20*20)), __FILE__, __LINE__);
 }
 

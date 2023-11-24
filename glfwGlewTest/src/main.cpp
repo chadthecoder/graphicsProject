@@ -128,11 +128,11 @@ int main(void)
     //shader.Bind();
 
     const size_t vertPerPoint = 8;
-    const size_t vertPerCube = vertPerPoint * 8;
+    const size_t vertPerCube = vertPerPoint * 36; //vertPerPoint * 8;
     const size_t indexPerCube = 36;
     const size_t strideC = indexPerCube;
     const size_t numCube = 7; //memory leak causes less to be able to be drawn w/o creating a segfault?
-    const size_t maxCubeCount = 166; //166
+    const size_t maxCubeCount = 1; //166;
     const size_t maxQuadCount = maxCubeCount * 6;
     const size_t maxVertexCount = maxCubeCount * vertPerCube;
     const size_t maxIndexCount = maxCubeCount * indexPerCube;
@@ -286,47 +286,47 @@ int main(void)
         } */
         for(size_t i = 0; i < maxIndexCount; i += indexPerCube)
         {
-            indicesCube[i+0] = 4 + offset;
-            indicesCube[i+1] = 5 + offset;
-            indicesCube[i+2] = 6 + offset;
+            indicesCube[i+0] = 1 + offset;
+            indicesCube[i+1] = 2 + offset;
+            indicesCube[i+2] = 3 + offset;
             indicesCube[i+3] = 4 + offset;
-            indicesCube[i+4] = 6 + offset;
-            indicesCube[i+5] = 7 + offset;
+            indicesCube[i+4] = 5 + offset;
+            indicesCube[i+5] = 6 + offset;
 
-            indicesCube[i+6] = 1 + offset;
-            indicesCube[i+7] = 5 + offset;
-            indicesCube[i+8] = 4 + offset;
-            indicesCube[i+9] = 1 + offset;
-            indicesCube[i+10] = 4 + offset;
-            indicesCube[i+11] = 0 + offset;
+            indicesCube[i+6] = 7 + offset;
+            indicesCube[i+7] = 8 + offset;
+            indicesCube[i+8] = 9 + offset;
+            indicesCube[i+9] = 10 + offset;
+            indicesCube[i+10] = 11 + offset;
+            indicesCube[i+11] = 12 + offset;
 
-            indicesCube[i+12] = 1 + offset;
-            indicesCube[i+13] = 0 + offset;
-            indicesCube[i+14] = 3 + offset;
-            indicesCube[i+15] = 1 + offset;
-            indicesCube[i+16] = 3 + offset;
-            indicesCube[i+17] = 2 + offset;
+            indicesCube[i+12] = 13 + offset;
+            indicesCube[i+13] = 14 + offset;
+            indicesCube[i+14] = 15 + offset;
+            indicesCube[i+15] = 16 + offset;
+            indicesCube[i+16] = 17 + offset;
+            indicesCube[i+17] = 18 + offset;
 
-            indicesCube[i+18] = 3 + offset;
-            indicesCube[i+19] = 7 + offset;
-            indicesCube[i+20] = 6 + offset;
-            indicesCube[i+21] = 3 + offset;
-            indicesCube[i+22] = 6 + offset;
-            indicesCube[i+23] = 2 + offset;
+            indicesCube[i+18] = 19 + offset;
+            indicesCube[i+19] = 20 + offset;
+            indicesCube[i+20] = 21 + offset;
+            indicesCube[i+21] = 22 + offset;
+            indicesCube[i+22] = 23 + offset;
+            indicesCube[i+23] = 24 + offset;
 
-            indicesCube[i+24] = 0 + offset;
-            indicesCube[i+25] = 4 + offset;
-            indicesCube[i+26] = 7 + offset;
-            indicesCube[i+27] = 0 + offset;
-            indicesCube[i+28] = 7 + offset;
-            indicesCube[i+29] = 3 + offset;
+            indicesCube[i+24] = 25 + offset;
+            indicesCube[i+25] = 26 + offset;
+            indicesCube[i+26] = 27 + offset;
+            indicesCube[i+27] = 28 + offset;
+            indicesCube[i+28] = 29 + offset;
+            indicesCube[i+29] = 30 + offset;
 
-            indicesCube[i+30] = 2 + offset;
-            indicesCube[i+31] = 6 + offset;
-            indicesCube[i+32] = 5 + offset;
-            indicesCube[i+33] = 2 + offset;
-            indicesCube[i+34] = 5 + offset;
-            indicesCube[i+35] = 1 + offset;
+            indicesCube[i+30] = 31 + offset;
+            indicesCube[i+31] = 32 + offset;
+            indicesCube[i+32] = 33 + offset;
+            indicesCube[i+33] = 34 + offset;
+            indicesCube[i+34] = 35 + offset;
+            indicesCube[i+35] = 36 + offset;
 
             //std::cout << "stuff: " << maxIndexCount << " : " << i << " : " << offset << "\n";
 
@@ -379,15 +379,18 @@ int main(void)
     size_t vertexCount = 0;
     std::array<openglStuff::Vertex, maxVertexCount> verticesCube;
     openglStuff::Vertex* bufferC = verticesCube.data();
-    for(int y = 0; y < 5; y++)
+
+    bufferC = renderer.Cube2(bufferC, 0.0f, 0.0f, 0.0f);
+
+    /* for(int y = 0; y < 5; y++)
     {
         for(int x = 0; x < 5; x++)
         {
-            bufferC = renderer.Cube(bufferC, (float)x, (float)y, -(float)y);
+            bufferC = renderer.Cube2(bufferC, (float)x, (float)y, -(float)y);
             indexCount += 36;
             vertexCount += vertPerCube;
         }
-    }
+    } */
 
     //create vertex buffer for numCubes, can change Cube function to change color and texture of cubes
     /* openglStuff::Vertex verticesCube[vertPerCube*numCube];
@@ -495,7 +498,7 @@ clock_t fps = 0;
         //std::cout << "size: " << sizeof(verticesCube)/sizeof(openglStuff::Vertex) << "\n";
         //std::cout << "size: " << verticesCube << "\n";
         //std::cout << "size: " << sizeof(float) << "\n";
-        renderer.Draw(verticesCube.data(), vertexCount * sizeof(float));
+        renderer.Draw(verticesCube.data(), 36 * 8 * sizeof(float)); // vertexCount * sizeof(float));
         //std::cout << "size: " << sizeof(float) << "\n";
         
 
