@@ -6,6 +6,12 @@ Meant to be cross platform for Windows and Linux. Only works on Windows right no
 
 # Resources:
 
+# Perlin Noise
+
+https://github.com/Reputeless/PerlinNoise
+
+# Pong Icon
+
 pong icon by Icons8 (icons8.com)
 
 Game Programming in C++ by Sanjay Madhav  

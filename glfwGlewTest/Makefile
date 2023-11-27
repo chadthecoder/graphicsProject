@@ -46,7 +46,7 @@ OBJS = $(SOURCES:src/%.cpp=bin/%.o)
 outputLin = -o "bin/$(programName)"
 
 bin/%.o:src/%.cpp
-	$(cc) $(includes) $(libsLin) -c -o $@ $<
+	$(cc) --std=c++17 $(includes) $(libsLin) -c -o $@ $<
 
 bin/%.o:$(IMGUI_DIR)/%.cpp
 	$(cc) $(libsLin) -c -o $@ $<

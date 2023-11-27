@@ -21,6 +21,9 @@
 //#include <imgui/backends/imgui_impl_opengl3_loader.h>
 #include <imgui/backends/imgui_impl_opengl3.h>
 
+//perlin noise
+#include "perlinNoise/PerlinNoise.hpp"
+
 #include "Errors.hpp"
 #include "VertexBuffer.hpp"
 #include "IndexBuffer.hpp"
@@ -382,7 +385,7 @@ int main(void)
 
     //bufferC = renderer.Cube2(bufferC, 0.0f, 0.0f, 0.0f);
 
-    for(int y = 0; y < 5; y++)
+    /* for(int y = 0; y < 5; y++)
     {
         for(int x = 0; x < 5; x++)
         {
@@ -390,7 +393,29 @@ int main(void)
             indexCount += 36;
             vertexCount += vertPerCube;
         }
-    }
+    } */
+
+    const siv::PerlinNoise::seed_type seed = 123456u;
+
+	const siv::PerlinNoise perlin{ seed };
+	
+	for (int y = 0; y < 5; ++y)
+	{
+		for (int x = 0; x < 5; ++x)
+		{
+			const double noise = perlin.octave2D_01((x * 1), (y * 1), 4);
+
+            std::cout << (float)(int)(noise*10) << "\n";
+
+            bufferC = renderer.Cube2(bufferC, (float)x, (float)(int)(noise*10), -(float)y);
+            indexCount += 36;
+            vertexCount += vertPerCube;
+
+			//std::cout << noise << '\t';
+		}
+
+		std::cout << '\n';
+	}
 
     //create vertex buffer for numCubes, can change Cube function to change color and texture of cubes
     /* openglStuff::Vertex verticesCube[vertPerCube*numCube];
