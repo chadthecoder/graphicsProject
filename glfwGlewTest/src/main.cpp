@@ -22,7 +22,7 @@
 #include <imgui/backends/imgui_impl_opengl3.h>
 
 //perlin noise
-#include "perlinNoise/PerlinNoise.hpp"
+#include "PerlinNoise/PerlinNoise.hpp"
 
 #include "Errors.hpp"
 #include "VertexBuffer.hpp"
@@ -405,9 +405,14 @@ int main(void)
 		{
 			const double noise = perlin.octave2D_01((x * 1), (y * 1), 4);
 
-            std::cout << (float)(int)(noise*10) << "\n";
+            const float noise1 = sin(x/10.0f);
+            const double noise2 = cos(x);
 
-            bufferC = renderer.Cube2(bufferC, (float)x, (float)(int)(noise*10), -(float)y);
+            std::cout << noise1 << "\n";
+            //std::cout << (float)(int)(noise*10) << "\n";
+
+            bufferC = renderer.Cube2(bufferC, (float)x, (float)(noise1*10), -(float)y);
+            //bufferC = renderer.Cube2(bufferC, (float)x, (float)(int)(noise*10), -(float)y);
             indexCount += 36;
             vertexCount += vertPerCube;
 
