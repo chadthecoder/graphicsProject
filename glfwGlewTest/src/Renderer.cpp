@@ -498,7 +498,7 @@ void Renderer::Draw(const void* data, unsigned int size) const //Draw(float* ver
     GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, size, data), __FILE__, __LINE__);
 
     GLCall(glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr), __FILE__, __LINE__);
-    ib.GetCount2();
+    //ib.GetCountPrint();
     //GLCall(glDrawArrays(GL_TRIANGLES, 0, (36*20*20)), __FILE__, __LINE__);
 }
 

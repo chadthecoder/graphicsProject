@@ -72,6 +72,35 @@ void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods
     }
 }
 
+struct counts {
+  size_t vertexCount;
+  uint32_t indexCount;
+  openglStuff::Vertex* bufferC;
+} ;
+
+counts renderBlocksUnder(Renderer& rend, openglStuff::Vertex* bufferC, float x, float y, float z, uint32_t indexCount, size_t vertexCount)
+{
+    y--;
+    //size_t test [2]; //0-indexCount, 1-vertexCount
+    while(y>-1)
+    {
+        //std::cout << "in loooooooooooopy: " << y << "\n";
+        bufferC = rend.Cube2(bufferC, x, (float)y, z);
+        indexCount += 36;
+        vertexCount += 36 * 8;
+
+        y--;
+    }
+
+
+    counts counts2;
+
+    counts2.indexCount = indexCount;
+    counts2.vertexCount = vertexCount;
+    counts2.bufferC = bufferC;
+    return counts2;
+}
+
 int main(void)
 {
     //glfw window and cursor stuff
@@ -134,8 +163,8 @@ int main(void)
     const size_t vertPerCube = vertPerPoint * 36; //vertPerPoint * 8;
     const size_t indexPerCube = 36;
     //const size_t strideC = indexPerCube;
-    const size_t numCube = 166; //memory leak causes less to be able to be drawn w/o creating a segfault?
-    const size_t maxCubeCount = 166; //166;
+    //const size_t numCube = 166; //memory leak causes less to be able to be drawn w/o creating a segfault?
+    const size_t maxCubeCount = 500; //166;
     //const size_t maxQuadCount = maxCubeCount * 6;
     const size_t maxVertexCount = maxCubeCount * vertPerCube;
     const size_t maxIndexCount = maxCubeCount * indexPerCube;
@@ -365,10 +394,12 @@ int main(void)
     //texture stuff, cpp logo
     //Texture texture("res/img/brick.png", "3D");
     //texture.Bind();
-    
+
     Renderer renderer("3D", sizeof(openglStuff::Vertex) * maxVertexCount, indicesCube,
         maxIndexCount, "res/shaders/Basic.shader", "res/img/brick.png");
     
+    
+
     //renderer.SetUniform1i("u_Texture", 0);
 
     //create pyramids
@@ -398,28 +429,45 @@ int main(void)
     const siv::PerlinNoise::seed_type seed = 123456u;
 
 	const siv::PerlinNoise perlin{ seed };
-	
-	for (int y = 0; y < 5; ++y)
+
+	for (int y = 0; y < 16; ++y)
 	{
-		for (int x = 0; x < 5; ++x)
+		for (int x = 0; x < 16; ++x)
 		{
 			const double noise = perlin.octave2D_01((x * 1), (y * 1), 4);
 
             const float noise1 = sin(x/10.0f);
             const double noise2 = cos(x);
 
-            std::cout << noise1 << "\n";
+            //std::cout << (float)(int)(noise1*10) << "\n";
             //std::cout << (float)(int)(noise*10) << "\n";
 
-            bufferC = renderer.Cube2(bufferC, (float)x, (float)(noise1*10), -(float)y);
-            //bufferC = renderer.Cube2(bufferC, (float)x, (float)(int)(noise*10), -(float)y);
+            float x1 = (float)x;
+            float y1 = (float)(int)(noise1*10);
+            float z1 = -(float)y;
+
+            float x2 = (float)x;
+            float y2 = (float)(int)(noise1*10);
+            float z2 = -(float)y;
+
+            bufferC = renderer.Cube2(bufferC, x2, y2, z2);
+            counts testy;
+            //std::cout << "rend 1: " << x2 << " : " << y2 << " : " << z2 << "\n";
+            testy = renderBlocksUnder(renderer, bufferC, x2, y2, z2, indexCount, vertexCount);
+            //std::cout << "rend 2: " << indexCount << " : " << vertexCount << "\n";
+            indexCount += testy.indexCount;
+            vertexCount += testy.vertexCount;
+            bufferC = testy.bufferC;
+            bufferC = renderer.Cube2(bufferC, x2, y2, z2);
             indexCount += 36;
             vertexCount += vertPerCube;
 
 			//std::cout << noise << '\t';
 		}
 
-		std::cout << '\n';
+        
+
+		//std::cout << '\n';
 	}
 
     //create vertex buffer for numCubes, can change Cube function to change color and texture of cubes
@@ -496,6 +544,7 @@ int main(void)
     //setup camera
     Camera camera(mode->width, mode->height, glm::vec3(0.8f, 0.8f, 3.0f));
     
+    std::cout << "hi2\n";
 
     //renderer.Bind();
 
@@ -505,6 +554,8 @@ clock_t fps = 0;
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
+        //std::cout << "hi1\n";
+
         current_ticks = clock();
 
        
@@ -528,9 +579,12 @@ clock_t fps = 0;
         //std::cout << "size: " << sizeof(verticesCube)/sizeof(openglStuff::Vertex) << "\n";
         //std::cout << "size: " << verticesCube << "\n";
         //std::cout << "size: " << sizeof(float) << "\n";
-        renderer.Draw(verticesCube.data(), 25 * vertPerCube * sizeof(openglStuff::Vertex)); // vertexCount * sizeof(float));
+
+        //std::cout << "vertex count: " << vertexCount << "\n";
+        //std::cout << "hi2\n";
+        renderer.Draw(verticesCube.data(), maxVertexCount * sizeof(openglStuff::Vertex));//25 * vertPerCube * sizeof(openglStuff::Vertex)); // vertexCount * sizeof(float));
         //std::cout << "size: " << sizeof(float) << "\n";
-        
+        //std::cout << "hi3\n";
 
         //imgui options
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.

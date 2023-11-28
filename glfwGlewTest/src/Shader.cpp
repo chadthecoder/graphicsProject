@@ -9,7 +9,9 @@ Shader::Shader(const std::string& filepath) : m_FilePath(filepath), m_RendererID
 
 Shader::~Shader()
 {
+    //std::cout << "id: " << m_RendererID << "\n";
     GLCall(glDeleteProgram(m_RendererID), __FILE__, __LINE__);
+    //std::cout << "id-after: " << m_RendererID << "\n";
 }
 
 ShaderProgramSource Shader::ParseShader(const std::string &filepath)

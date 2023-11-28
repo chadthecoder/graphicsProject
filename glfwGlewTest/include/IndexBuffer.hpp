@@ -14,6 +14,6 @@ public:
     void Bind() const;
     void Unbind() const;
 
-    inline void GetCount2() const {  std::cout << m_Count << std::endl; }
+    inline void GetCountPrint() const {  std::cout << m_Count << std::endl; }
     inline unsigned int GetCount() const { return m_Count; }
 };
