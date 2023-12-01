@@ -1,3 +1,4 @@
 glfwGlewTest/bin/*.o
 glfwGlewTest/bin/openGL
 glfwGlewTest/include/glfw/build/
+gladTest/build/*
