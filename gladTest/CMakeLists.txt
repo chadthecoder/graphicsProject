@@ -1,29 +1,47 @@
 cmake_minimum_required(VERSION 3.12)
+project(OpenGLCube)
 
-project(OpenGLCubeExample)
-
-# Set C++ standard
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Add source files
-file(GLOB SOURCE_FILES "src/*.cpp")
+# Add the necessary packages
+find_package(OpenGL REQUIRED)
 
-# Add include directories
-include_directories(include)
+# Include directories
+include_directories(${OPENGL_INCLUDE_DIRS} include)
 
-# Add GLFW
-find_package(glfw3 3.3 REQUIRED)
+# GLFW
+find_package(glfw3 REQUIRED)
 include_directories(${GLFW_INCLUDE_DIRS})
 
-# Add Glad
-add_library(glad "include/glad/glad.c")
+# STB_IMAGE
+include_directories(${CMAKE_SOURCE_DIR}/include)
 
-# Add executable
-add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+# GLAD
+add_library(GLAD "include/glad/glad.c")
+include_directories(${CMAKE_SOURCE_DIR}/include/glad)
+
+# Source files
+set(SOURCES
+    src/main.cpp
+    include/stb_image.h
+    include/glm//glm/glm.hpp
+    include/glm/glm/gtc/matrix_transform.hpp
+    src/Shader.cpp
+    src/Shader.hpp
+    src/Camera.cpp
+    src/Camera.hpp
+    shaders/vertex.glsl
+    shaders/fragment.glsl
+)
+
+# GLM
+set(GLM_INCLUDE_DIRS "include")
+
+add_executable(OpenGLCube ${SOURCES})
 
 # Link libraries
-target_link_libraries(${PROJECT_NAME} PRIVATE glfw glad dl)
+target_link_libraries(OpenGLCube ${OPENGL_LIBRARIES} glfw GLAD ${CMAKE_DL_LIBS} ${GLM_INCLUDE_DIRS})
 
-# Copy shaders to build directory
+# Copy shader files to build directory
 file(COPY shaders DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY textures DESTINATION ${CMAKE_BINARY_DIR})

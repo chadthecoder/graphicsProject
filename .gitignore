@@ -2,3 +2,5 @@ glfwGlewTest/bin/*.o
 glfwGlewTest/bin/openGL
 glfwGlewTest/include/glfw/build/
 gladTest/build/*
+!gladTest/build/build.sh
+gladTest/include/glm/build/*

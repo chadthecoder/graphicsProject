@@ -1,2 +1,0 @@
-/home/chadthecoder/Code/graphicsProject/build/CMakeFiles/rebuild_cache.dir
-/home/chadthecoder/Code/graphicsProject/build/CMakeFiles/edit_cache.dir

@@ -1,6 +1,6 @@
-/* // Shader.cpp
+// Shader.cpp
 
-#include "Shader.h"
+#include "Shader.hpp"
 
 #include <fstream>
 #include <sstream>
@@ -102,4 +102,4 @@ void Shader::checkCompileErrors(unsigned int shader, const std::string& type) {
             std::cerr << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
         }
     }
-} */
+}
