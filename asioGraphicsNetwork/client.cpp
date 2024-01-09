@@ -11,7 +11,7 @@
 #include <iostream>
 // #include <boost/array.hpp>
 // #include <boost/asio.hpp>
-// #define ASIO_STANDALONE
+#define ASIO_STANDALONE
 #include "asio-1.28.0/include/asio.hpp"
 // #include "asio-1.28.0/include/asio/ts/socket.hpp"
 // #include <asio.hpp>
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 
         asio::ip::udp::resolver resolver(io_context);
         asio::ip::udp::endpoint receiver_endpoint =
-            *resolver.resolve(asio::ip::udp::v4(), argv[1], "1024").begin();
+            *resolver.resolve(asio::ip::udp::v4(), argv[1], "1025").begin();
 
         asio::ip::udp::socket socket(io_context);
         socket.open(asio::ip::udp::v4());

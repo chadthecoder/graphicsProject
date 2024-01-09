@@ -3,7 +3,7 @@
 	{
 		"generator" : 
 		{
-			"name" : "Unix Makefiles"
+			"name" : "Ninja"
 		},
 		"paths" : 
 		{
@@ -34,7 +34,7 @@
 			}
 		},
 		{
-			"jsonFile" : "cache-v2-d05a9d34a0203c973701.json",
+			"jsonFile" : "cache-v2-7da3d0a710a3079e1e49.json",
 			"kind" : "cache",
 			"version" : 
 			{
@@ -43,7 +43,7 @@
 			}
 		},
 		{
-			"jsonFile" : "cmakeFiles-v1-643419087a32f10c120a.json",
+			"jsonFile" : "cmakeFiles-v1-c8eea2aec788a88d7e3c.json",
 			"kind" : "cmakeFiles",
 			"version" : 
 			{
@@ -80,7 +80,7 @@
 				"responses" : 
 				[
 					{
-						"jsonFile" : "cache-v2-d05a9d34a0203c973701.json",
+						"jsonFile" : "cache-v2-7da3d0a710a3079e1e49.json",
 						"kind" : "cache",
 						"version" : 
 						{
@@ -101,7 +101,7 @@
 						"error" : "unknown request kind 'toolchains'"
 					},
 					{
-						"jsonFile" : "cmakeFiles-v1-643419087a32f10c120a.json",
+						"jsonFile" : "cmakeFiles-v1-c8eea2aec788a88d7e3c.json",
 						"kind" : "cmakeFiles",
 						"version" : 
 						{
