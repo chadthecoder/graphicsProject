@@ -25,6 +25,7 @@ sudo apt-get install g++
 Currently has issue where binds up port 1024, find asio fix using https://stackoverflow.com/questions/34596638/boost-asio-so-reuseport ?
 
 g++ server.cpp -o server -Iasio-1.28.0/include -lpthread
+g++ serverAsync.cpp -o serverAsync -Iasio-1.28.0/include -lpthread
 g++ client.cpp -o client  -Iasio-1.28.0/include -lpthread
 
 (on one terminal) ./server
