@@ -1,3 +1,1 @@
-/bin/*.o
-/bin/client
-/bin/server
+*/build

@@ -4,6 +4,15 @@ Graphics project using SDL2, OPENGL with GLEW, and ASIO. Following multiple tuto
 
 Meant to be cross platform for Windows and Linux. Only tested on Linux right now.
 
+# New VCPKG app
+
+../lib/vcpkg/vcpkg new --application
+
+# Build system for networking
+./lib/vcpkg/bootstrap-vcpkg.sh
+../lib/vcpkg/vcpkg install (lib here)
+cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=../lib/vcpkg/scripts/buildsystems/vcpkg.cmake 
+
 # Resources:
 
 https://www.codeproject.com/Articles/1264257/Socket-Programming-in-Cplusplus-using-boost-asio-T
