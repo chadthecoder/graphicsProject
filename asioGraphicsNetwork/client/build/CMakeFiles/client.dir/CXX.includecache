@@ -1,0 +1,14 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/chadthecoder/Code/graphicsProject/asioGraphicsNetwork/client/src/client.cpp
+iostream
+-
+asio.hpp
+-
+

@@ -29,8 +29,8 @@ std::string make_daytime_string()
 class udp_server
 {
 public:
-  udp_server(asio::io_context& io_context)
-    : socket_(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), 1025))
+  udp_server(asio::io_context& io_context, asio::ip::port_type port_num)
+    : socket_(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port_num))
   {
     start_receive();
   }
@@ -78,7 +78,7 @@ int main()
   try
   {
     asio::io_context io_context;
-    udp_server server(io_context);
+    udp_server server(io_context, 1025);
     io_context.run();
   }
   catch (std::exception& e)

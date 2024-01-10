@@ -1,0 +1,3 @@
+/home/chadthecoder/Code/graphicsProject/asioGraphicsNetwork/client/build/CMakeFiles/rebuild_cache.dir
+/home/chadthecoder/Code/graphicsProject/asioGraphicsNetwork/client/build/CMakeFiles/edit_cache.dir
+/home/chadthecoder/Code/graphicsProject/asioGraphicsNetwork/client/build/CMakeFiles/client.dir
